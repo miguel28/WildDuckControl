@@ -1,0 +1,17 @@
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\hidapi.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\hidapi64.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\SDL.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\SDL64.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\WildDuckControl.exe.config
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\WildDuckControl.exe
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\WildDuckControl.pdb
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\SDLJoystick.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\USBInterface.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\USBInterface.pdb
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\SDLJoystick.pdb
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Release\WildDuckControl.csprojResolveAssemblyReference.cache
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Release\WildDuckControl.frmHIDControllerTest.resources
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Release\WildDuckControl.Properties.Resources.resources
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Release\WildDuckControl.csproj.GenerateResource.Cache
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Release\WildDuckControl.exe
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Release\WildDuckControl.pdb

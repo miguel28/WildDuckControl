@@ -45,14 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="frmHIDControllerTest.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="frmHIDControllerTest.Designer.cs">
+      <DependentUpon>frmHIDControllerTest.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmHIDControllerTest.resx">
+      <DependentUpon>frmHIDControllerTest.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -77,13 +80,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Silva Vision\SDLJoystick\SDLJoystick.csproj">
-      <Project>{51b68fbb-668a-41f2-b6a6-0ab0e67850ee}</Project>
-      <Name>SDLJoystick</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Silva Vision\USBInterface\USBInterface.csproj">
+    <ProjectReference Include="..\..\HIDInterface\USBInterface\USBInterface.csproj">
       <Project>{30432d4a-0128-48e7-adcd-249d70323611}</Project>
       <Name>USBInterface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HIDJoystick\SDLJoystick\SDLJoystick.csproj">
+      <Project>{0dd0f441-f25b-41b4-bd1c-4a4c16a363cb}</Project>
+      <Name>SDLJoystick</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
