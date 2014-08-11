@@ -73,5 +73,13 @@ namespace WildDuckControl
             usb.StreamWriteChar((char)0x00);
             usb.SendBuffer();
         }
+
+        private void btnMoveCenter_Click(object sender, EventArgs e)
+        {
+            trbAileron.Value = 127;
+            trbElevator.Value = 127;
+            trbRudder.Value = 127;
+            trbThrotle.Value = 0;
+        }
     }
 }
