@@ -1,0 +1,9 @@
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\obj\Debug\WildDuckLibrary.csprojResolveAssemblyReference.cache
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\bin\Debug\hidapi.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\bin\Debug\hidapi64.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\bin\Debug\WildDuckLibrary.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\bin\Debug\WildDuckLibrary.pdb
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\bin\Debug\USBInterface.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\bin\Debug\USBInterface.pdb
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\obj\Debug\WildDuckLibrary.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\obj\Debug\WildDuckLibrary.pdb

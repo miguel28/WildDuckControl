@@ -1,0 +1,8 @@
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\bin\Release\hidapi.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\bin\Release\hidapi64.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\bin\Release\WildDuckLibrary.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\bin\Release\WildDuckLibrary.pdb
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\bin\Release\USBInterface.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\bin\Release\USBInterface.pdb
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\obj\Release\WildDuckLibrary.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckLibrary\obj\Release\WildDuckLibrary.pdb
