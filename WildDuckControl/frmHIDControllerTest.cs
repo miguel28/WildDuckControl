@@ -7,16 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using USBInterface;
+using WildDuckLibrary;
 using JoytickInterop;
 
 namespace WildDuckControl
 {
     public partial class frmHIDControllerTest : Form
     {
-        private USBDevice usb;
+        private WildDuckConnection wildDuck;
         private SDLJoystick joy;
-
+        private int FlyTimeOut = 0;
         public frmHIDControllerTest()
         {
             InitializeComponent();
@@ -24,16 +24,17 @@ namespace WildDuckControl
             numJoy.Maximum = SDLJoystick.Joysticks;
         }
 
-        private void btnOpenHID_Click(object sender, EventArgs e)
+        private void btnOpenConn_Click(object sender, EventArgs e)
         {
-            usb = new USBDevice(0x3995, 0x0020, 16);
-            timer1.Enabled = usb.HIDisOpen;
-            btnOpenHID.Enabled = !usb.HIDisOpen;
+            wildDuck = new WildDuckConnection();
+            wildDuck.ConnectionStart();
+            timer1.Enabled = true;
+            btnOpenConn.Enabled = false;
         }
+
         private void btnOpenJoystick_Click(object sender, EventArgs e)
         {
             joy = new SDLJoystick((int)numJoy.Value);
-            //timer1.Enabled = joy.IsOpen;
             btnOpenJoystick.Enabled = false;
             numJoy.Enabled = false;
         }
@@ -43,7 +44,7 @@ namespace WildDuckControl
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (chkUseJoystick.Checked && joy != null && joy.IsOpen)
+            if (chkUseJoystick.Checked && joy != null && joy.IsOpen && FlyTimeOut== 0)
                 UpdateControlsWithJoystick();
             SendReport();
         }
@@ -53,33 +54,48 @@ namespace WildDuckControl
 
             float tmpThortle = joy.GetAxis(1);
             if (tmpThortle <= 0.0f)
-                trbThrotle.Value = (int)(tmpThortle * -254.0f);
-            trbRudder.Value = (int)(joy.GetAxis(0) * 127.0f) + 127;
-            trbAileron.Value = (int)(joy.GetAxis(3) * 127.0f) + 127;
-            trbElevator.Value = (int)(joy.GetAxis(2) * 127.0f) + 127;
+                trbThrotle.Value = (int)(tmpThortle * -1023.0f);
+            trbRudder.Value = (int)(joy.GetAxis(0) * 511.0f) + 511;
+            trbAileron.Value = (int)(joy.GetAxis(3) * 511.0f) + 511;
+            trbElevator.Value = (int)(joy.GetAxis(2) * 511.0f) + 511;
         }
         private void SendReport()
         {
-            usb.StreamWriteBegin();
-            usb.StreamWriteChar((char)0x31);
-            usb.StreamWriteChar((char)0x32);
-            usb.StreamWriteChar((char)trbThrotle.Value);
-            usb.StreamWriteChar((char)trbRudder.Value);
-            usb.StreamWriteChar((char)trbAileron.Value);
-            usb.StreamWriteChar((char)trbElevator.Value);
-            usb.StreamWriteChar((char)numElevation.Value);
-            usb.StreamWriteChar((char)0x00);
-            usb.StreamWriteChar((char)0x00);
-            usb.StreamWriteChar((char)0x00);
-            usb.SendBuffer();
-        }
+            if(FlyTimeOut == 1)
+                btnMoveCenter_Click(null, null);
+            if (FlyTimeOut != 0)
+                FlyTimeOut--;
 
+            wildDuck.Send.joystickReport.Throttle = (ushort)(trbThrotle.Value);
+            wildDuck.Send.joystickReport.Aileron = (ushort)(trbAileron.Value);
+            wildDuck.Send.joystickReport.Rudder = (ushort)(trbRudder.Value);
+            wildDuck.Send.joystickReport.Elevator = (ushort)(trbElevator.Value);
+            wildDuck.Send.joystickReport.ElevationTarget = (char)numElevation.Value;
+            wildDuck.Send.joystickReport.UChannel = (char)trbUChannel.Value;
+        }
         private void btnMoveCenter_Click(object sender, EventArgs e)
         {
-            trbAileron.Value = 127;
-            trbElevator.Value = 127;
-            trbRudder.Value = 127;
+            trbAileron.Value = 511;
+            trbElevator.Value = 511;
+            trbRudder.Value = 511;
             trbThrotle.Value = 0;
         }
+        private void LandOff()
+        {
+            trbThrotle.Value = 0;
+            trbRudder.Value = 1022;
+            trbAileron.Value = 0;
+            trbElevator.Value = 0;
+            Application.DoEvents();
+            FlyTimeOut = 101;
+            
+
+
+        }
+        private void btnFly_Click(object sender, EventArgs e)
+        {
+            LandOff();
+        }
+
     }
 }

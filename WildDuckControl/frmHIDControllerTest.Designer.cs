@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.btnOpenHID = new System.Windows.Forms.Button();
             this.grpMetrics = new System.Windows.Forms.GroupBox();
+            this.btnMoveCenter = new System.Windows.Forms.Button();
             this.chkUseJoystick = new System.Windows.Forms.CheckBox();
             this.numElevation = new System.Windows.Forms.NumericUpDown();
             this.trbElevator = new System.Windows.Forms.TrackBar();
@@ -47,7 +47,10 @@
             this.lblPollTime = new System.Windows.Forms.Label();
             this.numJoy = new System.Windows.Forms.NumericUpDown();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btnMoveCenter = new System.Windows.Forms.Button();
+            this.btnOpenConn = new System.Windows.Forms.Button();
+            this.lblUChannel = new System.Windows.Forms.Label();
+            this.trbUChannel = new System.Windows.Forms.TrackBar();
+            this.btnFly = new System.Windows.Forms.Button();
             this.grpMetrics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numElevation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbElevator)).BeginInit();
@@ -56,20 +59,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.trbThrotle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPollTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numJoy)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trbUChannel)).BeginInit();
             this.SuspendLayout();
-            // 
-            // btnOpenHID
-            // 
-            this.btnOpenHID.Location = new System.Drawing.Point(23, 15);
-            this.btnOpenHID.Name = "btnOpenHID";
-            this.btnOpenHID.Size = new System.Drawing.Size(104, 33);
-            this.btnOpenHID.TabIndex = 0;
-            this.btnOpenHID.Text = "Open HID";
-            this.btnOpenHID.UseVisualStyleBackColor = true;
-            this.btnOpenHID.Click += new System.EventHandler(this.btnOpenHID_Click);
             // 
             // grpMetrics
             // 
+            this.grpMetrics.Controls.Add(this.btnFly);
+            this.grpMetrics.Controls.Add(this.trbUChannel);
+            this.grpMetrics.Controls.Add(this.lblUChannel);
             this.grpMetrics.Controls.Add(this.btnMoveCenter);
             this.grpMetrics.Controls.Add(this.chkUseJoystick);
             this.grpMetrics.Controls.Add(this.numElevation);
@@ -84,15 +81,25 @@
             this.grpMetrics.Controls.Add(this.trbThrotle);
             this.grpMetrics.Location = new System.Drawing.Point(23, 70);
             this.grpMetrics.Name = "grpMetrics";
-            this.grpMetrics.Size = new System.Drawing.Size(442, 231);
+            this.grpMetrics.Size = new System.Drawing.Size(442, 333);
             this.grpMetrics.TabIndex = 1;
             this.grpMetrics.TabStop = false;
             this.grpMetrics.Text = "Wild Duck Controls";
             // 
+            // btnMoveCenter
+            // 
+            this.btnMoveCenter.Location = new System.Drawing.Point(180, 211);
+            this.btnMoveCenter.Name = "btnMoveCenter";
+            this.btnMoveCenter.Size = new System.Drawing.Size(75, 41);
+            this.btnMoveCenter.TabIndex = 10;
+            this.btnMoveCenter.Text = "Move to center";
+            this.btnMoveCenter.UseVisualStyleBackColor = true;
+            this.btnMoveCenter.Click += new System.EventHandler(this.btnMoveCenter_Click);
+            // 
             // chkUseJoystick
             // 
             this.chkUseJoystick.AutoSize = true;
-            this.chkUseJoystick.Location = new System.Drawing.Point(298, 180);
+            this.chkUseJoystick.Location = new System.Drawing.Point(308, 221);
             this.chkUseJoystick.Name = "chkUseJoystick";
             this.chkUseJoystick.Size = new System.Drawing.Size(86, 17);
             this.chkUseJoystick.TabIndex = 9;
@@ -101,7 +108,7 @@
             // 
             // numElevation
             // 
-            this.numElevation.Location = new System.Drawing.Point(72, 178);
+            this.numElevation.Location = new System.Drawing.Point(82, 219);
             this.numElevation.Maximum = new decimal(new int[] {
             254,
             0,
@@ -114,7 +121,7 @@
             // trbElevator
             // 
             this.trbElevator.Location = new System.Drawing.Point(61, 121);
-            this.trbElevator.Maximum = 254;
+            this.trbElevator.Maximum = 1022;
             this.trbElevator.Name = "trbElevator";
             this.trbElevator.Size = new System.Drawing.Size(375, 45);
             this.trbElevator.TabIndex = 8;
@@ -122,7 +129,7 @@
             // trbAileron
             // 
             this.trbAileron.Location = new System.Drawing.Point(61, 87);
-            this.trbAileron.Maximum = 254;
+            this.trbAileron.Maximum = 1022;
             this.trbAileron.Name = "trbAileron";
             this.trbAileron.Size = new System.Drawing.Size(375, 45);
             this.trbAileron.TabIndex = 7;
@@ -130,7 +137,7 @@
             // trbRudder
             // 
             this.trbRudder.Location = new System.Drawing.Point(61, 55);
-            this.trbRudder.Maximum = 254;
+            this.trbRudder.Maximum = 1022;
             this.trbRudder.Name = "trbRudder";
             this.trbRudder.Size = new System.Drawing.Size(375, 45);
             this.trbRudder.TabIndex = 6;
@@ -138,7 +145,7 @@
             // lblElevation
             // 
             this.lblElevation.AutoSize = true;
-            this.lblElevation.Location = new System.Drawing.Point(15, 180);
+            this.lblElevation.Location = new System.Drawing.Point(25, 221);
             this.lblElevation.Name = "lblElevation";
             this.lblElevation.Size = new System.Drawing.Size(51, 13);
             this.lblElevation.TabIndex = 5;
@@ -147,7 +154,7 @@
             // lblElevator
             // 
             this.lblElevator.AutoSize = true;
-            this.lblElevator.Location = new System.Drawing.Point(15, 135);
+            this.lblElevator.Location = new System.Drawing.Point(15, 121);
             this.lblElevator.Name = "lblElevator";
             this.lblElevator.Size = new System.Drawing.Size(46, 13);
             this.lblElevator.TabIndex = 4;
@@ -156,7 +163,7 @@
             // lblAileron
             // 
             this.lblAileron.AutoSize = true;
-            this.lblAileron.Location = new System.Drawing.Point(15, 96);
+            this.lblAileron.Location = new System.Drawing.Point(15, 87);
             this.lblAileron.Name = "lblAileron";
             this.lblAileron.Size = new System.Drawing.Size(39, 13);
             this.lblAileron.TabIndex = 3;
@@ -165,7 +172,7 @@
             // lblRudder
             // 
             this.lblRudder.AutoSize = true;
-            this.lblRudder.Location = new System.Drawing.Point(15, 65);
+            this.lblRudder.Location = new System.Drawing.Point(13, 55);
             this.lblRudder.Name = "lblRudder";
             this.lblRudder.Size = new System.Drawing.Size(42, 13);
             this.lblRudder.TabIndex = 2;
@@ -174,7 +181,7 @@
             // lblThrotle
             // 
             this.lblThrotle.AutoSize = true;
-            this.lblThrotle.Location = new System.Drawing.Point(15, 29);
+            this.lblThrotle.Location = new System.Drawing.Point(15, 19);
             this.lblThrotle.Name = "lblThrotle";
             this.lblThrotle.Size = new System.Drawing.Size(40, 13);
             this.lblThrotle.TabIndex = 1;
@@ -183,7 +190,7 @@
             // trbThrotle
             // 
             this.trbThrotle.Location = new System.Drawing.Point(61, 19);
-            this.trbThrotle.Maximum = 254;
+            this.trbThrotle.Maximum = 1022;
             this.trbThrotle.Name = "trbThrotle";
             this.trbThrotle.Size = new System.Drawing.Size(375, 45);
             this.trbThrotle.TabIndex = 0;
@@ -200,7 +207,7 @@
             this.numPollTime.Size = new System.Drawing.Size(46, 20);
             this.numPollTime.TabIndex = 2;
             this.numPollTime.Value = new decimal(new int[] {
-            50,
+            10,
             0,
             0,
             0});
@@ -234,30 +241,58 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 50;
+            this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // btnMoveCenter
+            // btnOpenConn
             // 
-            this.btnMoveCenter.Location = new System.Drawing.Point(170, 170);
-            this.btnMoveCenter.Name = "btnMoveCenter";
-            this.btnMoveCenter.Size = new System.Drawing.Size(75, 41);
-            this.btnMoveCenter.TabIndex = 10;
-            this.btnMoveCenter.Text = "Move to center";
-            this.btnMoveCenter.UseVisualStyleBackColor = true;
-            this.btnMoveCenter.Click += new System.EventHandler(this.btnMoveCenter_Click);
+            this.btnOpenConn.Location = new System.Drawing.Point(13, 13);
+            this.btnOpenConn.Name = "btnOpenConn";
+            this.btnOpenConn.Size = new System.Drawing.Size(114, 35);
+            this.btnOpenConn.TabIndex = 6;
+            this.btnOpenConn.Text = "Wild Duck Open Connection";
+            this.btnOpenConn.UseVisualStyleBackColor = true;
+            this.btnOpenConn.Click += new System.EventHandler(this.btnOpenConn_Click);
+            // 
+            // lblUChannel
+            // 
+            this.lblUChannel.AutoSize = true;
+            this.lblUChannel.Location = new System.Drawing.Point(6, 161);
+            this.lblUChannel.Name = "lblUChannel";
+            this.lblUChannel.Size = new System.Drawing.Size(54, 13);
+            this.lblUChannel.TabIndex = 11;
+            this.lblUChannel.Text = "UChannel";
+            // 
+            // trbUChannel
+            // 
+            this.trbUChannel.Location = new System.Drawing.Point(61, 161);
+            this.trbUChannel.Maximum = 254;
+            this.trbUChannel.Name = "trbUChannel";
+            this.trbUChannel.Size = new System.Drawing.Size(375, 45);
+            this.trbUChannel.TabIndex = 12;
+            this.trbUChannel.Value = 220;
+            // 
+            // btnFly
+            // 
+            this.btnFly.Location = new System.Drawing.Point(180, 275);
+            this.btnFly.Name = "btnFly";
+            this.btnFly.Size = new System.Drawing.Size(75, 23);
+            this.btnFly.TabIndex = 13;
+            this.btnFly.Text = "Fly";
+            this.btnFly.UseVisualStyleBackColor = true;
+            this.btnFly.Click += new System.EventHandler(this.btnFly_Click);
             // 
             // frmHIDControllerTest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(490, 326);
+            this.ClientSize = new System.Drawing.Size(490, 415);
+            this.Controls.Add(this.btnOpenConn);
             this.Controls.Add(this.numJoy);
             this.Controls.Add(this.lblPollTime);
             this.Controls.Add(this.btnOpenJoystick);
             this.Controls.Add(this.numPollTime);
             this.Controls.Add(this.grpMetrics);
-            this.Controls.Add(this.btnOpenHID);
             this.Name = "frmHIDControllerTest";
             this.Text = "Control Test";
             this.grpMetrics.ResumeLayout(false);
@@ -269,6 +304,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trbThrotle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPollTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numJoy)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trbUChannel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -276,7 +312,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnOpenHID;
         private System.Windows.Forms.GroupBox grpMetrics;
         private System.Windows.Forms.TrackBar trbThrotle;
         private System.Windows.Forms.NumericUpDown numPollTime;
@@ -295,6 +330,10 @@
         private System.Windows.Forms.CheckBox chkUseJoystick;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button btnMoveCenter;
+        private System.Windows.Forms.Button btnOpenConn;
+        private System.Windows.Forms.TrackBar trbUChannel;
+        private System.Windows.Forms.Label lblUChannel;
+        private System.Windows.Forms.Button btnFly;
     }
 }
 

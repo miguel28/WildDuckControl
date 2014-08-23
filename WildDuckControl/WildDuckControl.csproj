@@ -88,6 +88,10 @@
       <Project>{0dd0f441-f25b-41b4-bd1c-4a4c16a363cb}</Project>
       <Name>SDLJoystick</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WildDuckLibrary\WildDuckLibrary.csproj">
+      <Project>{17f81c90-e589-4faa-a7fd-106a82ca7139}</Project>
+      <Name>WildDuckLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

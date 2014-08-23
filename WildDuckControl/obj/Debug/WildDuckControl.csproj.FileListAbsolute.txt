@@ -1,6 +1,4 @@
 c:\users\mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\WildDuckControl.exe.config
-C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\hidapi.dll
-C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\hidapi64.dll
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\SDL.dll
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\SDL64.dll
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\WildDuckControl.exe
@@ -15,3 +13,7 @@ C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckCont
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Debug\WildDuckControl.csproj.GenerateResource.Cache
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Debug\WildDuckControl.exe
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Debug\WildDuckControl.pdb
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\WildDuckLibrary.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\WildDuckLibrary.pdb
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\hidapi.dll
+C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\hidapi64.dll

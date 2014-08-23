@@ -7,12 +7,12 @@ namespace WildDuckLibrary
 {
     public enum ReportType
     {
-        Joystick,
-        Sensors,
-        EmergencyLanding,
-        Constans1,
-        Constans2,
-        Constans3
+        Joystick = 0x00,
+        Sensors = 0x01,
+        EmergencyLanding = 0x02,
+        Constans1 = 0x03,
+        Constans2 = 0x04,
+        Constans3 = 0x05
     }
     
     public struct JosytickReport
@@ -61,6 +61,15 @@ namespace WildDuckLibrary
         public ushort HS_Low_Correction;
     }
 
+    public struct Constants3
+    {
+        public char Prot_Medium_Limit;
+        public char Prot_Low_Limit;
+        public ushort Prot_High_Correction;
+        public ushort Prot_Medium_Correction;
+        public ushort Prot_Low_Correction;
+    }
+
     public struct Reports
     {
         public JosytickReport joystickReport;
@@ -68,5 +77,6 @@ namespace WildDuckLibrary
         public EmegencyLanding emergencyLanding;
         public Constants1 constant1;
         public Constants2 constant2;
+        public Constants3 constant3;
     }
 }
