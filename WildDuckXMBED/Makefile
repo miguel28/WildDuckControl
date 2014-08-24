@@ -19,7 +19,7 @@ OBJCOPY = $(GCC_BIN)arm-none-eabi-objcopy
 
 CPU = -mcpu=cortex-m0plus -mthumb
 CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -Wall -fno-exceptions -ffunction-sections -fdata-sections
-CC_SYMBOLS = -DTARGET_KL46Z -DTARGET_M0P -DTARGET_Freescale -DTARGET_KLXX -DTOOLCHAIN_GCC_ARM -DTOOLCHAIN_GCC -D__CORTEX_M0PLUS -DARM_MATH_CM0PLUS -DMBED_BUILD_TIMESTAMP=1408833975.88 -D__MBED__=1 -DTARGET_FF_ARDUINO 
+CC_SYMBOLS = -DTARGET_KL46Z -DTARGET_M0P -DTARGET_Freescale -DTARGET_KLXX -DTOOLCHAIN_GCC_ARM -DTOOLCHAIN_GCC -D__CORTEX_M0PLUS -DARM_MATH_CM0PLUS -DMBED_BUILD_TIMESTAMP=1408912831.76 -D__MBED__=1 -DTARGET_FF_ARDUINO 
 
 LD_FLAGS = -mcpu=cortex-m0plus -mthumb -Wl,--gc-sections --specs=nano.specs -u _printf_float -u _scanf_float
 LD_SYS_LIBS = -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys

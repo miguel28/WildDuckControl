@@ -5,8 +5,11 @@
 #include "Reports.h"
 
 //#define USBHOST 
+//#define PC_UART_DEBUG
+
 #define MAXBUFFER 32
 #define REPORTLENGTH 10 
+#define SENDREPORTTIMEOUT_MS 19
 
 #ifdef USBHOST
 #include "USBHID.h"
@@ -37,7 +40,8 @@ public:
     #else
     void Send(char* data);
     #endif
-    
+	void SendReport();
+
     char bufPointer; 
     char *buffer;
     int ReportRequest;
@@ -47,8 +51,8 @@ private:
     char lastChar;  
     char *ReceivedReport; 
 	Serial* rf;
-
-	void InvertLed();
+	Serial* rfTx;
+	Ticker* sendTicker;
 
     void GetReport(); 
     void ClearBuffer();  
@@ -59,7 +63,7 @@ private:
     void DecodeConstants2();
     void DecodeConstants3();
     
-    void SendReport();
+    
     
     ControllerReport _controllerReport;
     EmergencyLanding _emergencyLanding;

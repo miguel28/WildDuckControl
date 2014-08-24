@@ -81,7 +81,7 @@ bool L3GD20::read(float *gx, float *gy, float *gz) {
 
 bool L3GD20::write_reg(int addr_i2c,int addr_reg, char v)
 {
-    char data[2] = {addr_reg, v}; 
+    char data[2] = {(char)addr_reg, v}; 
     return L3GD20::_L3GD20.write(addr_i2c, data, 2) == 0;
 }
 

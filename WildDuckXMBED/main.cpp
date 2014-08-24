@@ -2,7 +2,6 @@
 #include "esc.h"
 #include "Receiver.h"
 
-
 //#include "SRF05.h"
 //#include "L3GD20.h"
 //#include "SRF10.h"
@@ -13,7 +12,10 @@
 //SRF08 sensor(D14,D15, 0xE0);//0xe0
 //L3GD20 gyro(D14,D15);
 
+#ifdef PC_UART_DEBUG
 Serial pc(USBTX, USBRX); // tx, rx
+#endif
+
 RFInfoReceiver reporter(true);
 
 //SRF05 sensor(D9,D8);
@@ -45,9 +47,10 @@ void UpdateESC()
     UChannel();
 }
 
-void ShowReport()
+void ShowControllerReport()
 {
-    ControllerReport report = reporter.GetControllerReport();
+#ifdef PC_UART_DEBUG
+	ControllerReport report = reporter.GetControllerReport();
     pc.printf("#### Report #%d\r\n",reporter.bufPointer);
 	pc.printf("Throttle #%d\r\n", report.Throttle);
     pc.printf("Rudder #%d\r\n",report.Rudder);
@@ -55,40 +58,52 @@ void ShowReport()
     pc.printf("Elevator #%d\r\n",report.Elevator);
     pc.printf("Elevation #%d\r\n\r\n",report.ElevationTarget);
     pc.printf("UChannel #%d\r\n\r\n",report.UChannel);
-
-    /*pc.printf("BUFFER %d,%d,%d,%d,%d,%d,%d,%d,%d,%d \r\n",
-        reporter.buffer[0],
-        reporter.buffer[1],
-        reporter.buffer[2],
-        reporter.buffer[3],
-        reporter.buffer[4],
-        reporter.buffer[5],
-        reporter.buffer[6],
-        reporter.buffer[7],
-        reporter.buffer[8],
-        reporter.buffer[9]);
-    //pc.printf("Range #%d Error: %d\n\n",highSensor.CurrentRange, highSensor.Error);
-    //pc.printf("Range #%d\r\n\r\n",sensor.read());
-    
-    /*sensor.startRanging();
-    ssensor = sensor.getRange();
-    pc.printf("Range #%d\r\n",ssensor);  */  
-    
-    //gyro.read(&ax,&ay,&az);
-    //pc.printf("X: %3.3f, Y: %3.3f, Z: %3.3f\r\n", ax,ay,az);
-    
+#endif
 } 
 
+void ShowBufferReport()
+{
+#ifdef PC_UART_DEBUG
+	pc.printf("BUFFER %d,%d,%d,%d,%d,%d,%d,%d,%d,%d \r\n",
+		reporter.buffer[0],
+		reporter.buffer[1],
+		reporter.buffer[2],
+		reporter.buffer[3],
+		reporter.buffer[4],
+		reporter.buffer[5],
+		reporter.buffer[6],
+		reporter.buffer[7],
+		reporter.buffer[8],
+		reporter.buffer[9]);
+#endif
+}
+
+void ShowSensorsReport()
+{
+	/*
+	//pc.printf("Range #%d Error: %d\n\n",highSensor.CurrentRange, highSensor.Error);
+	//pc.printf("Range #%d\r\n\r\n",sensor.read());*/
+
+	/*sensor.startRanging();
+	ssensor = sensor.getRange();
+	pc.printf("Range #%d\r\n",ssensor);  */
+
+	//gyro.read(&ax,&ay,&az);
+	//pc.printf("X: %3.3f, Y: %3.3f, Z: %3.3f\r\n", ax,ay,az);
+}
+
 int main() {
+#ifdef PC_UART_DEBUG
     pc.baud(115200);
-    
+#endif
     while(1) 
     {
         UpdateESC();
-        ShowReport();
-        wait_ms(19);
-		//Led = 0;
-		//wait_ms(19);
-		//Led = 1;
+		ShowControllerReport();
+		Led = !Led;
+
+		//reporter.Send("Hola    \r\n");
+		reporter.SendReport();
+		wait_ms(SENDREPORTTIMEOUT_MS);
     }
 }

@@ -1,38 +1,47 @@
 #include "Receiver.h"
 
 //Serial rf(PTE16, PTE17); // tx, rx
-
 //Serial rfTx(D14, D15); // tx, rx
 //Ticker sendTicker;
 DigitalOut led2(LED1);
 
 RFInfoReceiver::RFInfoReceiver(bool attachReveicer)
 {
-	rf = new Serial(PTE16, PTE17); // tx, rx
+	rf = new Serial(NC, PTE17); // tx, rx
+	rf->baud(9600);
+
+#ifndef PC_UART_DEBUG
+	rfTx = new Serial(USBTX, NC); // tx, rx
+	rfTx->baud(9600);
+#else
+	rfTx = new Serial(USBTX, USBRX); // tx, rx
+	rfTx->baud(9600);
+#endif
+
+	sendTicker = new Ticker();
+
 	bufferBusy = false;
     lastChar = 0x00;
-    ReportRequest = 0x01;
+	ReportRequest = Sensors;
     
+	_SsensorsReport.Elevation = 50;
+	_SsensorsReport.Front = 0;
+	_SsensorsReport.Back = 0;
+	_SsensorsReport.Left = 0;
+	_SsensorsReport.Right = 0;
+
     if(attachReveicer) {
         rf->attach (this, &RFInfoReceiver::GetReport);
         buffer = new char[MAXBUFFER];
         ReceivedReport = new char[REPORTLENGTH];
         bufPointer = 0;
         ClearBuffer();
-        
-        //sendTicker.attach (this, &RFInfoReceiver::SendReport,0.020f);
     }
-    
 }
 RFInfoReceiver::~RFInfoReceiver()
 {
     delete ReceivedReport;
     delete buffer;
-}
-
-void RFInfoReceiver::InvertLed()
-{
-	led2 = !led2;
 }
 
 ControllerReport RFInfoReceiver::GetControllerReport()
@@ -84,115 +93,109 @@ void RFInfoReceiver::SetConstants3(Constants3 report)
 void RFInfoReceiver::SendReport()
 {
 	char* buffer = new char[10];
+	char temp1, temp2, temp3, temp4, temp5;
+	ReportRequest = Sensors;
+
 	switch(ReportRequest)
 	{
 	case Joystick:
-	{
-	buffer[0] = (char)ReportRequest;
-	buffer[1] = (char)0xef;
+		
+		buffer[0] = (char)ReportRequest;
+		buffer[1] = (char)0xef;
 
-	buffer[2] = (char)(_ScontrollerReport.Throttle & 0xff);
-	buffer[3] = (char)(_ScontrollerReport.Rudder & 0xff);
-	buffer[4] = (char)(_ScontrollerReport.Aileron & 0xff);
-	buffer[5] = (char)(_ScontrollerReport.Elevator & 0xff);
+		buffer[2] = (char)(_ScontrollerReport.Throttle & 0xff);
+		buffer[3] = (char)(_ScontrollerReport.Rudder & 0xff);
+		buffer[4] = (char)(_ScontrollerReport.Aileron & 0xff);
+		buffer[5] = (char)(_ScontrollerReport.Elevator & 0xff);
 
-	char temp1 = (char)((char)((_ScontrollerReport.Throttle >> 8) << 6) & 0xff);
-	char temp2 = (char)((char)((_ScontrollerReport.Rudder >> 8) << 4) & 0xff);
-	char temp3 = (char)((char)((_ScontrollerReport.Aileron >> 8) << 2) & 0xff);
-	char temp4 = (char)((char)((_ScontrollerReport.Elevator >> 8) << 0) & 0xff);
-	char temp5 = (char)((temp1 | temp2 | temp3 | temp4) & 0xff);
+		temp1 = (char)((char)((_ScontrollerReport.Throttle >> 8) << 6) & 0xff);
+		temp2 = (char)((char)((_ScontrollerReport.Rudder >> 8) << 4) & 0xff);
+		temp3 = (char)((char)((_ScontrollerReport.Aileron >> 8) << 2) & 0xff);
+		temp4 = (char)((char)((_ScontrollerReport.Elevator >> 8) << 0) & 0xff);
+		temp5 = (char)((temp1 | temp2 | temp3 | temp4) & 0xff);
 
-	buffer[6] = temp5;
-	buffer[7] = (char)_ScontrollerReport.ElevationTarget;
-	buffer[8] = (char)_ScontrollerReport.UChannel;
-	buffer[9] = (char)_ScontrollerReport.UseTargetMode;
+		buffer[6] = temp5;
+		buffer[7] = (char)_ScontrollerReport.ElevationTarget;
+		buffer[8] = (char)_ScontrollerReport.UChannel;
+		buffer[9] = (char)_ScontrollerReport.UseTargetMode;
 
-	Send(buffer);
-	break;
-	}
+		Send(buffer);
+		break;
+		
 
-	case Sensors:
-	{
-	buffer[0] = (char)ReportRequest;
-	buffer[1] = (char)0xef;
-	buffer[2] = _SsensorsReport.Elevation;
-	buffer[3] = _SsensorsReport.Front;
-	buffer[4] = _SsensorsReport.Back;
-	buffer[5] = _SsensorsReport.Left;
-	buffer[6] = _SsensorsReport.Right;
-	buffer[7] = (char)0x00;
-	buffer[8] = (char)0x00;
-	buffer[9] = (char)0x00;
+	case Sensors:	
+		buffer[0] = (char)ReportRequest;
+		buffer[1] = (char)0xdf;
+		buffer[2] = _SsensorsReport.Elevation;
+		buffer[3] = _SsensorsReport.Front;
+		buffer[4] = _SsensorsReport.Back;
+		buffer[5] = _SsensorsReport.Left;
+		buffer[6] = _SsensorsReport.Right;
+		buffer[7] = (char)0x00;
+		buffer[8] = (char)0x00;
+		buffer[9] = (char)0x00;
 
-	Send(buffer);
-	break;
-	}
+		Send(buffer);
+		break;
+		
 
 	case cEmergencyLanding:
-	{
-	buffer[0] = (char)ReportRequest;
-	buffer[1] = (char)0xef;
-	buffer[2] = _SemergencyLanding.UseEmergencyLanding;
-	buffer[3] = _SemergencyLanding.ConnectionTimeOut;
-	buffer[4] = _SemergencyLanding.BreakOutOffHeight;
-	buffer[5] = (char)(_SemergencyLanding.DownDecrementCoeficient & 0xff);
-	buffer[6] = (char)((_SemergencyLanding.DownDecrementCoeficient >> 8) & 0xff);
-	buffer[7] = _SemergencyLanding.DecrementTime;
-	buffer[8] = (char)0x00;
-	buffer[9] = (char)0x00;
+		
+		buffer[0] = (char)ReportRequest;
+		buffer[1] = (char)0xcf;
+		buffer[2] = _SemergencyLanding.UseEmergencyLanding;
+		buffer[3] = _SemergencyLanding.ConnectionTimeOut;
+		buffer[4] = _SemergencyLanding.BreakOutOffHeight;
+		buffer[5] = (char)(_SemergencyLanding.DownDecrementCoeficient & 0xff);
+		buffer[6] = (char)((_SemergencyLanding.DownDecrementCoeficient >> 8) & 0xff);
+		buffer[7] = _SemergencyLanding.DecrementTime;
+		buffer[8] = (char)0x00;
+		buffer[9] = (char)0x00;
 
-	Send(buffer);
-	break;
-	}
+		Send(buffer);
+		break;
 
 	case cConstants1:
-	{
-	buffer[0] = (char)ReportRequest;
-	buffer[1] = (char)0xef;
-	buffer[2] = _Sconstants1.UseProtection;
-	buffer[3] = _Sconstants1.ProtectionDistance;
-	buffer[4] = _Sconstants1.HS_High_Limit;
-	buffer[5] = _Sconstants1.HS_Medium_Limit;
-	buffer[6] = _Sconstants1.HS_Low_Limit;
-	buffer[7] = (char)0x00;
-	buffer[8] = (char)0x00;
-	buffer[9] = (char)0x00;
-	Send(buffer);
-	break;
-	}
+		buffer[0] = (char)ReportRequest;
+		buffer[1] = (char)0xbf;
+		buffer[2] = _Sconstants1.UseProtection;
+		buffer[3] = _Sconstants1.ProtectionDistance;
+		buffer[4] = _Sconstants1.HS_High_Limit;
+		buffer[5] = _Sconstants1.HS_Medium_Limit;
+		buffer[6] = _Sconstants1.HS_Low_Limit;
+		buffer[7] = (char)0x00;
+		buffer[8] = (char)0x00;
+		buffer[9] = (char)0x00;
+		Send(buffer);
+		break;
 
 	case cConstants2:
-	{
-	buffer[0] = (char)ReportRequest;
-	buffer[1] = (char)0xef;
-	buffer[2] = (char)((_Sconstants2.HS_UltraHigh_Correction >> 0) & 0x0ff);
-	buffer[3] = (char)((_Sconstants2.HS_UltraHigh_Correction >> 8) & 0x0ff);
-	buffer[4] = (char)((_Sconstants2.HS_High_Correction >> 0) & 0x0ff);
-	buffer[5] = (char)((_Sconstants2.HS_High_Correction >> 8) & 0x0ff);
-	buffer[6] = (char)((_Sconstants2.HS_Medium_Correction >> 0) & 0x0ff);
-	buffer[7] = (char)((_Sconstants2.HS_Medium_Correction >> 8) & 0x0ff);
-	buffer[8] = (char)((_Sconstants2.HS_Low_Correction >> 0) & 0x0ff);
-	buffer[9] = (char)((_Sconstants2.HS_Low_Correction >> 8) & 0x0ff);
-	Send(buffer);
-	break;
-	}
+		buffer[0] = (char)ReportRequest;
+		buffer[1] = (char)0xaf;
+		buffer[2] = (char)((_Sconstants2.HS_UltraHigh_Correction >> 0) & 0x0ff);
+		buffer[3] = (char)((_Sconstants2.HS_UltraHigh_Correction >> 8) & 0x0ff);
+		buffer[4] = (char)((_Sconstants2.HS_High_Correction >> 0) & 0x0ff);
+		buffer[5] = (char)((_Sconstants2.HS_High_Correction >> 8) & 0x0ff);
+		buffer[6] = (char)((_Sconstants2.HS_Medium_Correction >> 0) & 0x0ff);
+		buffer[7] = (char)((_Sconstants2.HS_Medium_Correction >> 8) & 0x0ff);
+		buffer[8] = (char)((_Sconstants2.HS_Low_Correction >> 0) & 0x0ff);
+		buffer[9] = (char)((_Sconstants2.HS_Low_Correction >> 8) & 0x0ff);
+		Send(buffer);
+		break;
 
 	case cConstants3:
-	{
-	buffer[0] = (char)ReportRequest;
-	buffer[1] = (char)0xef;
-	buffer[2] = _Sconstants3.Prot_Medium_Limit;
-	buffer[3] = _Sconstants3.Prot_Low_Limit;
-	buffer[4] = (char)((_Sconstants3.Prot_High_Correction >> 0) & 0xff);
-	buffer[5] = (char)((_Sconstants3.Prot_High_Correction >> 8) & 0xff);
-	buffer[6] = (char)((_Sconstants3.Prot_Medium_Correction >> 0) & 0xff);
-	buffer[7] = (char)((_Sconstants3.Prot_Medium_Correction >> 8) & 0xff);
-	buffer[8] = (char)((_Sconstants3.Prot_Low_Correction >> 0) & 0xff);
-	buffer[9] = (char)((_Sconstants3.Prot_Low_Correction >> 8) & 0xff);
-	Send(buffer);
-	break;
-	}
-
+		buffer[0] = (char)ReportRequest;
+		buffer[1] = (char)0x9f;
+		buffer[2] = _Sconstants3.Prot_Medium_Limit;
+		buffer[3] = _Sconstants3.Prot_Low_Limit;
+		buffer[4] = (char)((_Sconstants3.Prot_High_Correction >> 0) & 0xff);
+		buffer[5] = (char)((_Sconstants3.Prot_High_Correction >> 8) & 0xff);
+		buffer[6] = (char)((_Sconstants3.Prot_Medium_Correction >> 0) & 0xff);
+		buffer[7] = (char)((_Sconstants3.Prot_Medium_Correction >> 8) & 0xff);
+		buffer[8] = (char)((_Sconstants3.Prot_Low_Correction >> 0) & 0xff);
+		buffer[9] = (char)((_Sconstants3.Prot_Low_Correction >> 8) & 0xff);
+		Send(buffer);
+		break;
 	}
 }
 void RFInfoReceiver::GetReport()
@@ -297,24 +300,30 @@ void RFInfoReceiver::ClearBuffer()
 void RFInfoReceiver::Send(HID_REPORT report)
 {
     int i;
-    for(i = 0; i<10; i++) {
-        while(!rf->writeable());
-        rf->putc(report.data[i]);
+    for(i = 0; i<10; i++) 
+	{
+        while(!rfTx->writeable());
+        rfTx->putc(report.data[i]);
         wait_us(5);
     }
-    rf->putc(char(0xff));
-    rf->putc(char(0xff));
+    rfTx->putc(char(0xff));
+	wait_us(5);
+    rfTx->putc(char(0xff));
+	wait_us(5);
 }
 #else
 void RFInfoReceiver::Send(char* data)
 {
-    /*int i;
+	int i;
     for(i = 0; i<10; i++)
     {
-        while(!rfTx.writeable());
-        rfTx.printf("%c",data[i]);
-        wait_us(5);
+		while (!rfTx->writeable());
+        rfTx->putc(data[i]);
+        wait_us(500);
     }
-    rfTx.printf("%c%c",char(0xff),char(0xff)); */
+	rfTx->putc(char(0xff));
+	wait_us(500);
+	rfTx->putc(char(0xff));
+	wait_us(500);
 }
 #endif
