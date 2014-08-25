@@ -13,6 +13,7 @@ RFInfoReceiver::RFInfoReceiver(bool attachReveicer)
 #ifndef PC_UART_DEBUG
 	rfTx = new BufferedSerial(PTE20, NC); // tx, rx
 	rfTx->baud(9600);
+	Attemps = 0;
 #else
 	rfTx = new Serial(USBTX, USBRX); // tx, rx
 	rfTx->baud(9600);
@@ -325,6 +326,14 @@ void RFInfoReceiver::Send(char* data)
 	wait_us(500);
 	rfTx->putc(char(0xff));
 	wait_us(500);*/
+	Attemps++;
+	if (Attemps == 100)
+	{
+		Attemps = 0;
+		delete rfTx;
+		rfTx = new BufferedSerial(PTE20, NC); // tx, rx
+	}
+
 	rfTx->printf("%c%c%c%c%c%c%c%c%c%c%c%c",
 		data[0],
 		data[1],

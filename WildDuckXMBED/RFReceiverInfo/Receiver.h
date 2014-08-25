@@ -64,7 +64,7 @@ private:
     void DecodeConstants2();
     void DecodeConstants3();
     
-    
+	int Attemps;
     
     ControllerReport _controllerReport;
     EmergencyLanding _emergencyLanding;
