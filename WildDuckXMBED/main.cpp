@@ -30,6 +30,8 @@ ESC UChannel(D8);
 int ssensor = 255;
 float ax, ay,az;
 
+int sendCounter = 100;
+
 void UpdateESC()
 {
     ControllerReport report = reporter.GetControllerReport();
@@ -100,10 +102,17 @@ int main() {
     {
         UpdateESC();
 		ShowControllerReport();
-		Led = !Led;
+		Led = 0;
 
-		//reporter.Send("Hola    \r\n");
+		/*if (sendCounter > 0)
+			reporter.SendReport();
+		if (sendCounter >= -20)
+			sendCounter--;
+		if (sendCounter <= -20)
+			sendCounter = 100;
+		*/
 		reporter.SendReport();
+		Led = 1;
 		wait_ms(SENDREPORTTIMEOUT_MS);
     }
 }

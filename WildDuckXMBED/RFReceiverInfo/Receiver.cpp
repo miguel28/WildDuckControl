@@ -11,7 +11,7 @@ RFInfoReceiver::RFInfoReceiver(bool attachReveicer)
 	rf->baud(9600);
 
 #ifndef PC_UART_DEBUG
-	rfTx = new Serial(USBTX, NC); // tx, rx
+	rfTx = new BufferedSerial(PTE20, NC); // tx, rx
 	rfTx->baud(9600);
 #else
 	rfTx = new Serial(USBTX, USBRX); // tx, rx
@@ -314,7 +314,7 @@ void RFInfoReceiver::Send(HID_REPORT report)
 #else
 void RFInfoReceiver::Send(char* data)
 {
-	int i;
+	/*int i;
     for(i = 0; i<10; i++)
     {
 		while (!rfTx->writeable());
@@ -324,6 +324,20 @@ void RFInfoReceiver::Send(char* data)
 	rfTx->putc(char(0xff));
 	wait_us(500);
 	rfTx->putc(char(0xff));
-	wait_us(500);
+	wait_us(500);*/
+	rfTx->printf("%c%c%c%c%c%c%c%c%c%c%c%c",
+		data[0],
+		data[1],
+		data[2],
+		data[3],
+		data[4],
+		data[5],
+		data[6],
+		data[7],
+		data[8],
+		data[9],
+		0xff,
+		0xff
+		);
 }
 #endif

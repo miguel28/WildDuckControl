@@ -3,9 +3,9 @@
 
 GCC_BIN =
 PROJECT = WildDuckX
-OBJECTS = ./main.o ./Servo/Servo.o ./UltrasonicSensors/SRF10.o ./UltrasonicSensors/UltrasonicBase.o ./UltrasonicSensors/SRF05.o ./RFReceiverInfo/Receiver.o ./SRF08/SRF08.o ./ESC/esc.o ./L3GD20/L3GD20.o 
+OBJECTS = ./main.o ./Servo/Servo.o ./UltrasonicSensors/SRF10.o ./UltrasonicSensors/UltrasonicBase.o ./UltrasonicSensors/SRF05.o ./RFReceiverInfo/Receiver.o ./BufferedSerial/BufferedSerial.o ./BufferedSerial/Buffer/Buffer.o ./SRF08/SRF08.o ./ESC/esc.o ./L3GD20/L3GD20.o 
 SYS_OBJECTS = ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/startup_MKL46Z4.o ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/system_MKL46Z4.o ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/cmsis_nvic.o ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/mbed_overrides.o ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/board.o ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/retarget.o 
-INCLUDE_PATHS = -I. -I./Servo -I./UltrasonicSensors -I./mbed -I./mbed/TARGET_KL46Z -I./mbed/TARGET_KL46Z/TARGET_Freescale -I./mbed/TARGET_KL46Z/TARGET_Freescale/TARGET_KLXX -I./mbed/TARGET_KL46Z/TARGET_Freescale/TARGET_KLXX/TARGET_KL46Z -I./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM -I./RFReceiverInfo -I./SRF08 -I./ESC -I./L3GD20 
+INCLUDE_PATHS = -I. -I./Servo -I./UltrasonicSensors -I./mbed -I./mbed/TARGET_KL46Z -I./mbed/TARGET_KL46Z/TARGET_Freescale -I./mbed/TARGET_KL46Z/TARGET_Freescale/TARGET_KLXX -I./mbed/TARGET_KL46Z/TARGET_Freescale/TARGET_KLXX/TARGET_KL46Z -I./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM -I./RFReceiverInfo -I./BufferedSerial -I./BufferedSerial/Buffer -I./SRF08 -I./ESC -I./L3GD20 
 LIBRARY_PATHS = -L./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM 
 LIBRARIES = -lmbed 
 LINKER_SCRIPT = ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/MKL46Z4.ld
@@ -19,7 +19,7 @@ OBJCOPY = $(GCC_BIN)arm-none-eabi-objcopy
 
 CPU = -mcpu=cortex-m0plus -mthumb
 CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -Wall -fno-exceptions -ffunction-sections -fdata-sections
-CC_SYMBOLS = -DTARGET_KL46Z -DTARGET_M0P -DTARGET_Freescale -DTARGET_KLXX -DTOOLCHAIN_GCC_ARM -DTOOLCHAIN_GCC -D__CORTEX_M0PLUS -DARM_MATH_CM0PLUS -DMBED_BUILD_TIMESTAMP=1408912831.76 -D__MBED__=1 -DTARGET_FF_ARDUINO 
+CC_SYMBOLS = -DTARGET_KL46Z -DTARGET_M0P -DTARGET_Freescale -DTARGET_KLXX -DTOOLCHAIN_GCC_ARM -DTOOLCHAIN_GCC -D__CORTEX_M0PLUS -DARM_MATH_CM0PLUS -DMBED_BUILD_TIMESTAMP=1408919465.75 -D__MBED__=1 -DTARGET_FF_ARDUINO 
 
 LD_FLAGS = -mcpu=cortex-m0plus -mthumb -Wl,--gc-sections --specs=nano.specs -u _printf_float -u _scanf_float
 LD_SYS_LIBS = -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys

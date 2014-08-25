@@ -2,6 +2,7 @@
 #define _RECEIVER_H_
 
 #include "mbed.h"
+#include "BufferedSerial.h"
 #include "Reports.h"
 
 //#define USBHOST 
@@ -51,7 +52,7 @@ private:
     char lastChar;  
     char *ReceivedReport; 
 	Serial* rf;
-	Serial* rfTx;
+	BufferedSerial* rfTx;
 	Ticker* sendTicker;
 
     void GetReport(); 
