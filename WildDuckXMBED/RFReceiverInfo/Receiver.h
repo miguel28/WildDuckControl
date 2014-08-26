@@ -4,6 +4,7 @@
 #include "mbed.h"
 #include "BufferedSerial.h"
 #include "Reports.h"
+#include "./mbed/TARGET_KL46Z/MKL46Z4.h"
 
 //#define USBHOST 
 //#define PC_UART_DEBUG
@@ -52,7 +53,7 @@ private:
     char lastChar;  
     char *ReceivedReport; 
 	Serial* rf;
-	BufferedSerial* rfTx;
+	Serial* rfTx;
 	Ticker* sendTicker;
 
     void GetReport(); 
@@ -63,9 +64,7 @@ private:
     void DecodeConstants1();
     void DecodeConstants2();
     void DecodeConstants3();
-    
-	int Attemps;
-    
+
     ControllerReport _controllerReport;
     EmergencyLanding _emergencyLanding;
     Constants1 _constants1;

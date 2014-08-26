@@ -100,9 +100,10 @@ int main() {
 #endif
     while(1) 
     {
-        UpdateESC();
-		ShowControllerReport();
 		Led = 0;
+		UpdateESC();
+		ShowControllerReport();
+		
 
 		/*if (sendCounter > 0)
 			reporter.SendReport();
@@ -112,6 +113,7 @@ int main() {
 			sendCounter = 100;
 		*/
 		reporter.SendReport();
+		//reporter.Send("Hola    \r\n");
 		Led = 1;
 		wait_ms(SENDREPORTTIMEOUT_MS);
     }
