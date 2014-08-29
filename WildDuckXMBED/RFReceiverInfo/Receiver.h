@@ -4,14 +4,14 @@
 #include "mbed.h"
 #include "BufferedSerial.h"
 #include "Reports.h"
-#include "./mbed/TARGET_KL46Z/MKL46Z4.h"
 
 //#define USBHOST 
 //#define PC_UART_DEBUG
 
 #define MAXBUFFER 32
 #define REPORTLENGTH 10 
-#define SENDREPORTTIMEOUT_MS 19
+#define SENDREPORTTIMEOUT 0.020f
+#define REFRESH_TIMEOUT_MS 20 
 
 #ifdef USBHOST
 #include "USBHID.h"
@@ -24,12 +24,14 @@ public:
     RFInfoReceiver(bool attachReveicer);   
     ~RFInfoReceiver();
     
+	/*Get*/
     ControllerReport GetControllerReport();
     EmergencyLanding GetEmergencyLandingReport();
     Constants1 GetConstants1();
     Constants2 GetConstants2();
     Constants3 GetConstants3();
     
+	/*Set*/
     void SetControllerReport(ControllerReport report);
     void SetSensorsReport(SensorsReport report);
     void SetEmergencyLandingReport(EmergencyLanding report);
@@ -46,14 +48,16 @@ public:
 
     char bufPointer; 
     char *buffer;
-    int ReportRequest;
+    char ReportRequest;
     
 private:
     bool bufferBusy;
     char lastChar;  
     char *ReceivedReport; 
+
+	char *revBuffer;
 	Serial* rf;
-	Serial* rfTx;
+	BufferedSerial* rfTx;
 	Ticker* sendTicker;
 
     void GetReport(); 

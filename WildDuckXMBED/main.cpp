@@ -2,23 +2,11 @@
 #include "esc.h"
 #include "Receiver.h"
 
-//#include "SRF05.h"
-//#include "L3GD20.h"
-//#include "SRF10.h"
-//#include "SRF08.h"
-//SRF10 highSensor(D7, D6);
-//SRF08 sensor(A4,A5, 0xE0);//0xe0
-//SRF08 sensor(D7,D6, 0xE0);//0xe0
-//SRF08 sensor(D14,D15, 0xE0);//0xe0
-//L3GD20 gyro(D14,D15);
-
 #ifdef PC_UART_DEBUG
 Serial pc(USBTX, USBRX); // tx, rx
 #endif
 
 RFInfoReceiver reporter(true);
-
-//SRF05 sensor(D9,D8);
 DigitalOut Led(LED2);
 
 ESC Aileron(D5);
@@ -27,16 +15,11 @@ ESC Throtle(D3);
 ESC Rudder(D2);
 ESC UChannel(D8);
 
-int ssensor = 255;
-float ax, ay,az;
-
-int sendCounter = 100;
-
 void UpdateESC()
 {
     ControllerReport report = reporter.GetControllerReport();
     
-    Aileron = (float)( ((float)report.Aileron)/1022.0f);        
+    Aileron = (float)(((float)report.Aileron)/1022.0f);        
     Throtle= (float)((float)(report.Throttle)/1022.0f);  
     Elevator = (float)((float)(report.Elevator)/1022.0f);  
     Rudder = (float)((float)(report.Rudder)/1022.0f);  
@@ -82,39 +65,20 @@ void ShowBufferReport()
 
 void ShowSensorsReport()
 {
-	/*
-	//pc.printf("Range #%d Error: %d\n\n",highSensor.CurrentRange, highSensor.Error);
-	//pc.printf("Range #%d\r\n\r\n",sensor.read());*/
 
-	/*sensor.startRanging();
-	ssensor = sensor.getRange();
-	pc.printf("Range #%d\r\n",ssensor);  */
-
-	//gyro.read(&ax,&ay,&az);
-	//pc.printf("X: %3.3f, Y: %3.3f, Z: %3.3f\r\n", ax,ay,az);
 }
 
 int main() {
-#ifdef PC_UART_DEBUG
-    pc.baud(115200);
-#endif
+
     while(1) 
     {
-		Led = 0;
+		Led = !Led;
 		UpdateESC();
 		ShowControllerReport();
-		
+		//ShowBufferReport();
 
-		/*if (sendCounter > 0)
-			reporter.SendReport();
-		if (sendCounter >= -20)
-			sendCounter--;
-		if (sendCounter <= -20)
-			sendCounter = 100;
-		*/
-		reporter.SendReport();
-		//reporter.Send("Hola    \r\n");
-		Led = 1;
-		wait_ms(SENDREPORTTIMEOUT_MS);
+		//reporter.SendReport();
+		
+		wait_ms(REFRESH_TIMEOUT_MS);
     }
 }
