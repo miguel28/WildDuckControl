@@ -4,8 +4,6 @@ C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckCont
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\WildDuckControl.exe
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\WildDuckControl.pdb
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\SDLJoystick.dll
-C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\USBInterface.dll
-C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\USBInterface.pdb
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\SDLJoystick.pdb
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Debug\WildDuckControl.csprojResolveAssemblyReference.cache
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Debug\WildDuckControl.frmHIDControllerTest.resources

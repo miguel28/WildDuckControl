@@ -9,7 +9,7 @@ DigitalOut Led(LED2);
 DataReporter::DataReporter(bool attachReveicer)
 {
 	rf = new Serial(PTE20, PTE21); // tx, rx
-	rfTx = new BufferedSerial(PTE16, NC);
+	//rfTx = new BufferedSerial(PTE16, NC);
 	sendTicker = new Ticker();
 
 	bufferBusy = false;
@@ -25,7 +25,7 @@ DataReporter::DataReporter(bool attachReveicer)
 
     if(attachReveicer) {
         rf->attach (this, &DataReporter::GetReport);
-		sendTicker->attach(this, &DataReporter::SendReport, SENDREPORTTIMEOUT);
+		//sendTicker->attach(this, &DataReporter::SendReport, SENDREPORTTIMEOUT);
 
         buffer = new char[MAXBUFFER];
         ReceivedReport = new char[REPORTLENGTH];
@@ -117,13 +117,13 @@ void DataReporter::Send(char* data)
 	int i;
 	for (i = 0; i<10; i++)
 	{
-		while (!rfTx->writeable());
-		rfTx->putc(data[i]);
+		while (!rf->writeable());
+		rf->putc(data[i]);
 	}
-	while (!rfTx->writeable());
-	rfTx->putc((char)0xff);
-	while (!rfTx->writeable());
-	rfTx->putc((char)0xff);
+	while (!rf->writeable());
+	rf->putc((char)0xff);
+	while (!rf->writeable());
+	rf->putc((char)0xff);
 }
 #endif
 
@@ -249,6 +249,7 @@ void DataReporter::GetReport()
                     ReceivedReport[i] = buffer[i];
 
                 DecodeReport();
+				SendReport();
                 led2 = !led2;
             }
             bufPointer = 0;

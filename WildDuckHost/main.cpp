@@ -11,14 +11,17 @@ DigitalOut led(LED3);
 
 int main() {
     send_report.length = 16;
-   
+	//wait_ms(100);
+	//reporter.Attach();
     while(1) 
     {
-        led = 1;
+		led = 1;
         if(hid.readNB(&recv_report)) 
             reporter.Send(recv_report);
 
+		reporter.GetReport();
 		hid.sendNB(&send_report);
+
 		wait(0.01f);
     }
 }

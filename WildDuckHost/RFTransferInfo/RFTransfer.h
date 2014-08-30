@@ -19,10 +19,13 @@ public:
     void Send(char* data);
     #endif
 
-private:
+	void Attach();
+	void GetReport();
 	char bufPointer;
 	char *buffer;
 	unsigned char HeartBeat;
+private:
+	
 	bool bufferBusy;
 	char lastChar;
 
@@ -31,5 +34,5 @@ private:
 	Serial* rfRx;
 
 	void ClearBuffer();
-	void GetReport();
+	
 };

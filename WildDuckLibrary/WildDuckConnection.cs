@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using USBInterface;
+using System.IO.Ports;
+using System.Management; 
 
 namespace WildDuckLibrary
 {
+   
     public class WildDuckConnection
     {
         #region private members
-        private USBDevice usb;
+        private SerialPort serial;
         private Timer timer;
         private ReportType _reportType;
         private ReportType _RequestReport;
@@ -36,6 +38,30 @@ namespace WildDuckLibrary
         public Reports Send;
         #endregion
 
+        private string GetPortName()
+        {
+            string ret = "";
+            using (var searcher = new ManagementObjectSearcher("SELECT * FROM WIN32_SerialPort"))
+            {
+                string[] portnames = SerialPort.GetPortNames();
+                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList();
+                var tList = (from n in portnames
+                             join p in ports on n equals p["DeviceID"].ToString()
+                             select n + " - " + p["Caption"]).ToList();
+
+                foreach (string iport in tList)
+                {
+                    if (iport.Contains("Silicon"))
+                    {
+                        ret = iport.Substring(0,5);
+                        ret.Replace(" ", "");
+                        break;
+                    }
+                }
+            }
+            return ret;
+        }
+
         public WildDuckConnection(int pollData = 20)
         {
             timer = new Timer();
@@ -44,9 +70,12 @@ namespace WildDuckLibrary
 
             _reportType = ReportType.Joystick;
 
-            usb = new USBDevice(VendorID, ProductID, HidReportLength);
-            if(!usb.HIDisOpen)
-                throw new Exception("USB Device Couldn't be opened! Check if Freescale Freedom is connected!");
+            serial = new SerialPort();
+            serial.ReadBufferSize = 32;
+            serial.PortName = GetPortName();
+            serial.BaudRate = 9600;
+            serial.Open();
+
         }
         public void ConnectionStart()
         {
@@ -80,7 +109,7 @@ namespace WildDuckLibrary
         private void UpdateDataTransfer(object sender, EventArgs e)
         {
             SendReport();
-            //ReceiveReport();
+            ReceiveReport();
         }
 
         #region Send Reports
@@ -113,12 +142,11 @@ namespace WildDuckLibrary
                     break;
             }
         }
-        private void WriteReport(char[] buffer)
+        private void WriteReport(byte[] buffer)
         {
-            usb.StreamWriteBegin();
-            for (int i = 0; i < buffer.Length; i++)
-                usb.StreamWriteChar(buffer[i]);
-            usb.SendBuffer();
+            buffer[10] = (byte)0xff;
+            buffer[11] = (byte)0xff;
+            serial.Write(buffer, 0, 12);
         }
         private void SendJoystickReport()
         {
@@ -160,86 +188,86 @@ namespace WildDuckLibrary
             if (Send.joystickReport.Throttle >= 1022)
                 Send.joystickReport.Throttle = 1022;
 
-            char[] buffer = new char[10];
-            buffer[0] = (char)ReportType.Joystick;
-            buffer[1] = (char)_RequestReport;
+            byte[] buffer = new byte[12];
+            buffer[0] = (byte)ReportType.Joystick;
+            buffer[1] = (byte)_RequestReport;
 
-            buffer[2] = (char)(Send.joystickReport.Throttle & 0xff);
-            buffer[3] = (char)(Send.joystickReport.Rudder & 0xff);
-            buffer[4] = (char)(Send.joystickReport.Aileron & 0xff);
-            buffer[5] = (char)(Send.joystickReport.Elevator & 0xff);
+            buffer[2] = (byte)(Send.joystickReport.Throttle & 0xff);
+            buffer[3] = (byte)(Send.joystickReport.Rudder & 0xff);
+            buffer[4] = (byte)(Send.joystickReport.Aileron & 0xff);
+            buffer[5] = (byte)(Send.joystickReport.Elevator & 0xff);
 
-            char temp1 = (char)((char)((Send.joystickReport.Throttle >> 8) << 6) & 0xff);
-            char temp2 = (char)((char)((Send.joystickReport.Rudder >> 8) << 4) & 0xff);
-            char temp3 = (char)((char)((Send.joystickReport.Aileron >> 8) << 2) & 0xff);
-            char temp4 = (char)((char)((Send.joystickReport.Elevator >> 8) << 0) & 0xff);
-            char temp5 = (char)((temp1 | temp2 | temp3 | temp4) & 0xff);
+            byte temp1 = (byte)((byte)((Send.joystickReport.Throttle >> 8) << 6) & 0xff);
+            byte temp2 = (byte)((byte)((Send.joystickReport.Rudder >> 8) << 4) & 0xff);
+            byte temp3 = (byte)((byte)((Send.joystickReport.Aileron >> 8) << 2) & 0xff);
+            byte temp4 = (byte)((byte)((Send.joystickReport.Elevator >> 8) << 0) & 0xff);
+            byte temp5 = (byte)((temp1 | temp2 | temp3 | temp4) & 0xff);
 
             buffer[6] = temp5;
-            buffer[7] = (char)Send.joystickReport.ElevationTarget;
-            buffer[8] = (char)Send.joystickReport.UChannel;
-            buffer[9] = (char)Send.joystickReport.UseTargetMode;
+            buffer[7] = (byte)Send.joystickReport.ElevationTarget;
+            buffer[8] = (byte)Send.joystickReport.UChannel;
+            buffer[9] = (byte)Send.joystickReport.UseTargetMode;
             
             WriteReport(buffer);
         }
         private void SendEmegencyLandingReport()
         {
-            char[] buffer = new char[10];
-            buffer[0] = (char)ReportType.EmergencyLanding;
-            buffer[1] = (char)_RequestReport;
-            buffer[2] = Send.emergencyLanding.UseEmergencyLanding;
-            buffer[3] = Send.emergencyLanding.ConnectionTimeOut;
-            buffer[4] = Send.emergencyLanding.BreakOutOffHeight;
-            buffer[5] = (char)(Send.emergencyLanding.DownDecrementCoeficient & 0xff);
-            buffer[6] = (char)((Send.emergencyLanding.DownDecrementCoeficient >> 8) & 0xff);
-            buffer[7] = Send.emergencyLanding.DecrementTime;
-            buffer[8] = (char)0x00;
-            buffer[9] = (char)0x00;
+            byte[] buffer = new byte[12];
+            buffer[0] = (byte)ReportType.EmergencyLanding;
+            buffer[1] = (byte)_RequestReport;
+            buffer[2] = (byte)Send.emergencyLanding.UseEmergencyLanding;
+            buffer[3] = (byte)Send.emergencyLanding.ConnectionTimeOut;
+            buffer[4] = (byte)Send.emergencyLanding.BreakOutOffHeight;
+            buffer[5] = (byte)(Send.emergencyLanding.DownDecrementCoeficient & 0xff);
+            buffer[6] = (byte)((Send.emergencyLanding.DownDecrementCoeficient >> 8) & 0xff);
+            buffer[7] = (byte)Send.emergencyLanding.DecrementTime;
+            buffer[8] = (byte)0x00;
+            buffer[9] = (byte)0x00;
             WriteReport(buffer);
         }
         private void SendConstants1()
         {
-            char[] buffer = new char[10];
-            buffer[0] = (char)ReportType.Constans1;
-            buffer[1] = (char)_RequestReport;
-            buffer[2] = Send.constant1.UseProtection;
-            buffer[3] = Send.constant1.ProtectionDistance;
-            buffer[4] = Send.constant1.HS_High_Limit;
-            buffer[5] = Send.constant1.HS_Medium_Limit;
-            buffer[6] = Send.constant1.HS_Low_Limit;
-            buffer[7] = (char)0x00;
-            buffer[8] = (char)0x00;
-            buffer[9] = (char)0x00;
+            byte[] buffer = new byte[12];
+            buffer[0] = (byte)ReportType.Constans1;
+            buffer[1] = (byte)_RequestReport;
+            buffer[2] = (byte)Send.constant1.UseProtection;
+            buffer[3] = (byte)Send.constant1.ProtectionDistance;
+            buffer[4] = (byte)Send.constant1.HS_High_Limit;
+            buffer[5] = (byte)Send.constant1.HS_Medium_Limit;
+            buffer[6] = (byte)Send.constant1.HS_Low_Limit;
+            buffer[7] = (byte)0x00;
+            buffer[8] = (byte)0x00;
+            buffer[9] = (byte)0x00;
             WriteReport(buffer);
         }
         private void SendConstants2()
         {
-            char[] buffer = new char[10];
-            buffer[0] = (char)ReportType.Constans1;
-            buffer[1] = (char)_RequestReport;
-            buffer[2] = (char)((Send.constant2.HS_UltraHigh_Correction >> 0) & 0x0ff);
-            buffer[3] = (char)((Send.constant2.HS_UltraHigh_Correction >> 8) & 0x0ff);
-            buffer[4] = (char)((Send.constant2.HS_High_Correction >> 0) & 0x0ff);
-            buffer[5] = (char)((Send.constant2.HS_High_Correction >> 8) & 0x0ff);
-            buffer[6] = (char)((Send.constant2.HS_Medium_Correction >> 0) & 0x0ff);
-            buffer[7] = (char)((Send.constant2.HS_Medium_Correction >> 8) & 0x0ff);
-            buffer[8] = (char)((Send.constant2.HS_Low_Correction >> 0) & 0x0ff);
-            buffer[9] = (char)((Send.constant2.HS_Low_Correction >> 8) & 0x0ff);
+            byte[] buffer = new byte[12];
+            buffer[0] = (byte)ReportType.Constans1;
+            buffer[1] = (byte)_RequestReport;
+            buffer[2] = (byte)((Send.constant2.HS_UltraHigh_Correction >> 0) & 0x0ff);
+            buffer[3] = (byte)((Send.constant2.HS_UltraHigh_Correction >> 8) & 0x0ff);
+            buffer[4] = (byte)((Send.constant2.HS_High_Correction >> 0) & 0x0ff);
+            buffer[5] = (byte)((Send.constant2.HS_High_Correction >> 8) & 0x0ff);
+            buffer[6] = (byte)((Send.constant2.HS_Medium_Correction >> 0) & 0x0ff);
+            buffer[7] = (byte)((Send.constant2.HS_Medium_Correction >> 8) & 0x0ff);
+            buffer[8] = (byte)((Send.constant2.HS_Low_Correction >> 0) & 0x0ff);
+            buffer[9] = (byte)((Send.constant2.HS_Low_Correction >> 8) & 0x0ff);
             WriteReport(buffer);
         }
         private void SendConstants3()
         {
-            char[] buffer = new char[10];
-            buffer[0] = (char)ReportType.Constans1;
-            buffer[1] = (char)_RequestReport;
-            buffer[2] = Send.constant3.Prot_Medium_Limit;
-            buffer[3] = Send.constant3.Prot_Low_Limit;
-            buffer[4] = (char)((Send.constant3.Prot_High_Correction >> 0) & 0xff);
-            buffer[5] = (char)((Send.constant3.Prot_High_Correction >> 8) & 0xff);
-            buffer[6] = (char)((Send.constant3.Prot_Medium_Correction >> 0) & 0xff);
-            buffer[7] = (char)((Send.constant3.Prot_Medium_Correction >> 8) & 0xff);
-            buffer[8] = (char)((Send.constant3.Prot_Low_Correction >> 0) & 0xff);
-            buffer[9] = (char)((Send.constant3.Prot_Low_Correction >> 8) & 0xff);
+            byte[] buffer = new byte[12];
+            buffer[0] = (byte)ReportType.Constans1;
+            buffer[1] = (byte)_RequestReport;
+            buffer[2] = (byte)Send.constant3.Prot_Medium_Limit;
+            buffer[3] = (byte)Send.constant3.Prot_Low_Limit;
+            buffer[4] = (byte)((Send.constant3.Prot_High_Correction >> 0) & 0xff);
+            buffer[5] = (byte)((Send.constant3.Prot_High_Correction >> 8) & 0xff);
+            buffer[6] = (byte)((Send.constant3.Prot_Medium_Correction >> 0) & 0xff);
+            buffer[7] = (byte)((Send.constant3.Prot_Medium_Correction >> 8) & 0xff);
+            buffer[8] = (byte)((Send.constant3.Prot_Low_Correction >> 0) & 0xff);
+            buffer[9] = (byte)((Send.constant3.Prot_Low_Correction >> 8) & 0xff);
             WriteReport(buffer);
         }
         #endregion
@@ -247,16 +275,27 @@ namespace WildDuckLibrary
         #region Receive Reports
         private void ReceiveReport()
         {
-            int i;
-            char[] buffer = new char[10];
-            usb.ReciveBuffer();
-            usb.StreamReadBegin();
-
-            for (i = 1; i < buffer.Length; i++)
+            int size = serial.BytesToRead;
+            byte[] data = new byte[size];
+            byte[] buffer = new byte[size];
+            serial.Read(data, 0, data.Length);
+           
+            for(int i = 0; i< size-1; i++)
             {
-                buffer[i] = usb.StreamReadChar();
+                if(data[i] == (byte)0xff && data[i+1] == (byte)0xff && i>=10)
+                {
+                    for(int j = 0; j< 12;j++)
+                    {
+                        buffer[j] = data[i - 10 + j];
+                    }
+                    DecodeReport(buffer);
+                }
             }
 
+        }
+
+        private void DecodeReport(byte[] buffer)
+        {
             switch((ReportType)buffer[0])
             {
                 case ReportType.Joystick:
@@ -278,62 +317,62 @@ namespace WildDuckLibrary
                     DecodeEmergencyLandingReport(buffer);
                     break;
             }
-
         }
-        private void DecodeJoystickReport(char[] buffer)
+
+        private void DecodeJoystickReport(byte[] buffer)
         {
-            char temp;
-            temp = (char)((buffer[6] >> 6) & 0x03);
+            byte temp;
+            temp = (byte)((buffer[6] >> 6) & 0x03);
             _Received.joystickReport.Throttle = (ushort)((buffer[2]) | (temp << 8));
             
-            temp = (char)((buffer[6] >> 4) & 0x03);
+            temp = (byte)((buffer[6] >> 4) & 0x03);
             _Received.joystickReport.Rudder = (ushort)((buffer[3]) | (temp << 8));
 
-            temp = (char)((buffer[6] >> 2) & 0x03);
+            temp = (byte)((buffer[6] >> 2) & 0x03);
             _Received.joystickReport.Aileron = (ushort)((buffer[4]) | (temp << 8));
 
-            temp = (char)((buffer[6] >> 0) & 0x03);
+            temp = (byte)((buffer[6] >> 0) & 0x03);
             _Received.joystickReport.Elevator = (ushort)((buffer[5]) | (temp << 8));
 
             _Received.joystickReport.ElevationTarget = buffer[7];
-            _Received.joystickReport.UChannel = buffer[8];
-            _Received.joystickReport.UseTargetMode = buffer[9];
+            _Received.joystickReport.UChannel = (char)buffer[8];
+            _Received.joystickReport.UseTargetMode = (char)buffer[9];
         }
-        private void DecodeSensorsReport(char[] buffer)
+        private void DecodeSensorsReport(byte[] buffer)
         {
-            _Received.sensorsReport.Elevation = buffer[2];
-            _Received.sensorsReport.Front = buffer[3];
-            _Received.sensorsReport.Back = buffer[4];
-            _Received.sensorsReport.Left = buffer[5];
-            _Received.sensorsReport.Right = buffer[6];
+            _Received.sensorsReport.Elevation = (char)buffer[2];
+            _Received.sensorsReport.Front = (char)buffer[3];
+            _Received.sensorsReport.Back = (char)buffer[4];
+            _Received.sensorsReport.Left = (char)buffer[5];
+            _Received.sensorsReport.Right = (char)buffer[6];
         }
-        private void DecodeEmergencyLandingReport(char[] buffer)
+        private void DecodeEmergencyLandingReport(byte[] buffer)
         {
-            _Received.emergencyLanding.UseEmergencyLanding = buffer[2];
-            _Received.emergencyLanding.ConnectionTimeOut = buffer[3];
-            _Received.emergencyLanding.BreakOutOffHeight = buffer[4];
-            _Received.emergencyLanding.DownDecrementCoeficient = (char)((buffer[6]<<8) | buffer[5]);
-            _Received.emergencyLanding.DecrementTime = buffer[7];
+            _Received.emergencyLanding.UseEmergencyLanding = (char)buffer[2];
+            _Received.emergencyLanding.ConnectionTimeOut = (char)buffer[3];
+            _Received.emergencyLanding.BreakOutOffHeight = (char)buffer[4];
+            _Received.emergencyLanding.DownDecrementCoeficient = (byte)((buffer[6]<<8) | buffer[5]);
+            _Received.emergencyLanding.DecrementTime = (char)buffer[7];
         }
-        private void DecodeConstants1(char[] buffer)
+        private void DecodeConstants1(byte[] buffer)
         {
-            _Received.constant1.UseProtection = buffer[2];
-            _Received.constant1.ProtectionDistance = buffer[3];
-            _Received.constant1.HS_High_Limit = buffer[4];
-            _Received.constant1.HS_Medium_Limit = buffer[5];
-            _Received.constant1.HS_Low_Limit = buffer[6];
+            _Received.constant1.UseProtection = (char)buffer[2];
+            _Received.constant1.ProtectionDistance = (char)buffer[3];
+            _Received.constant1.HS_High_Limit = (char)buffer[4];
+            _Received.constant1.HS_Medium_Limit = (char)buffer[5];
+            _Received.constant1.HS_Low_Limit = (char)buffer[6];
         }
-        private void DecodeConstants2(char[] buffer)
+        private void DecodeConstants2(byte[] buffer)
         {
             _Received.constant2.HS_UltraHigh_Correction = (ushort)((buffer[3]<<8) | buffer[2]);
             _Received.constant2.HS_High_Correction = (ushort)((buffer[5] << 8) | buffer[4]);
             _Received.constant2.HS_Medium_Correction = (ushort)((buffer[7] << 8) | buffer[6]);
             _Received.constant2.HS_Low_Correction = (ushort)((buffer[9] << 8) | buffer[8]);
         }
-        private void DecodeConstants3(char[] buffer)
+        private void DecodeConstants3(byte[] buffer)
         {
-            _Received.constant3.Prot_Medium_Limit = buffer[2];
-            _Received.constant3.Prot_Low_Limit = buffer[3];
+            _Received.constant3.Prot_Medium_Limit = (char)buffer[2];
+            _Received.constant3.Prot_Low_Limit = (char)buffer[3];
             _Received.constant3.Prot_High_Correction = (ushort)((buffer[5] << 8) | buffer[4]);
             _Received.constant3.Prot_Medium_Correction = (ushort)((buffer[7] << 8) | buffer[6]);
             _Received.constant3.Prot_Low_Correction = (ushort)((buffer[9] << 8) | buffer[8]);

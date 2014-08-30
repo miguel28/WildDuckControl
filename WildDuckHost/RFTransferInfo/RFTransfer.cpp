@@ -1,14 +1,19 @@
 #include "RFTransfer.h"
 
 DigitalOut led2(LED2);
-Serial pc(USBTX, USBRX);
+//Serial pc(USBTX, USBRX);
 
 RFInfoReport::RFInfoReport(HID_REPORT* rep)
 {
 	HeartBeat = 0;
 	report = rep;
-	rf = new Serial(D14,D15); // tx, rx
-	rfRx = new Serial(PTE22,PTE23);
+	rf = new Serial(PTE22, PTE23); 
+	rfRx = new Serial(D14, D15); // tx, rx
+	
+}
+
+void RFInfoReport::Attach()
+{
 	rfRx->attach(this, &RFInfoReport::GetReport);
 }
 
@@ -47,10 +52,11 @@ void RFInfoReport::ClearBuffer()
 void RFInfoReport::GetReport()
 {
 	int i;
-
-	if (rfRx->readable()) {
-		char c = rfRx->getc();
-		pc.putc(c);
+	while (rf->readable())
+	{
+		led2 = 1;
+	//if (rfRx->readable()) {
+		char c = rf->getc();
 		buffer[bufPointer] = c;
 		bufPointer++;
 
@@ -62,9 +68,11 @@ void RFInfoReport::GetReport()
 				HeartBeat++;
 				report->data[13] = HeartBeat;
 				led2 = !led2;
+				break;
 			}
 			bufPointer = 0;
 		}
 		lastChar = c;
 	}
+	led2 = 0;
 }
