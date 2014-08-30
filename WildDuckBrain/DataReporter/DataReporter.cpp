@@ -8,24 +8,17 @@ DigitalOut Led(LED2);
 
 DataReporter::DataReporter(bool attachReveicer)
 {
-	rf = new Serial(PTE20, PTE21); // tx, rx
-	//rfTx = new BufferedSerial(PTE16, NC);
-	sendTicker = new Ticker();
+	rf = new Serial(PTE16, PTE17); // tx, rx
 
 	bufferBusy = false;
     lastChar = 0x00;
 	ReportRequest = Sensors;
 	revBuffer = new char[REPORTLENGTH];
 
-	_SsensorsReport.Elevation = 50;
-	_SsensorsReport.Front = 0;
-	_SsensorsReport.Back = 0;
-	_SsensorsReport.Left = 0;
-	_SsensorsReport.Right = 0;
+	InitReports();
 
     if(attachReveicer) {
         rf->attach (this, &DataReporter::GetReport);
-		//sendTicker->attach(this, &DataReporter::SendReport, SENDREPORTTIMEOUT);
 
         buffer = new char[MAXBUFFER];
         ReceivedReport = new char[REPORTLENGTH];
@@ -37,10 +30,48 @@ DataReporter::~DataReporter()
 {
     delete ReceivedReport;
     delete buffer;
+	delete rf;
+	delete revBuffer;
 }
-BufferedSerial* DataReporter::GetSender()
+
+void DataReporter::InitReports()
 {
-	return rfTx;
+	_controllerReport.Throttle = 0;
+	_controllerReport.Rudder = 512;
+	_controllerReport.Aileron = 512;
+	_controllerReport.Elevator = 512;
+	_controllerReport.ElevationTarget = 0;
+	_controllerReport.UChannel = 220;
+	_controllerReport.UseTargetMode = 0;
+
+	_SsensorsReport.Elevation = 50;
+	_SsensorsReport.Front = 0;
+	_SsensorsReport.Back = 0;
+	_SsensorsReport.Left = 0;
+	_SsensorsReport.Right = 0;
+
+	_emergencyLanding.UseEmergencyLanding = 0;
+	_emergencyLanding.ConnectionTimeOut = 0;
+	_emergencyLanding.BreakOutOffHeight = 0;
+	_emergencyLanding.DownDecrementCoeficient = 0;
+	_emergencyLanding.DecrementTime = 0;
+
+	_constants1.UseProtection = 0;
+	_constants1.ProtectionDistance = 0;
+	_constants1.HS_High_Limit = 0;
+	_constants1.HS_Medium_Limit = 0;
+	_constants1.HS_Low_Limit = 0;
+
+	_constants2.HS_UltraHigh_Correction = 0;
+	_constants2.HS_High_Correction = 0;
+	_constants2.HS_Medium_Correction = 0;
+	_constants2.HS_Low_Correction = 0;
+
+	_constants3.Prot_Medium_Limit = 0;
+	_constants3.Prot_Low_Limit = 0;
+	_constants3.Prot_High_Correction = 0;
+	_constants3.Prot_Medium_Correction = 0;
+	_constants3.Prot_Low_Correction = 0;
 }
 
 ControllerReport DataReporter::GetControllerReport()
@@ -99,16 +130,17 @@ void DataReporter::ClearBuffer()
 #ifdef USBHOST
 void DataReporter::Send(HID_REPORT report)
 {
+	Led = !Led;
 	int i;
 	for (i = 0; i<10; i++)
 	{
-		while (!rfTx->writeable());
-		rfTx->putc(report.data[i]);
+		while (!rf->writeable());
+		rf->putc(data[i]);
 	}
-	while (!rfTx->writeable());
-	rfTx->putc((char)0xff);
-	while (!rfTx->writeable());
-	rfTx->putc((char)0xff);
+	while (!rf->writeable());
+	rf->putc((char)0xff);
+	while (!rf->writeable());
+	rf->putc((char)0xff);
 }
 #else
 void DataReporter::Send(char* data)
@@ -293,6 +325,8 @@ void DataReporter::DecodeJoystick()
     _controllerReport.Aileron = (ReceivedReport[4] | ((ReceivedReport[6] & 0x0c) <<6) );
     _controllerReport.Elevator = (ReceivedReport[5] | ((ReceivedReport[6] & 0x03) <<8) );
     _controllerReport.ElevationTarget = ReceivedReport[7];
+	_controllerReport.UChannel = ReceivedReport[8];
+	_controllerReport.UseTargetMode = ReceivedReport[9];
 }
 void DataReporter::DecodeEmergency()
 {

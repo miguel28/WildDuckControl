@@ -5,8 +5,7 @@
 #include "BufferedSerial.h"
 #include "Reports.h"
 
-//#define USBHOST 
-//#define PC_UART_DEBUG
+
 
 #define MAXBUFFER 32
 #define REPORTLENGTH 10 
@@ -23,7 +22,6 @@ public:
     
     DataReporter(bool attachReveicer);   
     ~DataReporter();
-	BufferedSerial* GetSender();
 
 	/*Get*/
     ControllerReport GetControllerReport();
@@ -58,8 +56,8 @@ private:
 
 	char *revBuffer;
 	Serial* rf;
-	BufferedSerial* rfTx;
-	Ticker* sendTicker;
+
+	void InitReports();
 
     void GetReport(); 
     void ClearBuffer();  
