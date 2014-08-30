@@ -1,7 +1,7 @@
 #include "DataReporter.h"
 
 DigitalOut led2(LED1);
-
+DigitalOut Led(LED2);
 ////////////////////////////////////////////////////////////////////////
 ////       Public  Members
 ////////////////////////////////////////////////////////////////////////
@@ -113,6 +113,7 @@ void DataReporter::Send(HID_REPORT report)
 #else
 void DataReporter::Send(char* data)
 {
+	Led = !Led;
 	int i;
 	for (i = 0; i<10; i++)
 	{

@@ -36,7 +36,7 @@ namespace WildDuckLibrary
         public Reports Send;
         #endregion
 
-        public WildDuckConnection(int pollData = 50)
+        public WildDuckConnection(int pollData = 20)
         {
             timer = new Timer();
             timer.Interval = pollData;

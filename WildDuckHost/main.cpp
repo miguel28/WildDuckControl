@@ -2,13 +2,12 @@
 #include "USBHID.h"
 #include "RFTransfer.h"
 
-//Serial pc(USBTX, USBRX); // tx, rx
 USBHID hid(16, 16, 0x3995,0x0020);
 HID_REPORT send_report;
 HID_REPORT recv_report;
 
-RFInfoReport reporter;
-DigitalOut led(LED2);
+RFInfoReport reporter(&send_report);
+DigitalOut led(LED3);
 
 int main() {
     send_report.length = 16;
@@ -16,11 +15,10 @@ int main() {
     while(1) 
     {
         led = 1;
-        if(hid.read(&recv_report)) 
-        {
+        if(hid.readNB(&recv_report)) 
             reporter.Send(recv_report);
-            wait(0.01f);
-            led=0;
-        }
+
+		hid.sendNB(&send_report);
+		wait(0.01f);
     }
 }

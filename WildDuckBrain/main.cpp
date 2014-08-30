@@ -3,7 +3,7 @@
 #include "DataReporter.h"
 
 DataReporter reporter(true);
-DigitalOut Led(LED2);
+
 
 ESC Aileron(D5);
 ESC Elevator(D4);
@@ -72,13 +72,10 @@ int main() {
 
     while(1) 
     {
-		Led = !Led;
 		UpdateESC();
 		ShowControllerReport();
 		//ShowBufferReport();
 
-		//reporter.SendReport();
-		
 		wait_ms(REFRESH_TIMEOUT_MS);
     }
 }

@@ -11,7 +11,7 @@
 #define MAXBUFFER 32
 #define REPORTLENGTH 10 
 #define SENDREPORTTIMEOUT 0.020f
-#define REFRESH_TIMEOUT_MS 20 
+#define REFRESH_TIMEOUT_MS 20
 
 #ifdef USBHOST
 #include "USBHID.h"
