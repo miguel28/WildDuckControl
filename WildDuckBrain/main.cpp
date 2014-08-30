@@ -1,12 +1,8 @@
 #include "mbed.h"
 #include "esc.h"
-#include "Receiver.h"
+#include "DataReporter.h"
 
-#ifdef PC_UART_DEBUG
-Serial pc(USBTX, USBRX); // tx, rx
-#endif
-
-RFInfoReceiver reporter(true);
+DataReporter reporter(true);
 DigitalOut Led(LED2);
 
 ESC Aileron(D5);
@@ -14,6 +10,10 @@ ESC Elevator(D4);
 ESC Throtle(D3);
 ESC Rudder(D2);
 ESC UChannel(D8);
+
+#ifdef PC_UART_DEBUG
+BufferedSerial* pc = reporter.GetSender();
+#endif
 
 void UpdateESC()
 {
@@ -36,20 +36,20 @@ void ShowControllerReport()
 {
 #ifdef PC_UART_DEBUG
 	ControllerReport report = reporter.GetControllerReport();
-    pc.printf("#### Report #%d\r\n",reporter.bufPointer);
-	pc.printf("Throttle #%d\r\n", report.Throttle);
-    pc.printf("Rudder #%d\r\n",report.Rudder);
-    pc.printf("Aileron #%d\r\n",report.Aileron);
-    pc.printf("Elevator #%d\r\n",report.Elevator);
-    pc.printf("Elevation #%d\r\n\r\n",report.ElevationTarget);
-    pc.printf("UChannel #%d\r\n\r\n",report.UChannel);
+    pc->printf("#### Report #%d\r\n",reporter.bufPointer);
+	pc->printf("Throttle #%d\r\n", report.Throttle);
+    pc->printf("Rudder #%d\r\n",report.Rudder);
+    pc->printf("Aileron #%d\r\n",report.Aileron);
+    pc->printf("Elevator #%d\r\n",report.Elevator);
+    pc->printf("Elevation #%d\r\n\r\n",report.ElevationTarget);
+    pc->printf("UChannel #%d\r\n\r\n",report.UChannel);
 #endif
 } 
 
 void ShowBufferReport()
 {
 #ifdef PC_UART_DEBUG
-	pc.printf("BUFFER %d,%d,%d,%d,%d,%d,%d,%d,%d,%d \r\n",
+	pc->printf("BUFFER %d,%d,%d,%d,%d,%d,%d,%d,%d,%d \r\n",
 		reporter.buffer[0],
 		reporter.buffer[1],
 		reporter.buffer[2],

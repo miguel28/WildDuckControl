@@ -17,13 +17,14 @@
 #include "USBHID.h"
 #endif
 
-class RFInfoReceiver
+class DataReporter
 {
 public:  
     
-    RFInfoReceiver(bool attachReveicer);   
-    ~RFInfoReceiver();
-    
+    DataReporter(bool attachReveicer);   
+    ~DataReporter();
+	BufferedSerial* GetSender();
+
 	/*Get*/
     ControllerReport GetControllerReport();
     EmergencyLanding GetEmergencyLandingReport();

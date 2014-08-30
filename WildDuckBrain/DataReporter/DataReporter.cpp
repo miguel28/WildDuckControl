@@ -1,4 +1,4 @@
-#include "Receiver.h"
+#include "DataReporter.h"
 
 DigitalOut led2(LED1);
 
@@ -6,10 +6,10 @@ DigitalOut led2(LED1);
 ////       Public  Members
 ////////////////////////////////////////////////////////////////////////
 
-RFInfoReceiver::RFInfoReceiver(bool attachReveicer)
+DataReporter::DataReporter(bool attachReveicer)
 {
-	rf = new Serial(NC, PTE17); // tx, rx
-	rfTx = new BufferedSerial(PTE20, NC);
+	rf = new Serial(PTE20, PTE21); // tx, rx
+	rfTx = new BufferedSerial(PTE16, NC);
 	sendTicker = new Ticker();
 
 	bufferBusy = false;
@@ -24,8 +24,8 @@ RFInfoReceiver::RFInfoReceiver(bool attachReveicer)
 	_SsensorsReport.Right = 0;
 
     if(attachReveicer) {
-        rf->attach (this, &RFInfoReceiver::GetReport);
-		sendTicker->attach(this, &RFInfoReceiver::SendReport, SENDREPORTTIMEOUT);
+        rf->attach (this, &DataReporter::GetReport);
+		sendTicker->attach(this, &DataReporter::SendReport, SENDREPORTTIMEOUT);
 
         buffer = new char[MAXBUFFER];
         ReceivedReport = new char[REPORTLENGTH];
@@ -33,59 +33,63 @@ RFInfoReceiver::RFInfoReceiver(bool attachReveicer)
         ClearBuffer();
     }
 }
-RFInfoReceiver::~RFInfoReceiver()
+DataReporter::~DataReporter()
 {
     delete ReceivedReport;
     delete buffer;
 }
+BufferedSerial* DataReporter::GetSender()
+{
+	return rfTx;
+}
 
-ControllerReport RFInfoReceiver::GetControllerReport()
+ControllerReport DataReporter::GetControllerReport()
 {
 	return _controllerReport;
 }
-EmergencyLanding RFInfoReceiver::GetEmergencyLandingReport()
+EmergencyLanding DataReporter::GetEmergencyLandingReport()
 {
     return _emergencyLanding;
 }
-Constants1 RFInfoReceiver::GetConstants1()
+Constants1 DataReporter::GetConstants1()
 {
     return _constants1;
 }
-Constants2 RFInfoReceiver::GetConstants2()
+Constants2 DataReporter::GetConstants2()
 {
     return _constants2;
 }
-Constants3 RFInfoReceiver::GetConstants3()
+Constants3 DataReporter::GetConstants3()
 {
     return _constants3;
 }
 
-void RFInfoReceiver::SetControllerReport(ControllerReport report)
+void DataReporter::SetControllerReport(ControllerReport report)
 {
     _ScontrollerReport = report;
 }
-void RFInfoReceiver::SetSensorsReport(SensorsReport report)
+void DataReporter::SetSensorsReport(SensorsReport report)
 {
     _SsensorsReport = report;
 }
-void RFInfoReceiver::SetEmergencyLandingReport(EmergencyLanding report)
+void DataReporter::SetEmergencyLandingReport(EmergencyLanding report)
 {
     _SemergencyLanding = report;
 }
-void RFInfoReceiver::SetConstants1(Constants1 report)
+void DataReporter::SetConstants1(Constants1 report)
 {
     _Sconstants1 = report;
 }
-void RFInfoReceiver::SetConstants2(Constants2 report)
+void DataReporter::SetConstants2(Constants2 report)
 {
     _Sconstants2 = report;
 }
-void RFInfoReceiver::SetConstants3(Constants3 report)
+void DataReporter::SetConstants3(Constants3 report)
 {
     _Sconstants3 = report;
 }
 
-void RFInfoReceiver::ClearBuffer()
+void DataReporter::ClearBuffer()
 {
 	int i;
 	for (i = 0; i<MAXBUFFER; i++)
@@ -93,7 +97,7 @@ void RFInfoReceiver::ClearBuffer()
 	bufPointer = 0;
 }
 #ifdef USBHOST
-void RFInfoReceiver::Send(HID_REPORT report)
+void DataReporter::Send(HID_REPORT report)
 {
 	int i;
 	for (i = 0; i<10; i++)
@@ -107,7 +111,7 @@ void RFInfoReceiver::Send(HID_REPORT report)
 	rfTx->putc((char)0xff);
 }
 #else
-void RFInfoReceiver::Send(char* data)
+void DataReporter::Send(char* data)
 {
 	int i;
 	for (i = 0; i<10; i++)
@@ -125,7 +129,7 @@ void RFInfoReceiver::Send(char* data)
 ////////////////////////////////////////////////////////////////////////
 ////       Private  Members
 ////////////////////////////////////////////////////////////////////////
-void RFInfoReceiver::SendReport()
+void DataReporter::SendReport()
 {
 	char temp1, temp2, temp3, temp4, temp5;
 
@@ -229,7 +233,7 @@ void RFInfoReceiver::SendReport()
 		break;
 	}
 }
-void RFInfoReceiver::GetReport()
+void DataReporter::GetReport()
 {
     int i;
 
@@ -252,7 +256,7 @@ void RFInfoReceiver::GetReport()
     }
 }
 
-void RFInfoReceiver::DecodeReport()
+void DataReporter::DecodeReport()
 {
     ReportRequest = ReceivedReport[1];
     switch(ReceivedReport[0]) {
@@ -280,7 +284,7 @@ void RFInfoReceiver::DecodeReport()
             break;
     }
 }
-void RFInfoReceiver::DecodeJoystick()
+void DataReporter::DecodeJoystick()
 {
     _controllerReport.Throttle = (ReceivedReport[2] | ((ReceivedReport[6] & 0xc0) <<2) );
     _controllerReport.Rudder = (ReceivedReport[3] | ((ReceivedReport[6] & 0x30) <<4) );
@@ -288,7 +292,7 @@ void RFInfoReceiver::DecodeJoystick()
     _controllerReport.Elevator = (ReceivedReport[5] | ((ReceivedReport[6] & 0x03) <<8) );
     _controllerReport.ElevationTarget = ReceivedReport[7];
 }
-void RFInfoReceiver::DecodeEmergency()
+void DataReporter::DecodeEmergency()
 {
     _emergencyLanding.UseEmergencyLanding = ReceivedReport[2];
     _emergencyLanding.ConnectionTimeOut = ReceivedReport[3];
@@ -296,7 +300,7 @@ void RFInfoReceiver::DecodeEmergency()
     _emergencyLanding.DownDecrementCoeficient = ReceivedReport[5] | (ReceivedReport[6] << 8);
     _emergencyLanding.DecrementTime = ReceivedReport[7];
 }
-void RFInfoReceiver::DecodeConstants1()
+void DataReporter::DecodeConstants1()
 {
     _constants1.UseProtection = ReceivedReport[2];
     _constants1.ProtectionDistance = ReceivedReport[3];
@@ -304,14 +308,14 @@ void RFInfoReceiver::DecodeConstants1()
     _constants1.HS_Medium_Limit = ReceivedReport[5];
     _constants1.HS_Low_Limit = ReceivedReport[6];
 }
-void RFInfoReceiver::DecodeConstants2()
+void DataReporter::DecodeConstants2()
 {
     _constants2.HS_UltraHigh_Correction = ReceivedReport[2] | (ReceivedReport[3] << 8);
     _constants2.HS_High_Correction = ReceivedReport[4] | (ReceivedReport[5] << 8);
     _constants2.HS_Medium_Correction = ReceivedReport[6] | (ReceivedReport[7] << 8);
     _constants2.HS_Low_Correction = ReceivedReport[8] | (ReceivedReport[9] << 8);
 }
-void RFInfoReceiver::DecodeConstants3()
+void DataReporter::DecodeConstants3()
 {
     _constants3.Prot_Medium_Limit = ReceivedReport[2];
     _constants3.Prot_Low_Limit = ReceivedReport[3];
