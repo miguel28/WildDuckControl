@@ -13,7 +13,7 @@ namespace WildDuckLibrary
     {
         #region private members
         private SerialPort serial;
-        private Timer timer;
+        private Timer timer, timer2;
         private ReportType _reportType;
         private ReportType _RequestReport;
 
@@ -62,11 +62,15 @@ namespace WildDuckLibrary
             return ret;
         }
 
-        public WildDuckConnection(int pollData = 20)
+        public WildDuckConnection(int pollData = 50)
         {
             timer = new Timer();
             timer.Interval = pollData;
             timer.Tick += new EventHandler(UpdateDataTransfer);
+            timer2 = new Timer();
+            timer2.Interval = 10;
+            timer2.Tick += new EventHandler(UpdateDataTransfer2);
+
 
             _reportType = ReportType.Joystick;
 
@@ -80,6 +84,7 @@ namespace WildDuckLibrary
         public void ConnectionStart()
         {
             timer.Enabled = true;
+            timer2.Enabled = true;
         }
         public ReportType SendReportType
         {
@@ -109,6 +114,11 @@ namespace WildDuckLibrary
         private void UpdateDataTransfer(object sender, EventArgs e)
         {
             SendReport();
+            //ReceiveReport();
+        }
+        private void UpdateDataTransfer2(object sender, EventArgs e)
+        {
+            //SendReport();
             ReceiveReport();
         }
 
@@ -276,8 +286,10 @@ namespace WildDuckLibrary
         private void ReceiveReport()
         {
             int size = serial.BytesToRead;
+            if (size < 13)
+                return;
             byte[] data = new byte[size];
-            byte[] buffer = new byte[size];
+            byte[] RevBuffer = new byte[size];
             serial.Read(data, 0, data.Length);
            
             for(int i = 0; i< size-1; i++)
@@ -286,9 +298,9 @@ namespace WildDuckLibrary
                 {
                     for(int j = 0; j< 12;j++)
                     {
-                        buffer[j] = data[i - 10 + j];
+                        RevBuffer[j] = data[i - 10 + j];
                     }
-                    DecodeReport(buffer);
+                    DecodeReport(RevBuffer);
                 }
             }
 
@@ -335,32 +347,32 @@ namespace WildDuckLibrary
             _Received.joystickReport.Elevator = (ushort)((buffer[5]) | (temp << 8));
 
             _Received.joystickReport.ElevationTarget = buffer[7];
-            _Received.joystickReport.UChannel = (char)buffer[8];
-            _Received.joystickReport.UseTargetMode = (char)buffer[9];
+            _Received.joystickReport.UChannel = buffer[8];
+            _Received.joystickReport.UseTargetMode = buffer[9];
         }
         private void DecodeSensorsReport(byte[] buffer)
         {
-            _Received.sensorsReport.Elevation = (char)buffer[2];
-            _Received.sensorsReport.Front = (char)buffer[3];
-            _Received.sensorsReport.Back = (char)buffer[4];
-            _Received.sensorsReport.Left = (char)buffer[5];
-            _Received.sensorsReport.Right = (char)buffer[6];
+            _Received.sensorsReport.Elevation = buffer[2];
+            _Received.sensorsReport.Front = buffer[3];
+            _Received.sensorsReport.Back = buffer[4];
+            _Received.sensorsReport.Left = buffer[5];
+            _Received.sensorsReport.Right = buffer[6];
         }
         private void DecodeEmergencyLandingReport(byte[] buffer)
         {
-            _Received.emergencyLanding.UseEmergencyLanding = (char)buffer[2];
-            _Received.emergencyLanding.ConnectionTimeOut = (char)buffer[3];
-            _Received.emergencyLanding.BreakOutOffHeight = (char)buffer[4];
+            _Received.emergencyLanding.UseEmergencyLanding = buffer[2];
+            _Received.emergencyLanding.ConnectionTimeOut = buffer[3];
+            _Received.emergencyLanding.BreakOutOffHeight = buffer[4];
             _Received.emergencyLanding.DownDecrementCoeficient = (byte)((buffer[6]<<8) | buffer[5]);
-            _Received.emergencyLanding.DecrementTime = (char)buffer[7];
+            _Received.emergencyLanding.DecrementTime = buffer[7];
         }
         private void DecodeConstants1(byte[] buffer)
         {
-            _Received.constant1.UseProtection = (char)buffer[2];
-            _Received.constant1.ProtectionDistance = (char)buffer[3];
-            _Received.constant1.HS_High_Limit = (char)buffer[4];
-            _Received.constant1.HS_Medium_Limit = (char)buffer[5];
-            _Received.constant1.HS_Low_Limit = (char)buffer[6];
+            _Received.constant1.UseProtection = buffer[2];
+            _Received.constant1.ProtectionDistance = buffer[3];
+            _Received.constant1.HS_High_Limit = buffer[4];
+            _Received.constant1.HS_Medium_Limit = buffer[5];
+            _Received.constant1.HS_Low_Limit = buffer[6];
         }
         private void DecodeConstants2(byte[] buffer)
         {
@@ -371,8 +383,8 @@ namespace WildDuckLibrary
         }
         private void DecodeConstants3(byte[] buffer)
         {
-            _Received.constant3.Prot_Medium_Limit = (char)buffer[2];
-            _Received.constant3.Prot_Low_Limit = (char)buffer[3];
+            _Received.constant3.Prot_Medium_Limit = buffer[2];
+            _Received.constant3.Prot_Low_Limit = buffer[3];
             _Received.constant3.Prot_High_Correction = (ushort)((buffer[5] << 8) | buffer[4]);
             _Received.constant3.Prot_Medium_Correction = (ushort)((buffer[7] << 8) | buffer[6]);
             _Received.constant3.Prot_Low_Correction = (ushort)((buffer[9] << 8) | buffer[8]);

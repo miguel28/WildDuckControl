@@ -28,6 +28,7 @@ namespace WildDuckControl
         {
             wildDuck = new WildDuckConnection();
             wildDuck.ConnectionStart();
+            wildDuck.ReceiveReportType = ReportType.Sensors;
             timer1.Enabled = true;
             btnOpenConn.Enabled = false;
         }
@@ -47,6 +48,9 @@ namespace WildDuckControl
             if (chkUseJoystick.Checked && joy != null && joy.IsOpen && FlyTimeOut== 0)
                 UpdateControlsWithJoystick();
             SendReport();
+
+            lblSensorH.Text = wildDuck.Received.sensorsReport.Elevation.ToString();
+
         }
         private void UpdateControlsWithJoystick()
         {
@@ -70,8 +74,8 @@ namespace WildDuckControl
             wildDuck.Send.joystickReport.Aileron = (ushort)(trbAileron.Value);
             wildDuck.Send.joystickReport.Rudder = (ushort)(trbRudder.Value);
             wildDuck.Send.joystickReport.Elevator = (ushort)(trbElevator.Value);
-            wildDuck.Send.joystickReport.ElevationTarget = (char)numElevation.Value;
-            wildDuck.Send.joystickReport.UChannel = (char)trbUChannel.Value;
+            wildDuck.Send.joystickReport.ElevationTarget = (byte)numElevation.Value;
+            wildDuck.Send.joystickReport.UChannel = (byte)trbUChannel.Value;
         }
         private void btnMoveCenter_Click(object sender, EventArgs e)
         {
@@ -96,6 +100,5 @@ namespace WildDuckControl
         {
             LandOff();
         }
-
     }
 }

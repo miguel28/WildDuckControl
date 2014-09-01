@@ -13,5 +13,5 @@ C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckCont
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Debug\WildDuckControl.pdb
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\WildDuckLibrary.dll
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\WildDuckLibrary.pdb
-C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\hidapi.dll
-C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\hidapi64.dll
+C:\Users\Mike\Documents\Visual Studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\hidapi.dll
+C:\Users\Mike\Documents\Visual Studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Debug\hidapi64.dll

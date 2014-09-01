@@ -5,16 +5,16 @@
 #include "BufferedSerial.h"
 #include "Reports.h"
 
-
+#ifdef USBHOST
+#include "USBHID.h"
+#endif
 
 #define MAXBUFFER 32
 #define REPORTLENGTH 10 
 #define SENDREPORTTIMEOUT 0.020f
 #define REFRESH_TIMEOUT_MS 20
 
-#ifdef USBHOST
-#include "USBHID.h"
-#endif
+
 
 class DataReporter
 {
@@ -37,27 +37,27 @@ public:
     void SetConstants1(Constants1 report);
     void SetConstants2(Constants2 report);
     void SetConstants3(Constants3 report);
-    
-    #ifdef USBHOST
-    void Send(HID_REPORT report);
-    #else
-    void Send(char* data);
-    #endif
-	void SendReport();
 
-    char bufPointer; 
-    char *buffer;
+    
     char ReportRequest;
     
 private:
-    bool bufferBusy;
+	char bufPointer;
+	char *buffer;
+	bool bufferBusy;
     char lastChar;  
     char *ReceivedReport; 
-
 	char *revBuffer;
 	Serial* rf;
 
 	void InitReports();
+
+#ifdef USBHOST
+	void Send(HID_REPORT report);
+#else
+	void Send(char* data);
+#endif
+	void SendReport();
 
     void GetReport(); 
     void ClearBuffer();  

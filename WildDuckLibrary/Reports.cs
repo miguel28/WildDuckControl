@@ -17,40 +17,40 @@ namespace WildDuckLibrary
     
     public struct JosytickReport
     {
-        public char UseTargetMode;
+        public byte UseTargetMode;
         public ushort Aileron;
         public ushort Elevator;
         public ushort Throttle;
         public ushort Rudder;
         public ushort ElevationTarget;
-        public char UChannel;
+        public byte UChannel;
     }
 
     public struct SensorsReport
     {
-        public char Elevation;
-        public char Front;
-        public char Back;
-        public char Left;
-        public char Right;
+        public byte Elevation;
+        public byte Front;
+        public byte Back;
+        public byte Left;
+        public byte Right;
     }
 
     public struct EmegencyLanding
     {
-        public char UseEmergencyLanding;
-        public char ConnectionTimeOut;
-        public char BreakOutOffHeight;
+        public byte UseEmergencyLanding;
+        public byte ConnectionTimeOut;
+        public byte BreakOutOffHeight;
         public ushort DownDecrementCoeficient;
-        public char DecrementTime;
+        public byte DecrementTime;
     }
 
     public struct Constants1
     {
-        public char UseProtection;
-        public char ProtectionDistance;
-        public char HS_High_Limit;
-        public char HS_Medium_Limit;
-        public char HS_Low_Limit;
+        public byte UseProtection;
+        public byte ProtectionDistance;
+        public byte HS_High_Limit;
+        public byte HS_Medium_Limit;
+        public byte HS_Low_Limit;
     }
 
     public struct Constants2
@@ -63,8 +63,8 @@ namespace WildDuckLibrary
 
     public struct Constants3
     {
-        public char Prot_Medium_Limit;
-        public char Prot_Low_Limit;
+        public byte Prot_Medium_Limit;
+        public byte Prot_Low_Limit;
         public ushort Prot_High_Correction;
         public ushort Prot_Medium_Correction;
         public ushort Prot_Low_Correction;

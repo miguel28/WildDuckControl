@@ -30,6 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.grpMetrics = new System.Windows.Forms.GroupBox();
+            this.btnFly = new System.Windows.Forms.Button();
+            this.trbUChannel = new System.Windows.Forms.TrackBar();
+            this.lblUChannel = new System.Windows.Forms.Label();
             this.btnMoveCenter = new System.Windows.Forms.Button();
             this.chkUseJoystick = new System.Windows.Forms.CheckBox();
             this.numElevation = new System.Windows.Forms.NumericUpDown();
@@ -48,10 +51,9 @@
             this.numJoy = new System.Windows.Forms.NumericUpDown();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.btnOpenConn = new System.Windows.Forms.Button();
-            this.lblUChannel = new System.Windows.Forms.Label();
-            this.trbUChannel = new System.Windows.Forms.TrackBar();
-            this.btnFly = new System.Windows.Forms.Button();
+            this.lblSensorH = new System.Windows.Forms.Label();
             this.grpMetrics.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trbUChannel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numElevation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbElevator)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbAileron)).BeginInit();
@@ -59,11 +61,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.trbThrotle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPollTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numJoy)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trbUChannel)).BeginInit();
             this.SuspendLayout();
             // 
             // grpMetrics
             // 
+            this.grpMetrics.Controls.Add(this.lblSensorH);
             this.grpMetrics.Controls.Add(this.btnFly);
             this.grpMetrics.Controls.Add(this.trbUChannel);
             this.grpMetrics.Controls.Add(this.lblUChannel);
@@ -85,6 +87,34 @@
             this.grpMetrics.TabIndex = 1;
             this.grpMetrics.TabStop = false;
             this.grpMetrics.Text = "Wild Duck Controls";
+            // 
+            // btnFly
+            // 
+            this.btnFly.Location = new System.Drawing.Point(180, 275);
+            this.btnFly.Name = "btnFly";
+            this.btnFly.Size = new System.Drawing.Size(75, 23);
+            this.btnFly.TabIndex = 13;
+            this.btnFly.Text = "Fly";
+            this.btnFly.UseVisualStyleBackColor = true;
+            this.btnFly.Click += new System.EventHandler(this.btnFly_Click);
+            // 
+            // trbUChannel
+            // 
+            this.trbUChannel.Location = new System.Drawing.Point(61, 161);
+            this.trbUChannel.Maximum = 254;
+            this.trbUChannel.Name = "trbUChannel";
+            this.trbUChannel.Size = new System.Drawing.Size(375, 45);
+            this.trbUChannel.TabIndex = 12;
+            this.trbUChannel.Value = 220;
+            // 
+            // lblUChannel
+            // 
+            this.lblUChannel.AutoSize = true;
+            this.lblUChannel.Location = new System.Drawing.Point(6, 161);
+            this.lblUChannel.Name = "lblUChannel";
+            this.lblUChannel.Size = new System.Drawing.Size(54, 13);
+            this.lblUChannel.TabIndex = 11;
+            this.lblUChannel.Text = "UChannel";
             // 
             // btnMoveCenter
             // 
@@ -254,33 +284,14 @@
             this.btnOpenConn.UseVisualStyleBackColor = true;
             this.btnOpenConn.Click += new System.EventHandler(this.btnOpenConn_Click);
             // 
-            // lblUChannel
+            // lblSensorH
             // 
-            this.lblUChannel.AutoSize = true;
-            this.lblUChannel.Location = new System.Drawing.Point(6, 161);
-            this.lblUChannel.Name = "lblUChannel";
-            this.lblUChannel.Size = new System.Drawing.Size(54, 13);
-            this.lblUChannel.TabIndex = 11;
-            this.lblUChannel.Text = "UChannel";
-            // 
-            // trbUChannel
-            // 
-            this.trbUChannel.Location = new System.Drawing.Point(61, 161);
-            this.trbUChannel.Maximum = 254;
-            this.trbUChannel.Name = "trbUChannel";
-            this.trbUChannel.Size = new System.Drawing.Size(375, 45);
-            this.trbUChannel.TabIndex = 12;
-            this.trbUChannel.Value = 220;
-            // 
-            // btnFly
-            // 
-            this.btnFly.Location = new System.Drawing.Point(180, 275);
-            this.btnFly.Name = "btnFly";
-            this.btnFly.Size = new System.Drawing.Size(75, 23);
-            this.btnFly.TabIndex = 13;
-            this.btnFly.Text = "Fly";
-            this.btnFly.UseVisualStyleBackColor = true;
-            this.btnFly.Click += new System.EventHandler(this.btnFly_Click);
+            this.lblSensorH.AutoSize = true;
+            this.lblSensorH.Location = new System.Drawing.Point(319, 284);
+            this.lblSensorH.Name = "lblSensorH";
+            this.lblSensorH.Size = new System.Drawing.Size(16, 13);
+            this.lblSensorH.TabIndex = 14;
+            this.lblSensorH.Text = "...";
             // 
             // frmHIDControllerTest
             // 
@@ -297,6 +308,7 @@
             this.Text = "Control Test";
             this.grpMetrics.ResumeLayout(false);
             this.grpMetrics.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trbUChannel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numElevation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbElevator)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbAileron)).EndInit();
@@ -304,7 +316,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.trbThrotle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPollTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numJoy)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trbUChannel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -334,6 +345,7 @@
         private System.Windows.Forms.TrackBar trbUChannel;
         private System.Windows.Forms.Label lblUChannel;
         private System.Windows.Forms.Button btnFly;
+        private System.Windows.Forms.Label lblSensorH;
     }
 }
 
