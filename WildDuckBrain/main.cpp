@@ -41,60 +41,97 @@ void UpdateSensors()
 	reporter.SetSensorsReport(report);
 }
 
+int ThrottleCorrection(int ErrorDif)
+{
+	float CalThrottleDif = 0;
+	float MaxLimit, MinLimit, MinCorrection, MaxCorrection;
+
+	if (ErrorDif > 2)/// Quad por debajo del target
+	{
+		if (ErrorDif > HS_High_Limit) /// Diferencia es Grande 60
+		{
+			MinLimit = HS_High_Limit;
+			MinCorrection = HS_High_Correction;
+			MaxLimit = 100;
+			MaxCorrection = HS_UltraHigh_Correction;
+		}
+		else if (ErrorDif > HS_Medium_Limit) /// Diferencia es Media 30
+		{
+			MinLimit = HS_Medium_Limit;
+			MinCorrection = HS_Medium_Correction;
+			MaxLimit = HS_High_Limit;
+			MaxCorrection = HS_High_Correction;
+		}
+		else if (ErrorDif > HS_Low_Limit) /// Diferencia es Minima 10
+		{
+			MinLimit = HS_Low_Limit;
+			MinCorrection = HS_Low_Correction;
+			MaxLimit = HS_Medium_Limit;
+			MaxCorrection = HS_Medium_Correction;
+		}
+		else if (ErrorDif > 2) /// Diferencia es Muy Minima
+		{
+			MinLimit = 2;
+			MinCorrection = 0;
+			MaxLimit = HS_Low_Limit;
+			MaxCorrection = HS_Low_Correction;
+		}
+		float NetError = (ErrorDif - MinLimit);
+		float NetScale = (MaxLimit - MinLimit);
+		float NetGain = (MaxCorrection - MinCorrection);
+
+		CalThrottleDif = ((NetError / NetScale) * NetGain) + MinCorrection;
+	}
+	else if (ErrorDif < -2) /// Quad por encima del target
+	{
+		ErrorDif *= -1;
+		if (ErrorDif > HS_High_Limit) /// Diferencia es Grande 60
+		{
+			MinLimit = HS_High_Limit;
+			MinCorrection = HS_High_Correction;
+			MaxLimit = 100;
+			MaxCorrection = HS_UltraHigh_Correction;
+		}
+		else if (ErrorDif > HS_Medium_Limit) /// Diferencia es Media 30
+		{
+			MinLimit = HS_Medium_Limit;
+			MinCorrection = HS_Medium_Correction;
+			MaxLimit = HS_High_Limit;
+			MaxCorrection = HS_High_Correction;
+		}
+		else if (ErrorDif > HS_Low_Limit) /// Diferencia es Minima 10
+		{
+			MinLimit = HS_Low_Limit;
+			MinCorrection = HS_Low_Correction;
+			MaxLimit = HS_Medium_Limit;
+			MaxCorrection = HS_Medium_Correction;
+		}
+		else if (ErrorDif > 2) /// Diferencia es Muy Minima
+		{
+			MinLimit = 2;
+			MinCorrection = 0;
+			MaxLimit = HS_Low_Limit;
+			MaxCorrection = HS_Low_Correction;
+		}
+
+		float NetError = (ErrorDif - MinLimit);
+		float NetScale = (MaxLimit - MinLimit);
+		float NetGain = (MaxCorrection - MinCorrection);
+
+		CalThrottleDif = ((NetError / NetScale) * NetGain) + MinCorrection;
+		CalThrottleDif *= -1;
+	}
+
+	return (int)CalThrottleDif;
+}
+
 void UpdateThrottle()
 {
 	if (creport.UseTargetMode)
 	{
-		int target = creport.ElevationTarget;
-		int ErrorDif = target - HighSensor.GetInches();
+		int ErrorDif = creport.ElevationTarget - HighSensor.GetInches();
 		int FinalThrottle = IDLE_CONSTANT; // Constante Throttle IDLE probablemente no sea cero
-		int CalThrottleDif = 0;
-		float ScaleFactor;
-		float Gain;
-
-		if (ErrorDif > 3)/// Quad por debajo del target
-		{
-			if (ErrorDif > HS_High_Limit) /// Diferencia es Grande 60
-			{
-				FinalThrottle = HS_UltraHigh_Correction;
-			}
-			else if (ErrorDif > HS_Medium_Limit) /// Diferencia es Media 30
-			{
-				ScaleFactor = (float)(HS_High_Limit - HS_Medium_Limit) / (float)HS_High_Limit;
-				Gain = 
-				
-				FinalThrottle = Error
-			}
-			else if (ErrorDif > HS_Low_Limit) /// Diferencia es Minima 10
-			{
-
-			}
-			else if (ErrorDif > 3) /// Diferencia es Muy Minima
-			{
-
-			}
-		}
-		else if (ErrorDif < -3) /// Quad por encima del target
-		{
-			if (ErrorDif < -HS_High_Limit) /// Diferencia es Grande
-			{
-
-			}
-			else if (ErrorDif < -HS_Medium_Limit) /// Diferencia es Media
-			{
-
-			}
-			else if (ErrorDif > HS_Low_Limit) /// Diferencia es Minima
-			{
-
-			}
-			else if (ErrorDif > 3) /// Diferencia es Muy Minima
-			{
-
-			}
-		}
-		
-		FinalThrottle += CalThrottleDif;
+		FinalThrottle += ThrottleCorrection(ErrorDif);
 		Throtle = (float)((float)(FinalThrottle) / 1022.0f);
 	}
 	else Throtle = (float)((float)(creport.Throttle) / 1022.0f);
