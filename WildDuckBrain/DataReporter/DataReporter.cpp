@@ -14,7 +14,8 @@ DataReporter::DataReporter(bool attachReveicer)
     lastChar = 0x00;
 	ReportRequest = Sensors;
 	revBuffer = new char[REPORTLENGTH];
-
+	changed = true;
+	idle = true;
 	InitReports();
 
     if(attachReveicer) {
@@ -32,6 +33,18 @@ DataReporter::~DataReporter()
     delete buffer;
 	delete rf;
 	delete revBuffer;
+}
+
+bool DataReporter::ConstantsHaveChanged()
+{
+	bool ret = changed;
+	changed = false;
+	return ret;
+}
+
+bool DataReporter::IsIdle()
+{
+	return idle;
 }
 
 void DataReporter::InitReports()
@@ -295,25 +308,34 @@ void DataReporter::DecodeReport()
     ReportRequest = ReceivedReport[1];
     switch(ReceivedReport[0]) {
         case Joystick:
+			idle = false;
             DecodeJoystick();
             break;
 
         case Sensors:
+			idle = true;
             break;
 
         case cEmergencyLanding:
-            DecodeJoystick();
+			idle = true;
+            DecodeEmergency();
             break;
 
         case cConstants1:
+			idle = true;
+			changed = true;
             DecodeConstants1();
             break;
 
         case cConstants2:
+			idle = true;
+			changed = true;
             DecodeConstants2();
             break;
 
         case cConstants3:
+			idle = true;
+			changed = true;
             DecodeConstants3();
             break;
     }

@@ -9,7 +9,17 @@ SRF05::SRF05(PinName trigger, PinName echo)
     _echo.fall(this, &SRF05::_falling);
     _ticker.attach(this, &SRF05::_startRange, 0.1f);     
 }
-  
+ 
+float SRF05::Greater(SRF05 s)
+{
+	float a = GetInches();
+	float b = s.GetInches();
+	if (a <= b)
+		return a;
+	else
+		return b;
+}
+
 void SRF05::_startRange() {
     // send a trigger pulse, 20uS long
     _trigger = 1;

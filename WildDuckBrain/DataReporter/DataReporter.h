@@ -40,7 +40,9 @@ public:
 
     
     char ReportRequest;
-    
+	bool ConstantsHaveChanged();
+	bool IsIdle();
+
 private:
 	char bufPointer;
 	char *buffer;
@@ -48,8 +50,9 @@ private:
     char lastChar;  
     char *ReceivedReport; 
 	char *revBuffer;
+	bool changed;
+	bool idle;
 	Serial* rf;
-
 	void InitReports();
 
 #ifdef USBHOST
