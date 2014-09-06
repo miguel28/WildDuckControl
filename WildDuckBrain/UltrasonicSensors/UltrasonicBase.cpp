@@ -42,12 +42,10 @@ void IUltrasonicSensor::AddToStack(float range)
         float *newstack = new float[STACKAVERAGE];
         int i;
         for(i = 0; i< STACKAVERAGE -1; i++)
-        {
-            newstack[i] = stackBuffer[i+1];
-            delete stackBuffer;
-            stackBuffer = newstack;
-            stackBuffer[STACKAVERAGE - 1] = range;
-        }
+            newstack[i] = stackBuffer[i+1]; 
+		delete stackBuffer;
+		stackBuffer = newstack;
+		stackBuffer[STACKAVERAGE - 1] = range;
     }
     else
     {

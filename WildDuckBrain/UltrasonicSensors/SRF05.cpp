@@ -10,7 +10,7 @@ SRF05::SRF05(PinName trigger, PinName echo)
     _ticker.attach(this, &SRF05::_startRange, 0.1f);     
 }
  
-float SRF05::Greater(SRF05 s)
+float SRF05::Minor(SRF05 s)
 {
 	float a = GetInches();
 	float b = s.GetInches();

@@ -59,10 +59,10 @@ void UpdateSensors()
 	report.Right = 0;
 #else
 	report.Elevation = HighSensor.GetInches();
-	report.Front = FrontSensor1.Greater(FrontSensor2);
-	report.Back = BackSensor1.Greater(BackSensor2);
-	report.Left = LeftSensor1.Greater(LeftSensor2);
-	report.Right = RightSensor1.Greater(RightSensor2);
+	report.Front = FrontSensor1.Minor(FrontSensor2);
+	report.Back = BackSensor1.Minor(BackSensor2);
+	report.Left = LeftSensor1.Minor(LeftSensor2);
+	report.Right = RightSensor1.Minor(RightSensor2);
 #endif
 	reporter.SetSensorsReport(report);
 }
