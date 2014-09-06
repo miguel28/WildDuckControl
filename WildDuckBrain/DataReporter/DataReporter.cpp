@@ -191,7 +191,7 @@ void DataReporter::SendReport()
 	case Joystick:
 		
 		revBuffer[0] = (char)ReportRequest;
-		revBuffer[1] = (char)0xfe;
+		revBuffer[1] = (char)Nothing;
 
 		revBuffer[2] = (char)(_ScontrollerReport.Throttle & 0xff);
 		revBuffer[3] = (char)(_ScontrollerReport.Rudder & 0xff);
@@ -215,7 +215,7 @@ void DataReporter::SendReport()
 
 	case Sensors:	
 		revBuffer[0] = (char)ReportRequest;
-		revBuffer[1] = (char)0xfe;
+		revBuffer[1] = (char)Nothing;
 		revBuffer[2] = _SsensorsReport.Elevation;
 		revBuffer[3] = _SsensorsReport.Front;
 		revBuffer[4] = _SsensorsReport.Back;
@@ -231,7 +231,7 @@ void DataReporter::SendReport()
 	case cEmergencyLanding:
 		
 		revBuffer[0] = (char)ReportRequest;
-		revBuffer[1] = (char)0xfe;
+		revBuffer[1] = (char)Nothing;
 		revBuffer[2] = _SemergencyLanding.UseEmergencyLanding;
 		revBuffer[3] = _SemergencyLanding.ConnectionTimeOut;
 		revBuffer[4] = _SemergencyLanding.BreakOutOffHeight;
@@ -245,7 +245,7 @@ void DataReporter::SendReport()
 
 	case cConstants1:
 		revBuffer[0] = (char)ReportRequest;
-		revBuffer[1] = (char)0xfe;
+		revBuffer[1] = (char)Nothing;
 		revBuffer[2] = _Sconstants1.UseProtection;
 		revBuffer[3] = _Sconstants1.ProtectionDistance;
 		revBuffer[4] = _Sconstants1.HS_High_Limit;
@@ -259,7 +259,7 @@ void DataReporter::SendReport()
 
 	case cConstants2:
 		revBuffer[0] = (char)ReportRequest;
-		revBuffer[1] = (char)0xfe;
+		revBuffer[1] = (char)Nothing;
 		revBuffer[2] = (char)((_Sconstants2.HS_UltraHigh_Correction >> 0) & 0x0ff);
 		revBuffer[3] = (char)((_Sconstants2.HS_UltraHigh_Correction >> 8) & 0x0ff);
 		revBuffer[4] = (char)((_Sconstants2.HS_High_Correction >> 0) & 0x0ff);
@@ -273,7 +273,7 @@ void DataReporter::SendReport()
 
 	case cConstants3:
 		revBuffer[0] = (char)ReportRequest;
-		revBuffer[1] = (char)0xfe;
+		revBuffer[1] = (char)Nothing;
 		revBuffer[2] = _Sconstants3.Prot_Medium_Limit;
 		revBuffer[3] = _Sconstants3.Prot_Low_Limit;
 		revBuffer[4] = (char)((_Sconstants3.Prot_High_Correction >> 0) & 0xff);
@@ -314,7 +314,7 @@ void DataReporter::GetReport()
 void DataReporter::DecodeReport()
 {
     ReportRequest = ReceivedReport[1];
-    switch(ReceivedReport[0]) {
+    switch(ReceivedReport[0] & 0x0f) {
         case Joystick:
 			idle = false;
             DecodeJoystick();

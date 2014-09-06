@@ -10,7 +10,7 @@ enum
 	cConstants2 = 0x04,
 	cConstants3 = 0x05,
 
-	Nothing = 0xfe;
+	Nothing = 0x0f
 };
 
 typedef struct
