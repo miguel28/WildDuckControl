@@ -1,0 +1,29 @@
+﻿Build started 9/5/2014 6:17:30 PM.
+     1>Project "C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\SensorsSimulation\SensorsSimulation.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\\" /AI"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral" /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\\" /Zi /clr /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _UNICODE /D UNICODE /EHa /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Release\SensorsSimulation.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\mscorlib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Xml.dll" /analyze- /errorReport:prompt /clr:nostdlib stdafx.cpp
+         stdafx.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\\" /AI"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral" /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\\" /Zi /clr /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _UNICODE /D UNICODE /EHa /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Release\SensorsSimulation.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\mscorlib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Xml.dll" /analyze- /errorReport:prompt /clr:nostdlib AssemblyInfo.cpp frmSim.cpp SensorsSimulation.cpp
+         AssemblyInfo.cpp
+         frmSim.cpp
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(311): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+         SensorsSimulation.cpp
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(311): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+         Generating Code...
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /clr /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _UNICODE /D UNICODE /EHa /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /TP /analyze- /errorReport:prompt "C:\Users\User\AppData\Local\Temp\.NETFramework,Version=v4.5.AssemblyAttributes.cpp"
+         .NETFramework,Version=v4.5.AssemblyAttributes.cpp
+       ResourceCompile:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /D _UNICODE /D UNICODE /l"0x0409" /nologo /fo"Release\app.res" app.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\Release\SensorsSimulation.exe" /INCREMENTAL:NO /NOLOGO /ASSEMBLYRESOURCE:Release\SensorsSimulation.frmSim.resources /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\Release\SensorsSimulation.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 /SAFESEH Release\app.res
+         Release\AssemblyInfo.obj
+         Release\frmSim.obj
+         Release\SensorsSimulation.obj
+         Release\stdafx.obj
+         "Release\.NETFramework,Version=v4.5.AssemblyAttributes.obj"
+         SensorsSimulation.vcxproj -> C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\Release\SensorsSimulation.exe
+     1>Done Building Project "C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\SensorsSimulation\SensorsSimulation.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.80

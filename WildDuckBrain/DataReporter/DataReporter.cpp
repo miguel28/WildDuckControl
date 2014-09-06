@@ -6,26 +6,31 @@ DigitalOut Led(LED2);
 ////       Public  Members
 ////////////////////////////////////////////////////////////////////////
 
-DataReporter::DataReporter(bool attachReveicer)
+DataReporter::DataReporter()
 {
-	rf = new Serial(PTE16, PTE17); // tx, rx
+	HeartBeat = 0;
+	LastHeartBeat = 0;
+	HeartTolerance = 0;
+	isOnline = false;
 
 	bufferBusy = false;
-    lastChar = 0x00;
+	lastChar = 0x00;
 	ReportRequest = Sensors;
 	revBuffer = new char[REPORTLENGTH];
 	changed = true;
 	idle = true;
 	InitReports();
 
-    if(attachReveicer) {
-        rf->attach (this, &DataReporter::GetReport);
+	rf = new Serial(PTE16, PTE17); // tx, rx
+	rf->baud(BAUDRATE);
+	tickWatchDog = new Ticker();
+	rf->attach(this, &DataReporter::GetReport);
+	tickWatchDog->attach(this, &DataReporter::WatchDog, 0.1f);
 
-        buffer = new char[MAXBUFFER];
-        ReceivedReport = new char[REPORTLENGTH];
-        bufPointer = 0;
-        ClearBuffer();
-    }
+	buffer = new char[MAXBUFFER];
+	ReceivedReport = new char[REPORTLENGTH];
+	bufPointer = 0;
+
 }
 DataReporter::~DataReporter()
 {
@@ -34,17 +39,19 @@ DataReporter::~DataReporter()
 	delete rf;
 	delete revBuffer;
 }
-
 bool DataReporter::ConstantsHaveChanged()
 {
 	bool ret = changed;
 	changed = false;
 	return ret;
 }
-
 bool DataReporter::IsIdle()
 {
 	return idle;
+}
+bool DataReporter::IsOnline()
+{
+	return isOnline;
 }
 
 void DataReporter::InitReports()
@@ -57,28 +64,28 @@ void DataReporter::InitReports()
 	_controllerReport.UChannel = 220;
 	_controllerReport.UseTargetMode = 0;
 
-	_SsensorsReport.Elevation = 50;
+	_SsensorsReport.Elevation = 0;
 	_SsensorsReport.Front = 0;
 	_SsensorsReport.Back = 0;
 	_SsensorsReport.Left = 0;
 	_SsensorsReport.Right = 0;
 
 	_emergencyLanding.UseEmergencyLanding = 0;
-	_emergencyLanding.ConnectionTimeOut = 0;
-	_emergencyLanding.BreakOutOffHeight = 0;
+	_emergencyLanding.ConnectionTimeOut = 50;// 5 Seconds
+	_emergencyLanding.BreakOutOffHeight = 20;
 	_emergencyLanding.DownDecrementCoeficient = 0;
 	_emergencyLanding.DecrementTime = 0;
 
 	_constants1.UseProtection = 0;
 	_constants1.ProtectionDistance = 0;
-	_constants1.HS_High_Limit = 0;
-	_constants1.HS_Medium_Limit = 0;
-	_constants1.HS_Low_Limit = 0;
+	_constants1.HS_High_Limit = 60;
+	_constants1.HS_Medium_Limit = 30;
+	_constants1.HS_Low_Limit = 10;
 
-	_constants2.HS_UltraHigh_Correction = 0;
-	_constants2.HS_High_Correction = 0;
-	_constants2.HS_Medium_Correction = 0;
-	_constants2.HS_Low_Correction = 0;
+	_constants2.HS_UltraHigh_Correction = 320;
+	_constants2.HS_High_Correction = 120;
+	_constants2.HS_Medium_Correction = 35;
+	_constants2.HS_Low_Correction = 12;
 
 	_constants3.Prot_Medium_Limit = 0;
 	_constants3.Prot_Low_Limit = 0;
@@ -184,7 +191,7 @@ void DataReporter::SendReport()
 	case Joystick:
 		
 		revBuffer[0] = (char)ReportRequest;
-		revBuffer[1] = (char)0xef;
+		revBuffer[1] = (char)0xfe;
 
 		revBuffer[2] = (char)(_ScontrollerReport.Throttle & 0xff);
 		revBuffer[3] = (char)(_ScontrollerReport.Rudder & 0xff);
@@ -208,7 +215,7 @@ void DataReporter::SendReport()
 
 	case Sensors:	
 		revBuffer[0] = (char)ReportRequest;
-		revBuffer[1] = (char)0xdf;
+		revBuffer[1] = (char)0xfe;
 		revBuffer[2] = _SsensorsReport.Elevation;
 		revBuffer[3] = _SsensorsReport.Front;
 		revBuffer[4] = _SsensorsReport.Back;
@@ -224,7 +231,7 @@ void DataReporter::SendReport()
 	case cEmergencyLanding:
 		
 		revBuffer[0] = (char)ReportRequest;
-		revBuffer[1] = (char)0xcf;
+		revBuffer[1] = (char)0xfe;
 		revBuffer[2] = _SemergencyLanding.UseEmergencyLanding;
 		revBuffer[3] = _SemergencyLanding.ConnectionTimeOut;
 		revBuffer[4] = _SemergencyLanding.BreakOutOffHeight;
@@ -238,7 +245,7 @@ void DataReporter::SendReport()
 
 	case cConstants1:
 		revBuffer[0] = (char)ReportRequest;
-		revBuffer[1] = (char)0xbf;
+		revBuffer[1] = (char)0xfe;
 		revBuffer[2] = _Sconstants1.UseProtection;
 		revBuffer[3] = _Sconstants1.ProtectionDistance;
 		revBuffer[4] = _Sconstants1.HS_High_Limit;
@@ -252,7 +259,7 @@ void DataReporter::SendReport()
 
 	case cConstants2:
 		revBuffer[0] = (char)ReportRequest;
-		revBuffer[1] = (char)0xaf;
+		revBuffer[1] = (char)0xfe;
 		revBuffer[2] = (char)((_Sconstants2.HS_UltraHigh_Correction >> 0) & 0x0ff);
 		revBuffer[3] = (char)((_Sconstants2.HS_UltraHigh_Correction >> 8) & 0x0ff);
 		revBuffer[4] = (char)((_Sconstants2.HS_High_Correction >> 0) & 0x0ff);
@@ -266,7 +273,7 @@ void DataReporter::SendReport()
 
 	case cConstants3:
 		revBuffer[0] = (char)ReportRequest;
-		revBuffer[1] = (char)0x9f;
+		revBuffer[1] = (char)0xfe;
 		revBuffer[2] = _Sconstants3.Prot_Medium_Limit;
 		revBuffer[3] = _Sconstants3.Prot_Low_Limit;
 		revBuffer[4] = (char)((_Sconstants3.Prot_High_Correction >> 0) & 0xff);
@@ -296,6 +303,7 @@ void DataReporter::GetReport()
                 DecodeReport();
 				SendReport();
                 led2 = !led2;
+				HeartBeat++;
             }
             bufPointer = 0;
         }
@@ -318,6 +326,7 @@ void DataReporter::DecodeReport()
 
         case cEmergencyLanding:
 			idle = true;
+			changed = true;
             DecodeEmergency();
             break;
 
@@ -380,4 +389,25 @@ void DataReporter::DecodeConstants3()
     _constants3.Prot_High_Correction = ReceivedReport[4] | (ReceivedReport[5] << 8);
     _constants3.Prot_Medium_Correction = ReceivedReport[6] | (ReceivedReport[7] << 8);
     _constants3.Prot_Low_Correction = ReceivedReport[8] | (ReceivedReport[9] << 8);
+}
+
+void DataReporter::WatchDog()
+{
+	if (HeartBeat == LastHeartBeat)
+	{
+		HeartTolerance++;
+	}
+	else
+	{
+		LastHeartBeat = HeartBeat;
+		HeartTolerance = 0;
+		isOnline = true;
+	}
+	
+	if (HeartTolerance >= _emergencyLanding.ConnectionTimeOut)
+		isOnline = false;
+	else isOnline = true;
+	
+
+	
 }

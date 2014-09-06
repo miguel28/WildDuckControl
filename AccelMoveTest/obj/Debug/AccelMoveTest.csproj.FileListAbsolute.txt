@@ -11,3 +11,15 @@ C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\AccelMoveTes
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\AccelMoveTest\obj\Debug\AccelMoveTest.csproj.GenerateResource.Cache
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\AccelMoveTest\obj\Debug\AccelMoveTest.exe
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\AccelMoveTest\obj\Debug\AccelMoveTest.pdb
+C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\AccelMoveTest\bin\Debug\hidapi.dll
+C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\AccelMoveTest\bin\Debug\hidapi64.dll
+C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\AccelMoveTest\bin\Debug\AccelMoveTest.exe
+C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\AccelMoveTest\bin\Debug\AccelMoveTest.pdb
+C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\AccelMoveTest\bin\Debug\USBInterface.dll
+C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\AccelMoveTest\bin\Debug\USBInterface.pdb
+C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\AccelMoveTest\obj\Debug\AccelMoveTest.csprojResolveAssemblyReference.cache
+C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\AccelMoveTest\obj\Debug\AccelMoveTest.frmAccelTest1.resources
+C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\AccelMoveTest\obj\Debug\AccelMoveTest.Properties.Resources.resources
+C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\AccelMoveTest\obj\Debug\AccelMoveTest.csproj.GenerateResource.Cache
+C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\AccelMoveTest\obj\Debug\AccelMoveTest.exe
+C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\AccelMoveTest\obj\Debug\AccelMoveTest.pdb

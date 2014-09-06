@@ -3,12 +3,14 @@
 
 enum 
 {
-    Joystick = 0x00,
-    Sensors = 0x01,
-    cEmergencyLanding = 0x02,
-    cConstants1 = 0x03,
-    cConstants2 = 0x04,
-    cConstants3 = 0x05
+	Joystick = 0x00,
+	Sensors = 0x01,
+	cEmergencyLanding = 0x02,
+	cConstants1 = 0x03,
+	cConstants2 = 0x04,
+	cConstants3 = 0x05,
+
+	Nothing = 0xfe;
 };
 
 typedef struct

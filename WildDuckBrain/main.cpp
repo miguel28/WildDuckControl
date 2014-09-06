@@ -5,14 +5,11 @@
 
 #define PC_UART_DEBUG
 #define TEST_SENSORS
-
-
 #define IDLE_CONSTANT 511
 
 #ifdef PC_UART_DEBUG
 BufferedSerial pc(USBTX, USBRX);
 #endif
-
 DataReporter reporter(true);
 ESC Aileron(D5);
 ESC Elevator(D4);
@@ -42,12 +39,17 @@ SRF05 LeftSensor2(D8, D9);
 SRF05 RightSensor1(D8, D9);
 SRF05 RightSensor2(D8, D9);
 #endif
-
+///////////////Reports
 ControllerReport creport;
 Constants1 Conts1Report;
 Constants2 Conts2Report;
 Constants3 Conts3Report;
+EmergencyLanding eLanding;
 
+//////////// Variables
+bool UsingEmergency = false;
+float HighEmergency = 0.0f;
+int EAttemps = 0;
 void UpdateSensors()
 {
 	SensorsReport report;
@@ -119,16 +121,50 @@ int ThrottleCorrection(int ErrorDif)
 
 	return (int)CalThrottleDif;
 }
+void TargetControl(char Target)
+{
+	int ErrorDif = Target - HighSensor.GetInches();
+	int FinalThrottle = IDLE_CONSTANT; // Constante Throttle IDLE probablemente no sea cero
+	FinalThrottle += ThrottleCorrection(ErrorDif);
+	Throtle = (float)((float)(FinalThrottle) / 1022.0f);
+}
+void EmergencyAttend()
+{
+	if (!UsingEmergency)
+	{
+		HighEmergency = HighSensor.GetRange();
+		UsingEmergency = true;
+		EAttemps = 0;
+	}
+	else
+	{
+		if (HighSensor.GetRange() < eLanding.BreakOutOffHeight)
+			Throtle = 0.0f;
+		else
+		{
+			EAttemps++;
+			if (EAttemps > (eLanding.DecrementTime))
+			{
+				HighEmergency -= ((float)eLanding.DownDecrementCoeficient / (float)10000);
+				EAttemps = 0;
+			}
+			TargetControl(HighEmergency);
+		}
+	}
+}
 void UpdateThrottle()
 {
-	if (creport.UseTargetMode)
+	if (!reporter.IsOnline() && eLanding.UseEmergencyLanding)
 	{
-		int ErrorDif = creport.ElevationTarget - HighSensor.GetInches();
-		int FinalThrottle = IDLE_CONSTANT; // Constante Throttle IDLE probablemente no sea cero
-		FinalThrottle += ThrottleCorrection(ErrorDif);
-		Throtle = (float)((float)(FinalThrottle) / 1022.0f);
+		EmergencyAttend();
+		return;
 	}
-	else Throtle = (float)((float)(creport.Throttle) / 1022.0f);
+	else UsingEmergency = false;
+
+	if (creport.UseTargetMode)
+		TargetControl(creport.ElevationTarget);
+	else 
+		Throtle = (float)((float)(creport.Throttle) / 1022.0f);
 }
 void UpdateMovements()
 {
@@ -153,6 +189,7 @@ void UpdateESC()
 		Conts1Report = reporter.GetConstants1();
 		Conts2Report = reporter.GetConstants2();
 		Conts3Report = reporter.GetConstants3();
+		eLanding = reporter.GetEmergencyLanding();
 	}
 
 	UpdateThrottle();
@@ -185,6 +222,7 @@ void ShowSensorsReport()
 #endif
 #endif
 }
+
 
 int main() {
 

@@ -252,6 +252,18 @@ namespace WildDuckLibrary
         }
         private void SendConstants2()
         {
+            if (Send.constant2.HS_UltraHigh_Correction == 255 || Send.constant2.HS_UltraHigh_Correction == 511)
+                Send.constant2.HS_UltraHigh_Correction++;
+
+            if (Send.constant2.HS_High_Correction == 255 || Send.constant2.HS_High_Correction == 511)
+                Send.constant2.HS_High_Correction++;
+
+            if (Send.constant2.HS_Medium_Correction == 255 || Send.constant2.HS_Medium_Correction == 511)
+                Send.constant2.HS_Medium_Correction++;
+
+            if (Send.constant2.HS_Low_Correction == 255 || Send.constant2.HS_Low_Correction == 511)
+                Send.constant2.HS_Low_Correction++;
+
             byte[] buffer = new byte[12];
             buffer[0] = (byte)ReportType.Constans1;
             buffer[1] = (byte)_RequestReport;

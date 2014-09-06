@@ -13,14 +13,13 @@
 #define REPORTLENGTH 10 
 #define SENDREPORTTIMEOUT 0.020f
 #define REFRESH_TIMEOUT_MS 20
-
-
+#define BAUDRATE 9600
 
 class DataReporter
 {
 public:  
     
-    DataReporter(bool attachReveicer);   
+    DataReporter();   
     ~DataReporter();
 
 	/*Get*/
@@ -42,7 +41,7 @@ public:
     char ReportRequest;
 	bool ConstantsHaveChanged();
 	bool IsIdle();
-
+	bool IsOnline();
 private:
 	char bufPointer;
 	char *buffer;
@@ -52,17 +51,21 @@ private:
 	char *revBuffer;
 	bool changed;
 	bool idle;
-	Serial* rf;
-	void InitReports();
+	unsigned short HeartBeat, LastHeartBeat,HeartTolerance;
+	bool isOnline;
 
+	Serial* rf;
+	Ticker* tickWatchDog;
+	void InitReports();
+	void WatchDog();
 #ifdef USBHOST
 	void Send(HID_REPORT report);
 #else
 	void Send(char* data);
 #endif
 	void SendReport();
-
     void GetReport(); 
+
     void ClearBuffer();  
     void DecodeReport();
     void DecodeJoystick();
