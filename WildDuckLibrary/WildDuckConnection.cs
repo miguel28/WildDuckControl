@@ -62,7 +62,7 @@ namespace WildDuckLibrary
             return ret;
         }
 
-        public WildDuckConnection(int pollData = 50)
+        public WildDuckConnection(int pollData = 20)
         {
             timer = new Timer();
             timer.Interval = pollData;
@@ -77,7 +77,7 @@ namespace WildDuckLibrary
             serial = new SerialPort();
             serial.ReadBufferSize = 32;
             serial.PortName = GetPortName();
-            serial.BaudRate = 9600;
+            serial.BaudRate = 19200;
             serial.Open();
 
         }

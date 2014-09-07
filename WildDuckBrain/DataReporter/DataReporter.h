@@ -13,7 +13,7 @@
 #define REPORTLENGTH 10 
 #define SENDREPORTTIMEOUT 0.020f
 #define REFRESH_TIMEOUT_MS 20
-#define BAUDRATE 9600
+#define BAUDRATE 19200
 
 class DataReporter
 {
