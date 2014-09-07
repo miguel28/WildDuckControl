@@ -49,7 +49,7 @@ namespace WildDuckControl
                 UpdateControlsWithJoystick();
             SendReport();
 
-            lblSensorH.Text = wildDuck.Received.sensorsReport.Elevation.ToString();
+            lblSensorH.Text = wildDuck.Received.sensorsReport.Elevation.ToString() + ", " + wildDuck.Received.sensorsReport.Front.ToString() + ", " + wildDuck.Received.sensorsReport.Back.ToString();
 
         }
         private void UpdateControlsWithJoystick()

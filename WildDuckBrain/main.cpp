@@ -2,11 +2,18 @@
 
 void UpdateSensors()
 {
+	HighRangeRead++;
+	if (HighRangeRead>8)
+	{
+		HighSensor.startRanging();
+		HighRangeRead = 0;
+	}
+	
 	SensorsReport report;
 #ifdef TEST_SENSORS
 	report.Elevation = HighSensor.GetInches();
-	report.Front = 0;
-	report.Back = 0;
+	report.Front = FrontSensor1.GetInches();
+	report.Back = BackSensor1.GetInches();
 	report.Left = 0;
 	report.Right = 0;
 #else
@@ -199,7 +206,12 @@ void ShowSensorsReport()
 {
 #ifdef TEST_SENSORS
 #ifdef PC_UART_DEBUG
+
 	pc.printf("%4.2f\r\n", HighSensor.GetInches());
+
+	
+
+
 #endif
 #endif
 }
@@ -213,6 +225,7 @@ int main() {
 
 		//ShowControllerReport();
 		ShowSensorsReport();
+		
 		wait_ms(REFRESH_TIMEOUT_MS);
     }
 }

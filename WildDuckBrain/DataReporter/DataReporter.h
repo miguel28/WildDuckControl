@@ -12,7 +12,6 @@
 #define MAXBUFFER 32
 #define REPORTLENGTH 10 
 #define SENDREPORTTIMEOUT 0.020f
-#define REFRESH_TIMEOUT_MS 20
 #define BAUDRATE 19200
 
 class DataReporter

@@ -1,14 +1,14 @@
 #include "mbed.h"
 #include "esc.h"
 #include "SRF05.h"
+#include "SRF08.h"
 #include "DataReporter.h"
 
-
-#define PC_UART_DEBUG
+//#define PC_UART_DEBUG
 #define TEST_SENSORS
 #define IDLE_CONSTANT 511
+#define REFRESH_TIMEOUT_MS 20
 #define POWER_DELAY_MS 2000
-
 
 #ifdef PC_UART_DEBUG
 BufferedSerial pc(USBTX, USBRX);
@@ -18,23 +18,25 @@ ESC Aileron(D5);
 ESC Elevator(D4);
 ESC Throtle(D3);
 ESC Rudder(D2);
-ESC UChannel(PTE31);
+ESC UChannel(D6);
 
 #ifdef TEST_SENSORS
-SRF05 HighSensor(D8, D9);
-//SRF05 FrontSensor1(D8, D9);
+SRF08 HighSensor(D14, D15, 0xE0);
+SRF05 FrontSensor1(D8, D9);
 //SRF05 FrontSensor2(D8, D9);
-//SRF05 BackSensor1(D8, D9);
+SRF05 BackSensor1(D10, D11);
 //SRF05 BackSensor2(D8, D9);
 //SRF05 LeftSensor1(D8, D9);
 //SRF05 LeftSensor2(D8, D9);
 //SRF05 RightSensor1(D8, D9);
 //SRF05 RightSensor2(D8, D9);
 
+
+
 #else
-SRF05 HighSensor(D8, D9);
+SRF08 HighSensor(D14, D15, 0xE0);
 SRF05 FrontSensor1(D8, D9);
-SRF05 FrontSensor2(D8, D9);
+SRF05 FrontSensor2(D10, D11);
 SRF05 BackSensor1(D8, D9);
 SRF05 BackSensor2(D8, D9);
 SRF05 LeftSensor1(D8, D9);
@@ -53,6 +55,8 @@ EmergencyLanding eLanding;
 bool UsingEmergency = false;
 float HighEmergency = 0.0f;
 int EAttemps = 0;
+
+int HighRangeRead = 0;
 
 int ThrottleCorrection(int ErrorDif);
 void TargetControl(char Target);

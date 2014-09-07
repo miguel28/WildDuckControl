@@ -24,13 +24,14 @@ THE SOFTWARE.
 #define SRF08_H
 
 #include "mbed.h"
-
+#include "UltrasonicBase.h"
 /**
  * The SRF08 is an ultrasonic range finder with an I2C interface that allows 
  * the measurement to be read directly in centimetres. More information can be
  * found on this website: http://www.robot-electronics.co.uk/htm/srf08tech.shtml
  */
-class SRF08 {
+class SRF08 : public IUltrasonicSensor
+{
 
 public:
 
@@ -97,14 +98,17 @@ public:
      */
     void setAddress(int i2cAddress);
      
+	void ReadRange();
 protected:
 
     I2C i2cMod;
     unsigned char i2cAddress;
     Timeout rangeTimeout;
+	Ticker *ticker;
     bool rangingBusy;
     
     void setRangingFinished();
+	
 };
 
 #endif

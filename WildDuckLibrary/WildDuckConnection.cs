@@ -38,31 +38,8 @@ namespace WildDuckLibrary
         public Reports Send;
         #endregion
 
-        private string GetPortName()
-        {
-            string ret = "";
-            using (var searcher = new ManagementObjectSearcher("SELECT * FROM WIN32_SerialPort"))
-            {
-                string[] portnames = SerialPort.GetPortNames();
-                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList();
-                var tList = (from n in portnames
-                             join p in ports on n equals p["DeviceID"].ToString()
-                             select n + " - " + p["Caption"]).ToList();
-
-                foreach (string iport in tList)
-                {
-                    if (iport.Contains("Silicon"))
-                    {
-                        ret = iport.Substring(0,5);
-                        ret.Replace(" ", "");
-                        break;
-                    }
-                }
-            }
-            return ret;
-        }
-
-        public WildDuckConnection(int pollData = 20)
+        
+        public WildDuckConnection(int pollData = 50)
         {
             timer = new Timer();
             timer.Interval = pollData;
@@ -120,6 +97,29 @@ namespace WildDuckLibrary
         {
             //SendReport();
             ReceiveReport();
+        }
+        private string GetPortName()
+        {
+            string ret = "";
+            using (var searcher = new ManagementObjectSearcher("SELECT * FROM WIN32_SerialPort"))
+            {
+                string[] portnames = SerialPort.GetPortNames();
+                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList();
+                var tList = (from n in portnames
+                             join p in ports on n equals p["DeviceID"].ToString()
+                             select n + " - " + p["Caption"]).ToList();
+
+                foreach (string iport in tList)
+                {
+                    if (iport.Contains("Silicon"))
+                    {
+                        ret = iport.Substring(0, 5);
+                        ret.Replace(" ", "");
+                        break;
+                    }
+                }
+            }
+            return ret;
         }
 
         #region Send Reports

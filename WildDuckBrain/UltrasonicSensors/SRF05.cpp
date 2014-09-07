@@ -7,7 +7,7 @@ SRF05::SRF05(PinName trigger, PinName echo)
     // Attach interrupts
     _echo.rise(this, &SRF05::_rising);
     _echo.fall(this, &SRF05::_falling);
-    _ticker.attach(this, &SRF05::_startRange, 0.1f);     
+    _ticker.attach(this, &SRF05::_startRange, 0.07f);     
 }
  
 float SRF05::Minor(SRF05 s)

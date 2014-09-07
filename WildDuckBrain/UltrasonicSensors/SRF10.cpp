@@ -17,7 +17,7 @@ SRF10::SRF10(PinName sda, PinName scl) : IUltrasonicSensor()
     _srf10->write(ADDRESS, cmd, 2);
     
     wait(0.1f);
-    tckReadLength.attach(this, &SRF10::ReadRegister, 0.1f);  
+    tckReadLength.attach(this, &SRF10::ReadRegister, 0.12f);  
 }
 
 SRF10::~SRF10()

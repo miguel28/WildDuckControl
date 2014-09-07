@@ -32,8 +32,11 @@ SRF08::SRF08(PinName SDA, PinName SCL, int i2cAddress) :
         i2cMod(SDA, SCL), 
         i2cAddress(i2cAddress), 
         rangeTimeout(), 
-        rangingBusy(false) {
-
+		rangingBusy(false)
+{
+	i2cMod.frequency(100000);
+	//ticker = new Ticker();
+	//ticker->attach(this, &SRF08::ReadRange, 0.12f);
 }
 
 /*
@@ -46,10 +49,10 @@ void SRF08::startRanging() {
     //Create a two byte command. The first first byte is the register address
     // on the SRF08 to write to. The second byte is the command which is written
     // to that address ("Start ranging in cm" in this case).
-    const char command[] = {0x00, 0x51};
+    const char command[] = {0x00, 0x52};
     i2cMod.write(i2cAddress, command, 2);
     this->rangingBusy = true;
-    rangeTimeout.attach(this, &SRF08::setRangingFinished, 0.07);
+	rangeTimeout.attach(this, &SRF08::ReadRange, 0.07);
 }
 
 /*
@@ -70,7 +73,7 @@ bool SRF08::rangingFinished() {
  * Description: Range in cm. This function should only be called when ranging is finished, otherwise previous value is returned
  */
 int SRF08::getRange() {
-    while (!rangingFinished() ) wait(0.005);   //Wait until ranging is finished
+    //while (!rangingFinished() ) wait(0.005);   //Wait until ranging is finished
     const char command[]  = {0x02};           //Address of range register
     char response[] = {0x00, 0x00};
     i2cMod.write(i2cAddress, command, 1, 1);  //Send command
@@ -143,4 +146,14 @@ void SRF08::setAddress(int address) {
 //Small helper function for Timeout object
 void SRF08::setRangingFinished() {
     this->rangingBusy = false;
+}
+
+void SRF08::ReadRange()
+{
+	//startRanging();
+	//wait_ms(70);
+	CurrentRange = getRange();
+	CurrentInches = CurrentRange / 148.0f;
+	CurrentCentimeters = CurrentRange / 58.0f;
+	AddToStack(CurrentRange);
 }
