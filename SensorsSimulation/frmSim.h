@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 namespace SensorsSimulation {
 
 	using namespace System;
@@ -53,8 +51,6 @@ namespace SensorsSimulation {
 	private: System::Windows::Forms::TrackBar^  trbNoise;
 	protected:
 
-	protected:
-
 	private: System::Windows::Forms::NumericUpDown^  numStack;
 	private: System::Windows::Forms::NumericUpDown^  numNoise;
 	private: System::Windows::Forms::Label^  lblTarget;
@@ -78,6 +74,7 @@ namespace SensorsSimulation {
 	private: System::Windows::Forms::Label^  lblTargetProtection;
 	private: System::Windows::Forms::NumericUpDown^  numTargetProtection;
 	private: System::Windows::Forms::Label^  lblError;
+	private: System::Windows::Forms::Button^  btnReset;
 	private: System::ComponentModel::IContainer^  components;
 
 	private:
@@ -110,13 +107,14 @@ namespace SensorsSimulation {
 			this->lblStack = (gcnew System::Windows::Forms::Label());
 			this->grpSensorsSim = (gcnew System::Windows::Forms::GroupBox());
 			this->grpControlSignal = (gcnew System::Windows::Forms::GroupBox());
+			this->lblError = (gcnew System::Windows::Forms::Label());
 			this->lblRefuseLevel = (gcnew System::Windows::Forms::Label());
 			this->lblTargetProtection = (gcnew System::Windows::Forms::Label());
 			this->numTargetProtection = (gcnew System::Windows::Forms::NumericUpDown());
 			this->lblSignalValue = (gcnew System::Windows::Forms::Label());
 			this->lblControlSignal = (gcnew System::Windows::Forms::Label());
 			this->trbControlSignal = (gcnew System::Windows::Forms::TrackBar());
-			this->lblError = (gcnew System::Windows::Forms::Label());
+			this->btnReset = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbTarget))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbNoise))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numStack))->BeginInit();
@@ -274,6 +272,7 @@ namespace SensorsSimulation {
 			// 
 			// grpControlSignal
 			// 
+			this->grpControlSignal->Controls->Add(this->btnReset);
 			this->grpControlSignal->Controls->Add(this->lblError);
 			this->grpControlSignal->Controls->Add(this->lblRefuseLevel);
 			this->grpControlSignal->Controls->Add(this->lblTargetProtection);
@@ -287,6 +286,18 @@ namespace SensorsSimulation {
 			this->grpControlSignal->TabIndex = 14;
 			this->grpControlSignal->TabStop = false;
 			this->grpControlSignal->Text = L"Control Signal";
+			// 
+			// lblError
+			// 
+			this->lblError->AutoSize = true;
+			this->lblError->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->lblError->ForeColor = System::Drawing::Color::Red;
+			this->lblError->Location = System::Drawing::Point(231, 68);
+			this->lblError->Name = L"lblError";
+			this->lblError->Size = System::Drawing::Size(20, 16);
+			this->lblError->TabIndex = 6;
+			this->lblError->Text = L"...";
 			// 
 			// lblRefuseLevel
 			// 
@@ -345,17 +356,15 @@ namespace SensorsSimulation {
 			this->trbControlSignal->Value = 511;
 			this->trbControlSignal->Scroll += gcnew System::EventHandler(this, &frmSim::trbControlSignal_Scroll);
 			// 
-			// lblError
+			// btnReset
 			// 
-			this->lblError->AutoSize = true;
-			this->lblError->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblError->ForeColor = System::Drawing::Color::Red;
-			this->lblError->Location = System::Drawing::Point(231, 68);
-			this->lblError->Name = L"lblError";
-			this->lblError->Size = System::Drawing::Size(20, 16);
-			this->lblError->TabIndex = 6;
-			this->lblError->Text = L"...";
+			this->btnReset->Location = System::Drawing::Point(408, 13);
+			this->btnReset->Name = L"btnReset";
+			this->btnReset->Size = System::Drawing::Size(28, 23);
+			this->btnReset->TabIndex = 7;
+			this->btnReset->Text = L"...";
+			this->btnReset->UseVisualStyleBackColor = true;
+			this->btnReset->Click += gcnew System::EventHandler(this, &frmSim::btnReset_Click);
 			// 
 			// frmSim
 			// 
@@ -482,11 +491,42 @@ namespace SensorsSimulation {
 
 			 void CalcOposition()
 			 {
-				 ErrorDifCalc = GetRange() - (int)(numTargetProtection->Value);
+				 int range = GetRange();
+				 int target = (int)(numTargetProtection->Value);
+				 int Oposition = 0;
+				 ErrorDifCalc = range - target;
 				 lblError->Text = ErrorDifCalc.ToString();
+
+				 //// Oposition is calculated number that reduce the control signal
+
+				 if (range >= target + Conts3Report.Prot_Medium_Limit)/// Positive Axis System protected
+				 {
+					 Oposition = 0;
+				 }
+				 else if (range >= target + Conts3Report.Prot_Low_Limit)/// The system is getting closer to a wall little oposition
+				 {
+					 int error = range - Conts3Report.Prot_Low_Limit - target;
+					 int gain = Conts3Report.Prot_Medium_Limit - Conts3Report.Prot_Low_Limit;
+					 float output = ( (1.0f - ((float)error / (float)gain) ) * Conts3Report.Prot_Low_Correction);
+					 Oposition = (int)output;
+				 }
+				 else if (range >= target)/// The System is very close to the target oposition Oposition total (oposition equal to control signal)
+				 {
+
+				 }
+				 else /// The sytem is in dangerous negative oposition.
+				 {
+
+				 }
 			 }
+
+
 	private: System::Void trbControlSignal_Scroll(System::Object^  sender, System::EventArgs^  e) {
 		lblSignalValue->Text = trbControlSignal->Value.ToString();
+	}
+	private: System::Void btnReset_Click(System::Object^  sender, System::EventArgs^  e) {
+		trbControlSignal->Value = 511;
+
 	}
 };
 }
