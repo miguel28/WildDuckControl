@@ -2,12 +2,14 @@
 
 void UpdateSensors()
 {
+#ifdef USE_HIGH_SENSOR
 	HighRangeRead++;
 	if (HighRangeRead>8)
 	{
 		HighSensor.startRanging();
 		HighRangeRead = 0;
 	}
+#endif
 	
 	SensorsReport report;
 #ifdef TEST_SENSORS
@@ -17,12 +19,36 @@ void UpdateSensors()
 	report.Left = 0;
 	report.Right = 0;
 #else
+
+#ifdef USE_HIGH_SENSOR
 	report.Elevation = HighSensor.GetInches();
-	report.Front = FrontSensor1.Minor(FrontSensor2);
-	report.Back = BackSensor1.Minor(BackSensor2);
-	report.Left = LeftSensor1.Minor(LeftSensor2);
-	report.Right = RightSensor1.Minor(RightSensor2);
+#else
+	report.Elevation = 0;
 #endif
+#ifdef USE_FRONT_SENSOR
+	//report.Front = FrontSensor1.Minor(FrontSensor2);
+	report.Front = FrontSensor2.GetInches();
+#else
+	report.Front = 0;
+#endif
+#ifdef USE_BACK_SENSOR
+	report.Back = BackSensor1.Minor(BackSensor2);
+#else
+	report.Back = 0;
+#endif
+#ifdef USE_LEFT_SENSOR
+	report.Left = LeftSensor1.Minor(LeftSensor2);
+#else
+	report.Left = 0;
+#endif
+#ifdef USE_RIGHT_SENSOR
+	report.Right = RightSensor1.Minor(RightSensor2);
+#else
+	report.Right = 0;
+#endif
+
+#endif
+
 	reporter.SetSensorsReport(report);
 }
 int ThrottleCorrection(int ErrorDif)
@@ -80,13 +106,16 @@ int ThrottleCorrection(int ErrorDif)
 }
 void TargetControl(char Target)
 {
+#ifdef USE_HIGH_SENSOR
 	int ErrorDif = Target - HighSensor.GetInches();
 	int FinalThrottle = IDLE_CONSTANT; // Constante Throttle IDLE probablemente no sea cero
 	FinalThrottle += ThrottleCorrection(ErrorDif);
 	Throtle = (float)((float)(FinalThrottle) / 1022.0f);
+#endif
 }
 void EmergencyAttend()
 {
+#ifdef USE_HIGH_SENSOR
 	if (!UsingEmergency)
 	{
 		HighEmergency = HighSensor.GetInches();
@@ -108,6 +137,7 @@ void EmergencyAttend()
 			TargetControl(HighEmergency);
 		}
 	}
+#endif
 }
 void PowerUp()
 {

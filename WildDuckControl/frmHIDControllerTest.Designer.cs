@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.grpMetrics = new System.Windows.Forms.GroupBox();
+            this.lblSensorH = new System.Windows.Forms.Label();
             this.btnFly = new System.Windows.Forms.Button();
             this.trbUChannel = new System.Windows.Forms.TrackBar();
             this.lblUChannel = new System.Windows.Forms.Label();
@@ -51,7 +52,6 @@
             this.numJoy = new System.Windows.Forms.NumericUpDown();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.btnOpenConn = new System.Windows.Forms.Button();
-            this.lblSensorH = new System.Windows.Forms.Label();
             this.grpMetrics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbUChannel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numElevation)).BeginInit();
@@ -87,6 +87,15 @@
             this.grpMetrics.TabIndex = 1;
             this.grpMetrics.TabStop = false;
             this.grpMetrics.Text = "Wild Duck Controls";
+            // 
+            // lblSensorH
+            // 
+            this.lblSensorH.AutoSize = true;
+            this.lblSensorH.Location = new System.Drawing.Point(294, 241);
+            this.lblSensorH.Name = "lblSensorH";
+            this.lblSensorH.Size = new System.Drawing.Size(16, 13);
+            this.lblSensorH.TabIndex = 14;
+            this.lblSensorH.Text = "...";
             // 
             // btnFly
             // 
@@ -283,15 +292,6 @@
             this.btnOpenConn.Text = "Wild Duck Open Connection";
             this.btnOpenConn.UseVisualStyleBackColor = true;
             this.btnOpenConn.Click += new System.EventHandler(this.btnOpenConn_Click);
-            // 
-            // lblSensorH
-            // 
-            this.lblSensorH.AutoSize = true;
-            this.lblSensorH.Location = new System.Drawing.Point(319, 284);
-            this.lblSensorH.Name = "lblSensorH";
-            this.lblSensorH.Size = new System.Drawing.Size(16, 13);
-            this.lblSensorH.TabIndex = 14;
-            this.lblSensorH.Text = "...";
             // 
             // frmHIDControllerTest
             // 
