@@ -359,6 +359,8 @@ void DataReporter::DecodeJoystick()
     _controllerReport.ElevationTarget = ReceivedReport[7];
 	_controllerReport.UChannel = ReceivedReport[8];
 	_controllerReport.UseTargetMode = ReceivedReport[9];
+
+	_controllerReport.Command = (ReceivedReport[2] >> 4) & 0x0f;
 }
 void DataReporter::DecodeEmergency()
 {

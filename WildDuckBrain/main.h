@@ -5,13 +5,13 @@
 #include "DataReporter.h"
 #include "UltrasonicBase.h"
 
-#define PC_UART_DEBUG
+//#define PC_UART_DEBUG
 //#define TEST_SENSORS
-//#define USE_HIGH_SENSOR
+#define USE_HIGH_SENSOR
 #define USE_FRONT_SENSOR
-//#define USE_BACK_SENSOR
-//#define USE_LEFT_SENSOR
-//#define USE_RIGHT_SENSOR
+#define USE_BACK_SENSOR
+#define USE_LEFT_SENSOR
+#define USE_RIGHT_SENSOR
 
 #define IDLE_CONSTANT 511
 #define REFRESH_TIMEOUT_MS 20

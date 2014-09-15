@@ -40,7 +40,9 @@ void ConstructAllModules()
 #endif
 
 #endif
+
 }
+
 void DestructAllModules()
 {
 #ifdef PC_UART_DEBUG
@@ -76,7 +78,7 @@ void DestructAllModules()
 	delete LeftSensor2;
 #endif
 #ifdef USE_RIGHT_SENSOR
-	deleteRightSensor1;
+	delete RightSensor1;
 	delete RightSensor2;
 #endif
 
@@ -117,8 +119,6 @@ void UpdateSensors()
 #endif
 #ifdef USE_FRONT_SENSOR
 	sreport.Front = Minor(FrontSensor1->GetInches(), FrontSensor2->GetInches());
-	sreport.Debug1 = FrontSensor1->GetInches();
-	sreport.Debug2 = FrontSensor2->GetInches();
 #else
 	sreport.Front = 0;
 #endif
@@ -134,6 +134,8 @@ void UpdateSensors()
 #endif
 #ifdef USE_RIGHT_SENSOR
 	sreport.Right = Minor(RightSensor1->GetInches(), RightSensor2->GetInches());
+	sreport.Debug1 = RightSensor1->GetInches();
+	sreport.Debug2 = RightSensor2->GetInches();
 #else
 	sreport.Right = 0;
 #endif
@@ -289,6 +291,11 @@ void UpdateMovements()
 void UpdateESC()
 {
     creport = reporter->GetControllerReport();
+	if (creport.Command == 0x01)
+		PowerUp();
+	if (creport.Command == 0x02)
+		PowerDown();
+
 	if (reporter->ConstantsHaveChanged())
 	{
 		Conts1Report = reporter->GetConstants1();
@@ -325,7 +332,7 @@ void ShowSensorsReport()
 #ifdef TEST_SENSORS
 	pc->printf("%4.2f\r\n", HighSensor->GetInches());
 #else
-	pc->printf("S1: %4.2f, S2: %4.2f\r\n", FrontSensor1->GetInches(), FrontSensor2->GetInches());
+	pc->printf("S1: %4.2f, S2: %4.2f\r\n", RightSensor1->GetInches(), RightSensor2->GetInches());
 #endif
 #endif
 }

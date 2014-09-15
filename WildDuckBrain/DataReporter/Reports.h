@@ -22,6 +22,7 @@ typedef struct
     unsigned char ElevationTarget;
     unsigned char UChannel;
     unsigned char UseTargetMode;
+	unsigned char Command;
 }ControllerReport;
 
 typedef struct
