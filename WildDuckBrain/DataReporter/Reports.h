@@ -31,6 +31,9 @@ typedef struct
     unsigned char Back;
     unsigned char Left;
     unsigned char Right;
+	unsigned char Debug1;
+	unsigned char Debug2;
+	unsigned char Debug3;
 }SensorsReport;
 
 typedef struct

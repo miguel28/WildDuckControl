@@ -9,7 +9,6 @@ class SRF05 : public IUltrasonicSensor
 public:
 
     SRF05(PinName trigger, PinName echo);
-	float Minor(SRF05 s);
 
 private :
     DigitalOut _trigger;

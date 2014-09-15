@@ -3,8 +3,17 @@
 IUltrasonicSensor::IUltrasonicSensor()
 {
     stackPointer = 0;
+	STACKAVERAGE = 10;
     stackBuffer = new float[STACKAVERAGE];  
     IgnoreLectures = false;
+}
+
+IUltrasonicSensor::IUltrasonicSensor(int stack)
+{
+	stackPointer = 0;
+	STACKAVERAGE = stack;
+	stackBuffer = new float[STACKAVERAGE];
+	IgnoreLectures = false;
 }
 
 IUltrasonicSensor::~IUltrasonicSensor()
@@ -12,16 +21,15 @@ IUltrasonicSensor::~IUltrasonicSensor()
     delete stackBuffer;
 }
 
-
 ///uS/58=cm or uS/148=inches.
 float IUltrasonicSensor::GetCentimeter()
 {
-    return GetAverrage()/58.0f;
+	return GetAverrage() / CONVERSIONRANGE;
 }
 
 float IUltrasonicSensor::GetInches()
 {
-    return GetAverrage()/148.0f;
+	return GetAverrage() / CONVERSIONRANGE_IN;
 }
 
 float IUltrasonicSensor::GetAverrage()

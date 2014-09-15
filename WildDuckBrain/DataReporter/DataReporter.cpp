@@ -221,9 +221,9 @@ void DataReporter::SendReport()
 		revBuffer[4] = _SsensorsReport.Back;
 		revBuffer[5] = _SsensorsReport.Left;
 		revBuffer[6] = _SsensorsReport.Right;
-		revBuffer[7] = (char)0x00;
-		revBuffer[8] = (char)0x00;
-		revBuffer[9] = (char)0x00;
+		revBuffer[7] = _SsensorsReport.Debug1;
+		revBuffer[8] = _SsensorsReport.Debug2;
+		revBuffer[9] = _SsensorsReport.Debug3;
 		Send(revBuffer);
 		break;
 		
@@ -301,6 +301,7 @@ void DataReporter::GetReport()
                     ReceivedReport[i] = buffer[i];
 
                 DecodeReport();
+				//wait_us(10);
 				SendReport();
                 led2 = !led2;
 				HeartBeat++;

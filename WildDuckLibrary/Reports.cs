@@ -12,7 +12,9 @@ namespace WildDuckLibrary
         EmergencyLanding = 0x02,
         Constans1 = 0x03,
         Constans2 = 0x04,
-        Constans3 = 0x05
+        Constans3 = 0x05,
+
+        Nothing = 0x0f
     }
     
     public struct JosytickReport
@@ -33,6 +35,9 @@ namespace WildDuckLibrary
         public byte Back;
         public byte Left;
         public byte Right;
+        public byte Debug1;
+        public byte Debug2;
+        public byte Debug3;
     }
 
     public struct EmegencyLanding

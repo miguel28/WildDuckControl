@@ -1,55 +1,146 @@
 #include "main.h"
 
+void ConstructAllModules()
+{
+#ifdef PC_UART_DEBUG
+	pc = new BufferedSerial(USBTX, USBRX);
+#endif
+	reporter = new DataReporter();
+
+#ifdef TEST_SENSORS
+	HighSensor = new SRF08(D14, D15, 0xE0);
+	FrontSensor1 = new SRF05(D8, D9);
+	//FrontSensor2 = new SRF05(D8, D9);
+	BackSensor1 = new SRF05(D10, D11);
+	//BackSensor2 = new SRF05(D8, D9);
+	//LeftSensor1 = new SRF05(D8, D9);
+	//LeftSensor2 = new SRF05(D8, D9);
+	//RightSensor1 = new SRF05(D8, D9);
+	//RightSensor2 = new SRF05(D8, D9);
+#else
+
+#ifdef USE_HIGH_SENSOR
+	HighSensor = new SRF08(D14, D15, 0xE0);
+#endif
+#ifdef USE_FRONT_SENSOR
+	FrontSensor1 = new SRF05(PTB0, D8);
+	FrontSensor2 = new SRF05(PTB0, D9);
+#endif
+#ifdef USE_BACK_SENSOR
+	BackSensor1 = new SRF05(PTB0, D10);
+	BackSensor2 = new SRF05(PTB0, D11);
+#endif
+#ifdef USE_LEFT_SENSOR
+	LeftSensor1 = new SRF05(PTB0, D12);
+	LeftSensor2 = new SRF05(PTB0, D13);
+#endif
+#ifdef USE_RIGHT_SENSOR
+	RightSensor1 = new SRF05(PTB0, PTA15);
+	RightSensor2 = new SRF05(PTB0, PTA14);
+#endif
+
+#endif
+}
+void DestructAllModules()
+{
+#ifdef PC_UART_DEBUG
+	delete pc;
+#endif
+	delete reporter;
+
+#ifdef TEST_SENSORS
+	delete HighSensor;
+	delete FrontSensor1;
+	//delete FrontSensor2;
+	delete BackSensor1;
+	//delete BackSensor2;
+	//delete LeftSensor1;
+	//delete LeftSensor2;
+	//delete RightSensor1;
+	//delete RightSensor2;
+#else
+
+#ifdef USE_HIGH_SENSOR
+	delete HighSensor;
+#endif
+#ifdef USE_FRONT_SENSOR
+	delete FrontSensor1;
+	delete FrontSensor2;
+#endif
+#ifdef USE_BACK_SENSOR
+	delete BackSensor1;
+	delete BackSensor2;
+#endif
+#ifdef USE_LEFT_SENSOR
+	delete LeftSensor1;
+	delete LeftSensor2;
+#endif
+#ifdef USE_RIGHT_SENSOR
+	deleteRightSensor1;
+	delete RightSensor2;
+#endif
+
+#endif
+}
+
+float Minor(float s1, float s2)
+{
+	if (s1 <= s2)
+		return s1;
+	else
+		return s2;
+}
+
 void UpdateSensors()
 {
 #ifdef USE_HIGH_SENSOR
 	HighRangeRead++;
 	if (HighRangeRead>8)
 	{
-		HighSensor.startRanging();
+		HighSensor->startRanging();
 		HighRangeRead = 0;
 	}
 #endif
-	
-	SensorsReport report;
+
 #ifdef TEST_SENSORS
-	report.Elevation = HighSensor.GetInches();
-	report.Front = FrontSensor1.GetInches();
-	report.Back = BackSensor1.GetInches();
-	report.Left = 0;
-	report.Right = 0;
+	sreport.Elevation = HighSensor->GetInches();
+	sreport.Front = FrontSensor1->GetInches();
+	sreport.Back = BackSensor1->GetInches();
+	sreport.Left = 0;
+	sreport.Right = 0;
 #else
 
 #ifdef USE_HIGH_SENSOR
-	report.Elevation = HighSensor.GetInches();
+	sreport.Elevation = HighSensor->GetInches();
 #else
-	report.Elevation = 0;
+	sreport.Elevation = 0;
 #endif
 #ifdef USE_FRONT_SENSOR
-	//report.Front = FrontSensor1.Minor(FrontSensor2);
-	report.Front = FrontSensor2.GetInches();
+	sreport.Front = Minor(FrontSensor1->GetInches(), FrontSensor2->GetInches());
+	sreport.Debug1 = FrontSensor1->GetInches();
+	sreport.Debug2 = FrontSensor2->GetInches();
 #else
-	report.Front = 0;
+	sreport.Front = 0;
 #endif
 #ifdef USE_BACK_SENSOR
-	report.Back = BackSensor1.Minor(BackSensor2);
+	sreport.Back = Minor(BackSensor1->GetInches(), BackSensor2->GetInches());
 #else
-	report.Back = 0;
+	sreport.Back = 0;
 #endif
 #ifdef USE_LEFT_SENSOR
-	report.Left = LeftSensor1.Minor(LeftSensor2);
+	sreport.Left = Minor(LeftSensor1->GetInches(), LeftSensor2->GetInches());
 #else
-	report.Left = 0;
+	sreport.Left = 0;
 #endif
 #ifdef USE_RIGHT_SENSOR
-	report.Right = RightSensor1.Minor(RightSensor2);
+	sreport.Right = Minor(RightSensor1->GetInches(), RightSensor2->GetInches());
 #else
-	report.Right = 0;
+	sreport.Right = 0;
 #endif
 
 #endif
 
-	reporter.SetSensorsReport(report);
+	reporter->SetSensorsReport(sreport);
 }
 int ThrottleCorrection(int ErrorDif)
 {
@@ -106,25 +197,22 @@ int ThrottleCorrection(int ErrorDif)
 }
 void TargetControl(char Target)
 {
-#ifdef USE_HIGH_SENSOR
-	int ErrorDif = Target - HighSensor.GetInches();
+	int ErrorDif = Target - sreport.Elevation;
 	int FinalThrottle = IDLE_CONSTANT; // Constante Throttle IDLE probablemente no sea cero
 	FinalThrottle += ThrottleCorrection(ErrorDif);
 	Throtle = (float)((float)(FinalThrottle) / 1022.0f);
-#endif
 }
 void EmergencyAttend()
 {
-#ifdef USE_HIGH_SENSOR
 	if (!UsingEmergency)
 	{
-		HighEmergency = HighSensor.GetInches();
+		HighEmergency = sreport.Elevation;
 		UsingEmergency = true;
 		EAttemps = 0;
 	}
 	else
 	{
-		if (HighSensor.GetInches() < eLanding.BreakOutOffHeight)
+		if (sreport.Elevation < eLanding.BreakOutOffHeight)
 			PowerDown();
 		else
 		{
@@ -137,7 +225,6 @@ void EmergencyAttend()
 			TargetControl(HighEmergency);
 		}
 	}
-#endif
 }
 void PowerUp()
 {
@@ -172,7 +259,7 @@ void PowerDown()
 
 void UpdateThrottle()
 {
-	if (!reporter.IsOnline() && eLanding.UseEmergencyLanding)
+	if (!reporter->IsOnline() && eLanding.UseEmergencyLanding)
 	{
 		EmergencyAttend();
 		return;
@@ -201,13 +288,13 @@ void UpdateMovements()
 }
 void UpdateESC()
 {
-    creport = reporter.GetControllerReport();
-	if (reporter.ConstantsHaveChanged())
+    creport = reporter->GetControllerReport();
+	if (reporter->ConstantsHaveChanged())
 	{
-		Conts1Report = reporter.GetConstants1();
-		Conts2Report = reporter.GetConstants2();
-		Conts3Report = reporter.GetConstants3();
-		eLanding = reporter.GetEmergencyLandingReport();
+		Conts1Report = reporter->GetConstants1();
+		Conts2Report = reporter->GetConstants2();
+		Conts3Report = reporter->GetConstants3();
+		eLanding = reporter->GetEmergencyLandingReport();
 	}
 
 	UpdateThrottle();
@@ -223,30 +310,28 @@ void UpdateESC()
 void ShowControllerReport()
 {
 #ifdef PC_UART_DEBUG
-	ControllerReport report = reporter.GetControllerReport();
-	pc.printf("Throttle #%d\r\n", report.Throttle);
-    pc.printf("Rudder #%d\r\n",report.Rudder);
-    pc.printf("Aileron #%d\r\n",report.Aileron);
-    pc.printf("Elevator #%d\r\n",report.Elevator);
-    pc.printf("Elevation #%d\r\n\r\n",report.ElevationTarget);
-    pc.printf("UChannel #%d\r\n\r\n",report.UChannel);
+	ControllerReport report = reporter->GetControllerReport();
+	pc->printf("Throttle #%d\r\n", report.Throttle);
+	pc->printf("Rudder #%d\r\n", report.Rudder);
+	pc->printf("Aileron #%d\r\n", report.Aileron);
+	pc->printf("Elevator #%d\r\n", report.Elevator);
+	pc->printf("Elevation #%d\r\n\r\n", report.ElevationTarget);
+	pc->printf("UChannel #%d\r\n\r\n", report.UChannel);
 #endif
 } 
 void ShowSensorsReport()
 {
-#ifdef TEST_SENSORS
 #ifdef PC_UART_DEBUG
-
-	pc.printf("%4.2f\r\n", HighSensor.GetInches());
-
-	
-
-
+#ifdef TEST_SENSORS
+	pc->printf("%4.2f\r\n", HighSensor->GetInches());
+#else
+	pc->printf("S1: %4.2f, S2: %4.2f\r\n", FrontSensor1->GetInches(), FrontSensor2->GetInches());
 #endif
 #endif
 }
 
 int main() {
+	ConstructAllModules();
 
     while(1) 
     {
@@ -258,4 +343,6 @@ int main() {
 		
 		wait_ms(REFRESH_TIMEOUT_MS);
     }
+
+	DestructAllModules();
 }

@@ -52,6 +52,7 @@
             this.numJoy = new System.Windows.Forms.NumericUpDown();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.btnOpenConn = new System.Windows.Forms.Button();
+            this.cboxReport = new System.Windows.Forms.ComboBox();
             this.grpMetrics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbUChannel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numElevation)).BeginInit();
@@ -65,6 +66,7 @@
             // 
             // grpMetrics
             // 
+            this.grpMetrics.Controls.Add(this.cboxReport);
             this.grpMetrics.Controls.Add(this.lblSensorH);
             this.grpMetrics.Controls.Add(this.btnFly);
             this.grpMetrics.Controls.Add(this.trbUChannel);
@@ -91,7 +93,7 @@
             // lblSensorH
             // 
             this.lblSensorH.AutoSize = true;
-            this.lblSensorH.Location = new System.Drawing.Point(294, 241);
+            this.lblSensorH.Location = new System.Drawing.Point(270, 226);
             this.lblSensorH.Name = "lblSensorH";
             this.lblSensorH.Size = new System.Drawing.Size(16, 13);
             this.lblSensorH.TabIndex = 14;
@@ -138,7 +140,7 @@
             // chkUseJoystick
             // 
             this.chkUseJoystick.AutoSize = true;
-            this.chkUseJoystick.Location = new System.Drawing.Point(308, 221);
+            this.chkUseJoystick.Location = new System.Drawing.Point(309, 211);
             this.chkUseJoystick.Name = "chkUseJoystick";
             this.chkUseJoystick.Size = new System.Drawing.Size(86, 17);
             this.chkUseJoystick.TabIndex = 9;
@@ -293,6 +295,32 @@
             this.btnOpenConn.UseVisualStyleBackColor = true;
             this.btnOpenConn.Click += new System.EventHandler(this.btnOpenConn_Click);
             // 
+            // cboxReport
+            // 
+            this.cboxReport.FormattingEnabled = true;
+            this.cboxReport.Items.AddRange(new object[] {
+            "Joystick",
+            "Sensors",
+            "EmergencyLanding",
+            "Constants1",
+            "Constants2",
+            "Constants3",
+            "...",
+            "...",
+            "...",
+            "...",
+            "...",
+            "...",
+            "...",
+            "...",
+            "...",
+            "Nothing"});
+            this.cboxReport.Location = new System.Drawing.Point(28, 260);
+            this.cboxReport.Name = "cboxReport";
+            this.cboxReport.Size = new System.Drawing.Size(121, 21);
+            this.cboxReport.TabIndex = 15;
+            this.cboxReport.SelectedIndexChanged += new System.EventHandler(this.cboxReport_SelectedIndexChanged);
+            // 
             // frmHIDControllerTest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -346,6 +374,7 @@
         private System.Windows.Forms.Label lblUChannel;
         private System.Windows.Forms.Button btnFly;
         private System.Windows.Forms.Label lblSensorH;
+        private System.Windows.Forms.ComboBox cboxReport;
     }
 }
 

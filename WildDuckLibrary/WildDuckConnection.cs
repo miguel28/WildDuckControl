@@ -369,6 +369,9 @@ namespace WildDuckLibrary
             _Received.sensorsReport.Back = buffer[4];
             _Received.sensorsReport.Left = buffer[5];
             _Received.sensorsReport.Right = buffer[6];
+            _Received.sensorsReport.Debug1 = buffer[7];
+            _Received.sensorsReport.Debug2 = buffer[8];
+            _Received.sensorsReport.Debug3 = buffer[9];
         }
         private void DecodeEmergencyLandingReport(byte[] buffer)
         {

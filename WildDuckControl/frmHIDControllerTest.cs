@@ -28,7 +28,9 @@ namespace WildDuckControl
         {
             wildDuck = new WildDuckConnection();
             wildDuck.ConnectionStart();
-            wildDuck.ReceiveReportType = ReportType.Sensors;
+            //wildDuck.ReceiveReportType = ReportType.Sensors;
+            cboxReport.SelectedIndex = 15;
+            wildDuck.ReceiveReportType = ReportType.Nothing;
             timer1.Enabled = true;
             btnOpenConn.Enabled = false;
         }
@@ -53,7 +55,10 @@ namespace WildDuckControl
                             + wildDuck.Received.sensorsReport.Front.ToString() + ",\r\n"
                             + wildDuck.Received.sensorsReport.Back.ToString() + ",\r\n"
                             + wildDuck.Received.sensorsReport.Left.ToString() + ",\r\n"
-                            + wildDuck.Received.sensorsReport.Right.ToString();
+                            + wildDuck.Received.sensorsReport.Right.ToString() + ",\r\n"
+                            + wildDuck.Received.sensorsReport.Debug1.ToString() + ",\r\n"
+                            + wildDuck.Received.sensorsReport.Debug2.ToString() + ",\r\n"
+                            + wildDuck.Received.sensorsReport.Debug3.ToString();
 
 
         }
@@ -104,6 +109,11 @@ namespace WildDuckControl
         private void btnFly_Click(object sender, EventArgs e)
         {
             LandOff();
+        }
+
+        private void cboxReport_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            wildDuck.ReceiveReportType = (ReportType)cboxReport.SelectedIndex;
         }
     }
 }
