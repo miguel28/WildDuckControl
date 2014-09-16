@@ -75,6 +75,7 @@ namespace SensorsSimulation {
 	private: System::Windows::Forms::NumericUpDown^  numTargetProtection;
 	private: System::Windows::Forms::Label^  lblError;
 	private: System::Windows::Forms::Button^  btnReset;
+	private: System::Windows::Forms::TrackBar^  trbControlOuput;
 	private: System::ComponentModel::IContainer^  components;
 
 	private:
@@ -107,6 +108,7 @@ namespace SensorsSimulation {
 			this->lblStack = (gcnew System::Windows::Forms::Label());
 			this->grpSensorsSim = (gcnew System::Windows::Forms::GroupBox());
 			this->grpControlSignal = (gcnew System::Windows::Forms::GroupBox());
+			this->btnReset = (gcnew System::Windows::Forms::Button());
 			this->lblError = (gcnew System::Windows::Forms::Label());
 			this->lblRefuseLevel = (gcnew System::Windows::Forms::Label());
 			this->lblTargetProtection = (gcnew System::Windows::Forms::Label());
@@ -114,7 +116,7 @@ namespace SensorsSimulation {
 			this->lblSignalValue = (gcnew System::Windows::Forms::Label());
 			this->lblControlSignal = (gcnew System::Windows::Forms::Label());
 			this->trbControlSignal = (gcnew System::Windows::Forms::TrackBar());
-			this->btnReset = (gcnew System::Windows::Forms::Button());
+			this->trbControlOuput = (gcnew System::Windows::Forms::TrackBar());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbTarget))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbNoise))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numStack))->BeginInit();
@@ -123,6 +125,7 @@ namespace SensorsSimulation {
 			this->grpControlSignal->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numTargetProtection))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbControlSignal))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbControlOuput))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// trbTarget
@@ -272,6 +275,7 @@ namespace SensorsSimulation {
 			// 
 			// grpControlSignal
 			// 
+			this->grpControlSignal->Controls->Add(this->trbControlOuput);
 			this->grpControlSignal->Controls->Add(this->btnReset);
 			this->grpControlSignal->Controls->Add(this->lblError);
 			this->grpControlSignal->Controls->Add(this->lblRefuseLevel);
@@ -286,6 +290,16 @@ namespace SensorsSimulation {
 			this->grpControlSignal->TabIndex = 14;
 			this->grpControlSignal->TabStop = false;
 			this->grpControlSignal->Text = L"Control Signal";
+			// 
+			// btnReset
+			// 
+			this->btnReset->Location = System::Drawing::Point(408, 13);
+			this->btnReset->Name = L"btnReset";
+			this->btnReset->Size = System::Drawing::Size(28, 23);
+			this->btnReset->TabIndex = 7;
+			this->btnReset->Text = L"...";
+			this->btnReset->UseVisualStyleBackColor = true;
+			this->btnReset->Click += gcnew System::EventHandler(this, &frmSim::btnReset_Click);
 			// 
 			// lblError
 			// 
@@ -356,15 +370,14 @@ namespace SensorsSimulation {
 			this->trbControlSignal->Value = 511;
 			this->trbControlSignal->Scroll += gcnew System::EventHandler(this, &frmSim::trbControlSignal_Scroll);
 			// 
-			// btnReset
+			// trbControlOuput
 			// 
-			this->btnReset->Location = System::Drawing::Point(408, 13);
-			this->btnReset->Name = L"btnReset";
-			this->btnReset->Size = System::Drawing::Size(28, 23);
-			this->btnReset->TabIndex = 7;
-			this->btnReset->Text = L"...";
-			this->btnReset->UseVisualStyleBackColor = true;
-			this->btnReset->Click += gcnew System::EventHandler(this, &frmSim::btnReset_Click);
+			this->trbControlOuput->Location = System::Drawing::Point(85, 132);
+			this->trbControlOuput->Maximum = 1022;
+			this->trbControlOuput->Name = L"trbControlOuput";
+			this->trbControlOuput->Size = System::Drawing::Size(291, 45);
+			this->trbControlOuput->TabIndex = 8;
+			this->trbControlOuput->Value = 511;
 			// 
 			// frmSim
 			// 
@@ -385,6 +398,7 @@ namespace SensorsSimulation {
 			this->grpControlSignal->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numTargetProtection))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbControlSignal))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbControlOuput))->EndInit();
 			this->ResumeLayout(false);
 
 		}
@@ -484,40 +498,74 @@ namespace SensorsSimulation {
 			 {
 				 Conts3Report.Prot_Medium_Limit = 20;
 				 Conts3Report.Prot_Low_Limit = 12;
-				 Conts3Report.Prot_High_Correction = 0;
-				 Conts3Report.Prot_Medium_Correction = 0;
-				 Conts3Report.Prot_Low_Correction = 0;
+				 Conts3Report.Prot_High_Correction = 1300;
+				 Conts3Report.Prot_Medium_Correction = 1000;
+				 Conts3Report.Prot_Low_Correction = 200;
+			 }
+
+			 int CalcOposition(float range, float target, int* ControlAxis)
+			 {
+				 if (ControlAxis < 0)
+					 ControlAxis *= -1;
+
+				 float Oposition = 0;
+				 float Output = 0;
+				 int FinalValue;
+
+				 //// Oposition is calculated number that reduce the control signal
+				 if (range >= target + Conts3Report.Prot_Medium_Limit)/// Positive Axis System protected
+				 {
+					 Oposition = 0;
+					 Output = (Oposition * ControlAxis);
+				 }
+				 else if (range >= target + Conts3Report.Prot_Low_Limit)/// The system is getting closer to a wall little oposition
+				 {
+					 float error = range - Conts3Report.Prot_Low_Limit - target;
+					 float maxError = Conts3Report.Prot_Medium_Limit - Conts3Report.Prot_Low_Limit;
+					 float gain = 1.0f - (error / maxError);
+					 float correction = (Conts3Report.Prot_Low_Correction / 1000.0f);
+					 Oposition = gain * correction;
+
+					 Output = (Oposition * ControlAxis);
+				 }
+				 else if (range >= target)/// The System is very close to the target oposition Oposition total (oposition equal to control signal)
+				 {
+					 float error = range - target;
+					 float maxError = Conts3Report.Prot_Low_Limit - 0;
+					 float gain = 1.0f - (error / maxError);
+					 float correction = (Conts3Report.Prot_Medium_Correction / 1000.0f);
+					 Oposition = gain * correction;
+
+					 Output = (Oposition * ControlAxis);
+				 }
+				 else /// The sytem is in danger negative oposition.
+				 {
+					 float error = range - target;
+					 float maxError = target;
+					 float gain = (error / maxError);
+					 float correction = (Conts3Report.Prot_High_Correction / 1000.0f);
+					 Oposition = gain * correction;
+					 Output = (Oposition * 511);
+				 }
+				 return Output;
 			 }
 
 			 void CalcOposition()
 			 {
-				 int range = GetRange();
+				 int range = (int)GetRange();
 				 int target = (int)(numTargetProtection->Value);
-				 int Oposition = 0;
+				 float Output = 0;
+				 int FinalValue;
 				 ErrorDifCalc = range - target;
 				 lblError->Text = ErrorDifCalc.ToString();
 
-				 //// Oposition is calculated number that reduce the control signal
-
-				 if (range >= target + Conts3Report.Prot_Medium_Limit)/// Positive Axis System protected
-				 {
-					 Oposition = 0;
-				 }
-				 else if (range >= target + Conts3Report.Prot_Low_Limit)/// The system is getting closer to a wall little oposition
-				 {
-					 int error = range - Conts3Report.Prot_Low_Limit - target;
-					 int gain = Conts3Report.Prot_Medium_Limit - Conts3Report.Prot_Low_Limit;
-					 float output = ( (1.0f - ((float)error / (float)gain) ) * Conts3Report.Prot_Low_Correction);
-					 Oposition = (int)output;
-				 }
-				 else if (range >= target)/// The System is very close to the target oposition Oposition total (oposition equal to control signal)
-				 {
-
-				 }
-				 else /// The sytem is in dangerous negative oposition.
-				 {
-
-				 }
+				 Output = CalcOposition(range, target, trbControlSignal->Value - 511);
+				 FinalValue = +trbControlSignal->Value;
+				 
+				 lblRefuseLevel->Text = Output.ToString();
+				 
+				 if (FinalValue >= 0 && FinalValue <= 1022)
+					 trbControlOuput->Value = FinalValue;
 			 }
 
 
