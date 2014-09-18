@@ -498,12 +498,12 @@ namespace SensorsSimulation {
 			 {
 				 Conts3Report.Prot_Medium_Limit = 20;
 				 Conts3Report.Prot_Low_Limit = 12;
-				 Conts3Report.Prot_High_Correction = 1300;
+				 Conts3Report.Prot_High_Correction = 1000;
 				 Conts3Report.Prot_Medium_Correction = 1000;
 				 Conts3Report.Prot_Low_Correction = 200;
 			 }
 
-			 int CalcOposition(float range, float target, int* ControlAxis)
+			 int CalcOposition(int range1, float target, int ControlAxis)
 			 {
 				 if (ControlAxis < 0)
 					 ControlAxis *= -1;
@@ -513,14 +513,14 @@ namespace SensorsSimulation {
 				 int FinalValue;
 
 				 //// Oposition is calculated number that reduce the control signal
-				 if (range >= target + Conts3Report.Prot_Medium_Limit)/// Positive Axis System protected
+				 if (range1 >= target + Conts3Report.Prot_Medium_Limit)/// Positive Axis System protected
 				 {
 					 Oposition = 0;
 					 Output = (Oposition * ControlAxis);
 				 }
-				 else if (range >= target + Conts3Report.Prot_Low_Limit)/// The system is getting closer to a wall little oposition
+				 else if (range1 >= target + Conts3Report.Prot_Low_Limit)/// The system is getting closer to a wall little oposition
 				 {
-					 float error = range - Conts3Report.Prot_Low_Limit - target;
+					 float error = range1 - Conts3Report.Prot_Low_Limit - target;
 					 float maxError = Conts3Report.Prot_Medium_Limit - Conts3Report.Prot_Low_Limit;
 					 float gain = 1.0f - (error / maxError);
 					 float correction = (Conts3Report.Prot_Low_Correction / 1000.0f);
@@ -528,9 +528,9 @@ namespace SensorsSimulation {
 
 					 Output = (Oposition * ControlAxis);
 				 }
-				 else if (range >= target)/// The System is very close to the target oposition Oposition total (oposition equal to control signal)
+				 else if (range1 >= target)/// The System is very close to the target oposition Oposition total (oposition equal to control signal)
 				 {
-					 float error = range - target;
+					 float error = range1 - target;
 					 float maxError = Conts3Report.Prot_Low_Limit - 0;
 					 float gain = 1.0f - (error / maxError);
 					 float correction = (Conts3Report.Prot_Medium_Correction / 1000.0f);
@@ -540,27 +540,28 @@ namespace SensorsSimulation {
 				 }
 				 else /// The sytem is in danger negative oposition.
 				 {
-					 float error = range - target;
+					 float error = range1 - target;
 					 float maxError = target;
-					 float gain = (error / maxError);
-					 float correction = (Conts3Report.Prot_High_Correction / 1000.0f);
+					 float gain = -(error / maxError);
+					 float correction = (Conts3Report.Prot_High_Correction / 1000.0f) + 1.0f;
 					 Oposition = gain * correction;
-					 Output = (Oposition * 511);
+					 Output = (Oposition * 511) + ControlAxis;
 				 }
+
 				 return Output;
 			 }
 
 			 void CalcOposition()
 			 {
-				 int range = (int)GetRange();
+				 float range = GetRange();
 				 int target = (int)(numTargetProtection->Value);
 				 float Output = 0;
 				 int FinalValue;
 				 ErrorDifCalc = range - target;
 				 lblError->Text = ErrorDifCalc.ToString();
 
-				 Output = CalcOposition(range, target, trbControlSignal->Value - 511);
-				 FinalValue = +trbControlSignal->Value;
+				 Output = CalcOposition((int)range,(int)target, trbControlSignal->Value - 511);
+				 FinalValue = trbControlSignal->Value - Output;
 				 
 				 lblRefuseLevel->Text = Output.ToString();
 				 
