@@ -1,27 +1,39 @@
-﻿Build started 9/17/2014 7:22:16 PM.
+﻿Build started 9/18/2014 6:46:32 PM.
      1>Project "C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\SensorsSimulation\SensorsSimulation.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\\" /AI"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral" /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\\" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\SensorsSimulation.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\mscorlib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Xml.dll" /analyze- /errorReport:prompt /clr:nostdlib SensorsSimulation.cpp frmSim.cpp
          SensorsSimulation.cpp
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(474): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(512): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
      1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(524): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(534): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(551): warning C4244: 'return' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(513): warning C4101: 'FinalValue' : unreferenced local variable
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(560): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(563): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(563): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(564): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(528): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(571): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(581): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(599): warning C4244: 'return' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(560): warning C4101: 'FinalValue' : unreferenced local variable
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(610): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(610): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(611): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(611): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(624): warning C4244: '-=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(626): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(631): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(633): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
          frmSim.cpp
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(474): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(512): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
      1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(524): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(534): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(551): warning C4244: 'return' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(513): warning C4101: 'FinalValue' : unreferenced local variable
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(560): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(563): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(563): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(564): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(528): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(571): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(581): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(599): warning C4244: 'return' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(560): warning C4101: 'FinalValue' : unreferenced local variable
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(610): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(610): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(611): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(611): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(624): warning C4244: '-=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(626): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(631): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\user\documents\visual studio 2013\projects\wildduckcontrol\sensorssimulation\frmSim.h(633): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
          Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\Debug\SensorsSimulation.exe" /INCREMENTAL /NOLOGO /ASSEMBLYRESOURCE:Debug\SensorsSimulation.frmSim.resources /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\Debug\SensorsSimulation.pdb" /ASSEMBLYDEBUG /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\app.res
@@ -35,4 +47,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.34
+Time Elapsed 00:00:01.27

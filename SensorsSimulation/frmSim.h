@@ -76,6 +76,9 @@ namespace SensorsSimulation {
 	private: System::Windows::Forms::Label^  lblError;
 	private: System::Windows::Forms::Button^  btnReset;
 	private: System::Windows::Forms::TrackBar^  trbControlOuput;
+	private: System::Windows::Forms::Label^  lblSensorOutput2;
+	private: System::Windows::Forms::TrackBar^  trbTargetSensor2;
+	private: System::Windows::Forms::Label^  lblFinalOutput;
 	private: System::ComponentModel::IContainer^  components;
 
 	private:
@@ -107,7 +110,10 @@ namespace SensorsSimulation {
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->lblStack = (gcnew System::Windows::Forms::Label());
 			this->grpSensorsSim = (gcnew System::Windows::Forms::GroupBox());
+			this->lblSensorOutput2 = (gcnew System::Windows::Forms::Label());
+			this->trbTargetSensor2 = (gcnew System::Windows::Forms::TrackBar());
 			this->grpControlSignal = (gcnew System::Windows::Forms::GroupBox());
+			this->trbControlOuput = (gcnew System::Windows::Forms::TrackBar());
 			this->btnReset = (gcnew System::Windows::Forms::Button());
 			this->lblError = (gcnew System::Windows::Forms::Label());
 			this->lblRefuseLevel = (gcnew System::Windows::Forms::Label());
@@ -116,16 +122,17 @@ namespace SensorsSimulation {
 			this->lblSignalValue = (gcnew System::Windows::Forms::Label());
 			this->lblControlSignal = (gcnew System::Windows::Forms::Label());
 			this->trbControlSignal = (gcnew System::Windows::Forms::TrackBar());
-			this->trbControlOuput = (gcnew System::Windows::Forms::TrackBar());
+			this->lblFinalOutput = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbTarget))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbNoise))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numStack))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numNoise))->BeginInit();
 			this->grpSensorsSim->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbTargetSensor2))->BeginInit();
 			this->grpControlSignal->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbControlOuput))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numTargetProtection))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbControlSignal))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbControlOuput))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// trbTarget
@@ -183,7 +190,7 @@ namespace SensorsSimulation {
 			// lblNoise
 			// 
 			this->lblNoise->AutoSize = true;
-			this->lblNoise->Location = System::Drawing::Point(126, 112);
+			this->lblNoise->Location = System::Drawing::Point(129, 112);
 			this->lblNoise->Name = L"lblNoise";
 			this->lblNoise->Size = System::Drawing::Size(13, 13);
 			this->lblNoise->TabIndex = 6;
@@ -245,7 +252,7 @@ namespace SensorsSimulation {
 			// lblStack
 			// 
 			this->lblStack->AutoSize = true;
-			this->lblStack->Location = System::Drawing::Point(160, 87);
+			this->lblStack->Location = System::Drawing::Point(304, 164);
 			this->lblStack->Name = L"lblStack";
 			this->lblStack->Size = System::Drawing::Size(16, 13);
 			this->lblStack->TabIndex = 12;
@@ -253,6 +260,8 @@ namespace SensorsSimulation {
 			// 
 			// grpSensorsSim
 			// 
+			this->grpSensorsSim->Controls->Add(this->lblSensorOutput2);
+			this->grpSensorsSim->Controls->Add(this->trbTargetSensor2);
 			this->grpSensorsSim->Controls->Add(this->trbTarget);
 			this->grpSensorsSim->Controls->Add(this->lblOutput);
 			this->grpSensorsSim->Controls->Add(this->lblStack);
@@ -268,13 +277,32 @@ namespace SensorsSimulation {
 			this->grpSensorsSim->Controls->Add(this->lblTarget);
 			this->grpSensorsSim->Location = System::Drawing::Point(12, 12);
 			this->grpSensorsSim->Name = L"grpSensorsSim";
-			this->grpSensorsSim->Size = System::Drawing::Size(467, 249);
+			this->grpSensorsSim->Size = System::Drawing::Size(467, 385);
 			this->grpSensorsSim->TabIndex = 13;
 			this->grpSensorsSim->TabStop = false;
 			this->grpSensorsSim->Text = L"Sensors Simulation";
 			// 
+			// lblSensorOutput2
+			// 
+			this->lblSensorOutput2->AutoSize = true;
+			this->lblSensorOutput2->Location = System::Drawing::Point(258, 203);
+			this->lblSensorOutput2->Name = L"lblSensorOutput2";
+			this->lblSensorOutput2->Size = System::Drawing::Size(13, 13);
+			this->lblSensorOutput2->TabIndex = 14;
+			this->lblSensorOutput2->Text = L"0";
+			// 
+			// trbTargetSensor2
+			// 
+			this->trbTargetSensor2->Location = System::Drawing::Point(19, 203);
+			this->trbTargetSensor2->Maximum = 1700;
+			this->trbTargetSensor2->Name = L"trbTargetSensor2";
+			this->trbTargetSensor2->Size = System::Drawing::Size(242, 45);
+			this->trbTargetSensor2->TabIndex = 13;
+			this->trbTargetSensor2->Scroll += gcnew System::EventHandler(this, &frmSim::trbTargetSensor2_Scroll);
+			// 
 			// grpControlSignal
 			// 
+			this->grpControlSignal->Controls->Add(this->lblFinalOutput);
 			this->grpControlSignal->Controls->Add(this->trbControlOuput);
 			this->grpControlSignal->Controls->Add(this->btnReset);
 			this->grpControlSignal->Controls->Add(this->lblError);
@@ -290,6 +318,15 @@ namespace SensorsSimulation {
 			this->grpControlSignal->TabIndex = 14;
 			this->grpControlSignal->TabStop = false;
 			this->grpControlSignal->Text = L"Control Signal";
+			// 
+			// trbControlOuput
+			// 
+			this->trbControlOuput->Location = System::Drawing::Point(85, 132);
+			this->trbControlOuput->Maximum = 1022;
+			this->trbControlOuput->Name = L"trbControlOuput";
+			this->trbControlOuput->Size = System::Drawing::Size(291, 45);
+			this->trbControlOuput->TabIndex = 8;
+			this->trbControlOuput->Value = 511;
 			// 
 			// btnReset
 			// 
@@ -370,20 +407,20 @@ namespace SensorsSimulation {
 			this->trbControlSignal->Value = 511;
 			this->trbControlSignal->Scroll += gcnew System::EventHandler(this, &frmSim::trbControlSignal_Scroll);
 			// 
-			// trbControlOuput
+			// lblFinalOutput
 			// 
-			this->trbControlOuput->Location = System::Drawing::Point(85, 132);
-			this->trbControlOuput->Maximum = 1022;
-			this->trbControlOuput->Name = L"trbControlOuput";
-			this->trbControlOuput->Size = System::Drawing::Size(291, 45);
-			this->trbControlOuput->TabIndex = 8;
-			this->trbControlOuput->Value = 511;
+			this->lblFinalOutput->AutoSize = true;
+			this->lblFinalOutput->Location = System::Drawing::Point(10, 111);
+			this->lblFinalOutput->Name = L"lblFinalOutput";
+			this->lblFinalOutput->Size = System::Drawing::Size(87, 13);
+			this->lblFinalOutput->TabIndex = 9;
+			this->lblFinalOutput->Text = L"Output To NAZA";
 			// 
 			// frmSim
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(939, 272);
+			this->ClientSize = System::Drawing::Size(939, 476);
 			this->Controls->Add(this->grpControlSignal);
 			this->Controls->Add(this->grpSensorsSim);
 			this->Name = L"frmSim";
@@ -394,11 +431,12 @@ namespace SensorsSimulation {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numNoise))->EndInit();
 			this->grpSensorsSim->ResumeLayout(false);
 			this->grpSensorsSim->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbTargetSensor2))->EndInit();
 			this->grpControlSignal->ResumeLayout(false);
 			this->grpControlSignal->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbControlOuput))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numTargetProtection))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbControlSignal))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbControlOuput))->EndInit();
 			this->ResumeLayout(false);
 
 		}
@@ -481,10 +519,19 @@ namespace SensorsSimulation {
 		{
 			lblStack->Text += ((float)stackBuffer[i]).ToString() + ",\r\n";
 		}
-			
 
+		float range1 = GetRange();
+		float range2 = (trbTargetSensor2->Value / 10);
+		int target = (int)(numTargetProtection->Value);
+		int ControlSignal = trbControlSignal->Value;
 
-		CalcOposition();
+		ErrorDifCalc = range1 - target;
+		float ErrorDifCalc2 = range2 - target;
+		lblError->Text = ErrorDifCalc.ToString() + ", " + ErrorDifCalc2.ToString();
+
+		int final = AxisProtection(range1, range2, target, ControlSignal);
+
+		trbControlOuput->Value = final;
 	}
 	private: System::Void btnSetNoise_Click(System::Object^  sender, System::EventArgs^  e) {
 		AddedNoise = true;
@@ -503,7 +550,7 @@ namespace SensorsSimulation {
 				 Conts3Report.Prot_Low_Correction = 200;
 			 }
 
-			 int CalcOposition(int range1, float target, int ControlAxis)
+			 int CalcOposition(int range1, float target, int ControlAxis, bool *isInDanger)
 			 {
 				 if (ControlAxis < 0)
 					 ControlAxis *= -1;
@@ -545,29 +592,55 @@ namespace SensorsSimulation {
 					 float gain = -(error / maxError);
 					 float correction = (Conts3Report.Prot_High_Correction / 1000.0f) + 1.0f;
 					 Oposition = gain * correction;
-					 Output = (Oposition * 511) + ControlAxis;
+					 Output = (Oposition * 511);// +ControlAxis;
+					 *isInDanger = true;
 				 }
 
 				 return Output;
 			 }
 
-			 void CalcOposition()
+			 int AxisProtection(float range1, float range2, int target, int ControlSignal)
 			 {
-				 float range = GetRange();
-				 int target = (int)(numTargetProtection->Value);
-				 float Output = 0;
-				 int FinalValue;
-				 ErrorDifCalc = range - target;
-				 lblError->Text = ErrorDifCalc.ToString();
+				 float Output1 = 0;
+				 float Output2 = 0;
+				 bool Danger1 = false;
+				 bool Danger2 = false;
+				 int FinalValue = 0;
 
-				 Output = CalcOposition((int)range,(int)target, trbControlSignal->Value - 511);
-				 FinalValue = trbControlSignal->Value - Output;
-				 
-				 lblRefuseLevel->Text = Output.ToString();
-				 
-				 if (FinalValue >= 0 && FinalValue <= 1022)
-					 trbControlOuput->Value = FinalValue;
-			 }
+				 Output1 = CalcOposition((int)range1, (int)target, ControlSignal - 511, &Danger1);
+				 Output2 = CalcOposition((int)range2, (int)target, ControlSignal - 511, &Danger2);
+
+				 FinalValue = ControlSignal;
+				 if (Danger1 || Danger2)
+				 {
+					 FinalValue = 511;
+					 if (Danger1 && Danger2)
+					 {
+						 Output1 /= 4;
+						 Output2 /= 4;
+					 }
+
+					 if (Danger1)
+						 FinalValue -= Output1;
+					 if (Danger2)
+						 FinalValue += Output2;
+				 }
+				 else
+				 {
+					 if (ControlSignal >= 511)
+						 FinalValue = trbControlSignal->Value - Output1;
+					 else
+						 FinalValue = trbControlSignal->Value + Output2;
+				 }
+
+				 lblRefuseLevel->Text = Output1.ToString() + ", " + Output2.ToString();
+				 if (FinalValue <= 0)
+					 FinalValue = 0;
+				 if (FinalValue >= 1022)
+					 FinalValue = 1022;
+
+				 return FinalValue;
+			}
 
 
 	private: System::Void trbControlSignal_Scroll(System::Object^  sender, System::EventArgs^  e) {
@@ -576,6 +649,9 @@ namespace SensorsSimulation {
 	private: System::Void btnReset_Click(System::Object^  sender, System::EventArgs^  e) {
 		trbControlSignal->Value = 511;
 
+	}
+	private: System::Void trbTargetSensor2_Scroll(System::Object^  sender, System::EventArgs^  e) {
+		lblSensorOutput2->Text = (trbTargetSensor2->Value/10).ToString();
 	}
 };
 }
