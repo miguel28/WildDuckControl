@@ -2,7 +2,7 @@
 #include "mbed.h"
 
 SRF05::SRF05(PinName trigger, PinName echo) 
-    : _trigger(trigger), _echo(echo) {    
+	: IUltrasonicSensor(6), _trigger(trigger), _echo(echo) {
         
     // Attach interrupts
     _echo.rise(this, &SRF05::_rising);

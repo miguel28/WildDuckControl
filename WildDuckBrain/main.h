@@ -89,6 +89,5 @@ void PowerDown();
 void UpdateThrottle();
 void UpdateMovements();
 void UpdateESC();
-void StandardESC();
 void ShowControllerReport();
 void ShowSensorsReport();

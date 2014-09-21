@@ -29,7 +29,7 @@ THE SOFTWARE.
  * Description: Creates an instance of the SRF08 to communicate with a sRF08 module
  */
 SRF08::SRF08(PinName SDA, PinName SCL, int i2cAddress) : 
-	IUltrasonicSensor(5),
+	IUltrasonicSensor(4),
     i2cMod(SDA, SCL), 
     i2cAddress(i2cAddress), 
     rangeTimeout(), 

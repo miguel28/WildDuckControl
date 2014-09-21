@@ -289,22 +289,6 @@ void UpdateMovements()
 	UChannel = (float)((float)(creport.UChannel) / 254.0f);
 }
 
-void StandardESC()
-{
-	creport = reporter->GetControllerReport();
-	Throtle = (float)((float)(creport.Throttle) / 1022.0f);
-	Aileron = (float)(((float)creport.Aileron) / 1022.0f);
-	Elevator = (float)((float)(creport.Elevator) / 1022.0f);
-	Rudder = (float)((float)(creport.Rudder) / 1022.0f);
-	UChannel = (float)((float)(creport.UChannel) / 254.0f);
-
-	Aileron();
-	Throtle();
-	Elevator();
-	Rudder();
-	UChannel();
-}
-
 void UpdateESC()
 {
     creport = reporter->GetControllerReport();
@@ -359,10 +343,10 @@ int main() {
 
     while(1) 
     {
-		//UpdateSensors();
-		//UpdateESC();
-		StandardESC();
-		ShowControllerReport();
+		UpdateSensors();
+		UpdateESC();
+
+		//ShowControllerReport();
 		//ShowSensorsReport();
 		
 		wait_ms(REFRESH_TIMEOUT_MS);

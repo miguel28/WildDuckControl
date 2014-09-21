@@ -79,6 +79,7 @@ namespace SensorsSimulation {
 	private: System::Windows::Forms::Label^  lblSensorOutput2;
 	private: System::Windows::Forms::TrackBar^  trbTargetSensor2;
 	private: System::Windows::Forms::Label^  lblFinalOutput;
+	private: System::Windows::Forms::Label^  lblSensorTarget2;
 	private: System::ComponentModel::IContainer^  components;
 
 	private:
@@ -95,6 +96,7 @@ namespace SensorsSimulation {
 		void InitializeComponent(void)
 		{
 			this->components = (gcnew System::ComponentModel::Container());
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(frmSim::typeid));
 			this->trbTarget = (gcnew System::Windows::Forms::TrackBar());
 			this->trbNoise = (gcnew System::Windows::Forms::TrackBar());
 			this->numStack = (gcnew System::Windows::Forms::NumericUpDown());
@@ -113,6 +115,7 @@ namespace SensorsSimulation {
 			this->lblSensorOutput2 = (gcnew System::Windows::Forms::Label());
 			this->trbTargetSensor2 = (gcnew System::Windows::Forms::TrackBar());
 			this->grpControlSignal = (gcnew System::Windows::Forms::GroupBox());
+			this->lblFinalOutput = (gcnew System::Windows::Forms::Label());
 			this->trbControlOuput = (gcnew System::Windows::Forms::TrackBar());
 			this->btnReset = (gcnew System::Windows::Forms::Button());
 			this->lblError = (gcnew System::Windows::Forms::Label());
@@ -122,7 +125,7 @@ namespace SensorsSimulation {
 			this->lblSignalValue = (gcnew System::Windows::Forms::Label());
 			this->lblControlSignal = (gcnew System::Windows::Forms::Label());
 			this->trbControlSignal = (gcnew System::Windows::Forms::TrackBar());
-			this->lblFinalOutput = (gcnew System::Windows::Forms::Label());
+			this->lblSensorTarget2 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbTarget))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbNoise))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numStack))->BeginInit();
@@ -155,7 +158,7 @@ namespace SensorsSimulation {
 			// 
 			// numStack
 			// 
-			this->numStack->Location = System::Drawing::Point(30, 176);
+			this->numStack->Location = System::Drawing::Point(85, 160);
 			this->numStack->Name = L"numStack";
 			this->numStack->Size = System::Drawing::Size(65, 20);
 			this->numStack->TabIndex = 2;
@@ -183,9 +186,9 @@ namespace SensorsSimulation {
 			this->lblBaseSel->AutoSize = true;
 			this->lblBaseSel->Location = System::Drawing::Point(16, 23);
 			this->lblBaseSel->Name = L"lblBaseSel";
-			this->lblBaseSel->Size = System::Drawing::Size(79, 13);
+			this->lblBaseSel->Size = System::Drawing::Size(49, 13);
 			this->lblBaseSel->TabIndex = 5;
-			this->lblBaseSel->Text = L"Target Sensors";
+			this->lblBaseSel->Text = L"Sensor 1";
 			// 
 			// lblNoise
 			// 
@@ -260,6 +263,7 @@ namespace SensorsSimulation {
 			// 
 			// grpSensorsSim
 			// 
+			this->grpSensorsSim->Controls->Add(this->lblSensorTarget2);
 			this->grpSensorsSim->Controls->Add(this->lblSensorOutput2);
 			this->grpSensorsSim->Controls->Add(this->trbTargetSensor2);
 			this->grpSensorsSim->Controls->Add(this->trbTarget);
@@ -277,7 +281,7 @@ namespace SensorsSimulation {
 			this->grpSensorsSim->Controls->Add(this->lblTarget);
 			this->grpSensorsSim->Location = System::Drawing::Point(12, 12);
 			this->grpSensorsSim->Name = L"grpSensorsSim";
-			this->grpSensorsSim->Size = System::Drawing::Size(467, 385);
+			this->grpSensorsSim->Size = System::Drawing::Size(467, 274);
 			this->grpSensorsSim->TabIndex = 13;
 			this->grpSensorsSim->TabStop = false;
 			this->grpSensorsSim->Text = L"Sensors Simulation";
@@ -285,7 +289,7 @@ namespace SensorsSimulation {
 			// lblSensorOutput2
 			// 
 			this->lblSensorOutput2->AutoSize = true;
-			this->lblSensorOutput2->Location = System::Drawing::Point(258, 203);
+			this->lblSensorOutput2->Location = System::Drawing::Point(267, 219);
 			this->lblSensorOutput2->Name = L"lblSensorOutput2";
 			this->lblSensorOutput2->Size = System::Drawing::Size(13, 13);
 			this->lblSensorOutput2->TabIndex = 14;
@@ -293,7 +297,7 @@ namespace SensorsSimulation {
 			// 
 			// trbTargetSensor2
 			// 
-			this->trbTargetSensor2->Location = System::Drawing::Point(19, 203);
+			this->trbTargetSensor2->Location = System::Drawing::Point(19, 219);
 			this->trbTargetSensor2->Maximum = 1700;
 			this->trbTargetSensor2->Name = L"trbTargetSensor2";
 			this->trbTargetSensor2->Size = System::Drawing::Size(242, 45);
@@ -314,10 +318,19 @@ namespace SensorsSimulation {
 			this->grpControlSignal->Controls->Add(this->trbControlSignal);
 			this->grpControlSignal->Location = System::Drawing::Point(485, 12);
 			this->grpControlSignal->Name = L"grpControlSignal";
-			this->grpControlSignal->Size = System::Drawing::Size(442, 249);
+			this->grpControlSignal->Size = System::Drawing::Size(442, 274);
 			this->grpControlSignal->TabIndex = 14;
 			this->grpControlSignal->TabStop = false;
 			this->grpControlSignal->Text = L"Control Signal";
+			// 
+			// lblFinalOutput
+			// 
+			this->lblFinalOutput->AutoSize = true;
+			this->lblFinalOutput->Location = System::Drawing::Point(10, 111);
+			this->lblFinalOutput->Name = L"lblFinalOutput";
+			this->lblFinalOutput->Size = System::Drawing::Size(87, 13);
+			this->lblFinalOutput->TabIndex = 9;
+			this->lblFinalOutput->Text = L"Output To NAZA";
 			// 
 			// trbControlOuput
 			// 
@@ -407,24 +420,25 @@ namespace SensorsSimulation {
 			this->trbControlSignal->Value = 511;
 			this->trbControlSignal->Scroll += gcnew System::EventHandler(this, &frmSim::trbControlSignal_Scroll);
 			// 
-			// lblFinalOutput
+			// lblSensorTarget2
 			// 
-			this->lblFinalOutput->AutoSize = true;
-			this->lblFinalOutput->Location = System::Drawing::Point(10, 111);
-			this->lblFinalOutput->Name = L"lblFinalOutput";
-			this->lblFinalOutput->Size = System::Drawing::Size(87, 13);
-			this->lblFinalOutput->TabIndex = 9;
-			this->lblFinalOutput->Text = L"Output To NAZA";
+			this->lblSensorTarget2->AutoSize = true;
+			this->lblSensorTarget2->Location = System::Drawing::Point(19, 200);
+			this->lblSensorTarget2->Name = L"lblSensorTarget2";
+			this->lblSensorTarget2->Size = System::Drawing::Size(49, 13);
+			this->lblSensorTarget2->TabIndex = 15;
+			this->lblSensorTarget2->Text = L"Sensor 2";
 			// 
 			// frmSim
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(939, 476);
+			this->ClientSize = System::Drawing::Size(939, 296);
 			this->Controls->Add(this->grpControlSignal);
 			this->Controls->Add(this->grpSensorsSim);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"frmSim";
-			this->Text = L"frmSim";
+			this->Text = L"Sensors Simulator";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbTarget))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trbNoise))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numStack))->EndInit();

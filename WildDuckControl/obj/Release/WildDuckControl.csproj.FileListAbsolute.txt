@@ -6,8 +6,6 @@ C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckCont
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\WildDuckControl.exe
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\WildDuckControl.pdb
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\SDLJoystick.dll
-C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\USBInterface.dll
-C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\USBInterface.pdb
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\SDLJoystick.pdb
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Release\WildDuckControl.csprojResolveAssemblyReference.cache
 C:\Users\Mike\documents\visual studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Release\WildDuckControl.frmHIDControllerTest.resources
@@ -32,3 +30,5 @@ C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\WildDuckCont
 C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Release\WildDuckControl.csproj.GenerateResource.Cache
 C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Release\WildDuckControl.exe
 C:\Users\User\Documents\Visual Studio 2013\Projects\WildDuckControl\WildDuckControl\obj\Release\WildDuckControl.pdb
+C:\Users\Mike\Documents\Visual Studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\WildDuckLibrary.dll
+C:\Users\Mike\Documents\Visual Studio 2013\Projects\WildDuckControl\WildDuckControl\bin\Release\WildDuckLibrary.pdb
