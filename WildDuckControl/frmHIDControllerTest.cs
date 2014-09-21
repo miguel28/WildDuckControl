@@ -17,6 +17,9 @@ namespace WildDuckControl
         private WildDuckConnection wildDuck;
         private SDLJoystick joy;
         private int FlyTimeOut = 0;
+        float CalcThrottle = 0.0f;
+
+
         public frmHIDControllerTest()
         {
             InitializeComponent();
@@ -66,12 +69,21 @@ namespace WildDuckControl
         {
             joy.Update();
 
-            float tmpThortle = joy.GetAxis(1);
-            if (tmpThortle <= 0.0f)
-                trbThrotle.Value = (int)(tmpThortle * -1023.0f);
-            trbRudder.Value = (int)(joy.GetAxis(0) * 511.0f) + 511;
-            trbAileron.Value = (int)(joy.GetAxis(3) * 511.0f) + 511;
-            trbElevator.Value = (int)(joy.GetAxis(2) * 511.0f) + 511;
+            float tmpThortle = joy.GetAxis(1,0.25f);
+
+            CalcThrottle += -tmpThortle * (trbSensibility.Value / 50.0f);
+            if (CalcThrottle <= 0.0f)
+                CalcThrottle = 0.0f;
+            if (CalcThrottle >= 1022.0f)
+                CalcThrottle = 1022.0f;
+
+            if (joy.ButtonNewpress(2))
+                CalcThrottle = 0.0f;
+
+            trbThrotle.Value = (int)(CalcThrottle);
+            trbRudder.Value = (int)(joy.GetAxis(0, 0.25f) * 0.70f * 511.0f) + 511;
+            trbAileron.Value = (int)(joy.GetAxis(3, 0.25f) * 0.70f * 511.0f) + 511;
+            trbElevator.Value = (int)(joy.GetAxis(2, 0.25f) * 0.70f *511.0f) + 511;
         }
         private void SendReport()
         {

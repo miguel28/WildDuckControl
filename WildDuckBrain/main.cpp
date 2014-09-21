@@ -288,6 +288,23 @@ void UpdateMovements()
 
 	UChannel = (float)((float)(creport.UChannel) / 254.0f);
 }
+
+void StandardESC()
+{
+	creport = reporter->GetControllerReport();
+	Throtle = (float)((float)(creport.Throttle) / 1022.0f);
+	Aileron = (float)(((float)creport.Aileron) / 1022.0f);
+	Elevator = (float)((float)(creport.Elevator) / 1022.0f);
+	Rudder = (float)((float)(creport.Rudder) / 1022.0f);
+	UChannel = (float)((float)(creport.UChannel) / 254.0f);
+
+	Aileron();
+	Throtle();
+	Elevator();
+	Rudder();
+	UChannel();
+}
+
 void UpdateESC()
 {
     creport = reporter->GetControllerReport();
@@ -330,9 +347,9 @@ void ShowSensorsReport()
 {
 #ifdef PC_UART_DEBUG
 #ifdef TEST_SENSORS
-	pc->printf("%4.2f\r\n", HighSensor->GetInches());
+	//pc->printf("%4.2f\r\n", HighSensor->GetInches());
 #else
-	pc->printf("S1: %4.2f, S2: %4.2f\r\n", RightSensor1->GetInches(), RightSensor2->GetInches());
+	//pc->printf("S1: %4.2f, S2: %4.2f\r\n", RightSensor1->GetInches(), RightSensor2->GetInches());
 #endif
 #endif
 }
@@ -342,11 +359,11 @@ int main() {
 
     while(1) 
     {
-		UpdateSensors();
-		UpdateESC();
-
-		//ShowControllerReport();
-		ShowSensorsReport();
+		//UpdateSensors();
+		//UpdateESC();
+		StandardESC();
+		ShowControllerReport();
+		//ShowSensorsReport();
 		
 		wait_ms(REFRESH_TIMEOUT_MS);
     }

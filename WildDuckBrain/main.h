@@ -7,14 +7,14 @@
 
 //#define PC_UART_DEBUG
 //#define TEST_SENSORS
-#define USE_HIGH_SENSOR
-#define USE_FRONT_SENSOR
-#define USE_BACK_SENSOR
-#define USE_LEFT_SENSOR
-#define USE_RIGHT_SENSOR
+//#define USE_HIGH_SENSOR
+//#define USE_FRONT_SENSOR
+//#define USE_BACK_SENSOR
+//#define USE_LEFT_SENSOR
+//#define USE_RIGHT_SENSOR
 
 #define IDLE_CONSTANT 511
-#define REFRESH_TIMEOUT_MS 20
+#define REFRESH_TIMEOUT_MS 30
 #define POWER_DELAY_MS 2000
 
 #ifdef PC_UART_DEBUG
@@ -89,5 +89,6 @@ void PowerDown();
 void UpdateThrottle();
 void UpdateMovements();
 void UpdateESC();
+void StandardESC();
 void ShowControllerReport();
 void ShowSensorsReport();

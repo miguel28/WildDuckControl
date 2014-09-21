@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.grpMetrics = new System.Windows.Forms.GroupBox();
+            this.cboxReport = new System.Windows.Forms.ComboBox();
             this.lblSensorH = new System.Windows.Forms.Label();
             this.btnFly = new System.Windows.Forms.Button();
             this.trbUChannel = new System.Windows.Forms.TrackBar();
@@ -52,7 +53,7 @@
             this.numJoy = new System.Windows.Forms.NumericUpDown();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.btnOpenConn = new System.Windows.Forms.Button();
-            this.cboxReport = new System.Windows.Forms.ComboBox();
+            this.trbSensibility = new System.Windows.Forms.TrackBar();
             this.grpMetrics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbUChannel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numElevation)).BeginInit();
@@ -62,10 +63,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.trbThrotle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPollTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numJoy)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trbSensibility)).BeginInit();
             this.SuspendLayout();
             // 
             // grpMetrics
             // 
+            this.grpMetrics.Controls.Add(this.trbSensibility);
             this.grpMetrics.Controls.Add(this.cboxReport);
             this.grpMetrics.Controls.Add(this.lblSensorH);
             this.grpMetrics.Controls.Add(this.btnFly);
@@ -85,10 +88,36 @@
             this.grpMetrics.Controls.Add(this.trbThrotle);
             this.grpMetrics.Location = new System.Drawing.Point(23, 70);
             this.grpMetrics.Name = "grpMetrics";
-            this.grpMetrics.Size = new System.Drawing.Size(442, 333);
+            this.grpMetrics.Size = new System.Drawing.Size(442, 432);
             this.grpMetrics.TabIndex = 1;
             this.grpMetrics.TabStop = false;
             this.grpMetrics.Text = "Wild Duck Controls";
+            // 
+            // cboxReport
+            // 
+            this.cboxReport.FormattingEnabled = true;
+            this.cboxReport.Items.AddRange(new object[] {
+            "Joystick",
+            "Sensors",
+            "EmergencyLanding",
+            "Constants1",
+            "Constants2",
+            "Constants3",
+            "...",
+            "...",
+            "...",
+            "...",
+            "...",
+            "...",
+            "...",
+            "...",
+            "...",
+            "Nothing"});
+            this.cboxReport.Location = new System.Drawing.Point(28, 260);
+            this.cboxReport.Name = "cboxReport";
+            this.cboxReport.Size = new System.Drawing.Size(121, 21);
+            this.cboxReport.TabIndex = 15;
+            this.cboxReport.SelectedIndexChanged += new System.EventHandler(this.cboxReport_SelectedIndexChanged);
             // 
             // lblSensorH
             // 
@@ -295,37 +324,19 @@
             this.btnOpenConn.UseVisualStyleBackColor = true;
             this.btnOpenConn.Click += new System.EventHandler(this.btnOpenConn_Click);
             // 
-            // cboxReport
+            // trbSensibility
             // 
-            this.cboxReport.FormattingEnabled = true;
-            this.cboxReport.Items.AddRange(new object[] {
-            "Joystick",
-            "Sensors",
-            "EmergencyLanding",
-            "Constants1",
-            "Constants2",
-            "Constants3",
-            "...",
-            "...",
-            "...",
-            "...",
-            "...",
-            "...",
-            "...",
-            "...",
-            "...",
-            "Nothing"});
-            this.cboxReport.Location = new System.Drawing.Point(28, 260);
-            this.cboxReport.Name = "cboxReport";
-            this.cboxReport.Size = new System.Drawing.Size(121, 21);
-            this.cboxReport.TabIndex = 15;
-            this.cboxReport.SelectedIndexChanged += new System.EventHandler(this.cboxReport_SelectedIndexChanged);
+            this.trbSensibility.Location = new System.Drawing.Point(28, 320);
+            this.trbSensibility.Maximum = 200;
+            this.trbSensibility.Name = "trbSensibility";
+            this.trbSensibility.Size = new System.Drawing.Size(380, 45);
+            this.trbSensibility.TabIndex = 16;
             // 
             // frmHIDControllerTest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(490, 415);
+            this.ClientSize = new System.Drawing.Size(490, 514);
             this.Controls.Add(this.btnOpenConn);
             this.Controls.Add(this.numJoy);
             this.Controls.Add(this.lblPollTime);
@@ -344,6 +355,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trbThrotle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPollTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numJoy)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trbSensibility)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -375,6 +387,7 @@
         private System.Windows.Forms.Button btnFly;
         private System.Windows.Forms.Label lblSensorH;
         private System.Windows.Forms.ComboBox cboxReport;
+        private System.Windows.Forms.TrackBar trbSensibility;
     }
 }
 
