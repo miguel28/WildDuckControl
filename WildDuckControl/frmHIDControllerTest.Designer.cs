@@ -30,6 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.grpMetrics = new System.Windows.Forms.GroupBox();
+            this.lblThrSens = new System.Windows.Forms.Label();
+            this.trbSensibility = new System.Windows.Forms.TrackBar();
             this.cboxReport = new System.Windows.Forms.ComboBox();
             this.lblSensorH = new System.Windows.Forms.Label();
             this.btnFly = new System.Windows.Forms.Button();
@@ -53,8 +55,8 @@
             this.numJoy = new System.Windows.Forms.NumericUpDown();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.btnOpenConn = new System.Windows.Forms.Button();
-            this.trbSensibility = new System.Windows.Forms.TrackBar();
             this.grpMetrics.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trbSensibility)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbUChannel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numElevation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbElevator)).BeginInit();
@@ -63,11 +65,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.trbThrotle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPollTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numJoy)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trbSensibility)).BeginInit();
             this.SuspendLayout();
             // 
             // grpMetrics
             // 
+            this.grpMetrics.Controls.Add(this.lblThrSens);
             this.grpMetrics.Controls.Add(this.trbSensibility);
             this.grpMetrics.Controls.Add(this.cboxReport);
             this.grpMetrics.Controls.Add(this.lblSensorH);
@@ -86,12 +88,30 @@
             this.grpMetrics.Controls.Add(this.lblRudder);
             this.grpMetrics.Controls.Add(this.lblThrotle);
             this.grpMetrics.Controls.Add(this.trbThrotle);
-            this.grpMetrics.Location = new System.Drawing.Point(23, 70);
+            this.grpMetrics.Location = new System.Drawing.Point(12, 54);
             this.grpMetrics.Name = "grpMetrics";
-            this.grpMetrics.Size = new System.Drawing.Size(442, 432);
+            this.grpMetrics.Size = new System.Drawing.Size(383, 374);
             this.grpMetrics.TabIndex = 1;
             this.grpMetrics.TabStop = false;
             this.grpMetrics.Text = "Wild Duck Controls";
+            // 
+            // lblThrSens
+            // 
+            this.lblThrSens.AutoSize = true;
+            this.lblThrSens.Location = new System.Drawing.Point(10, 297);
+            this.lblThrSens.Name = "lblThrSens";
+            this.lblThrSens.Size = new System.Drawing.Size(92, 13);
+            this.lblThrSens.TabIndex = 17;
+            this.lblThrSens.Text = "Throttle Sensibility";
+            // 
+            // trbSensibility
+            // 
+            this.trbSensibility.Location = new System.Drawing.Point(18, 313);
+            this.trbSensibility.Maximum = 200;
+            this.trbSensibility.Name = "trbSensibility";
+            this.trbSensibility.Size = new System.Drawing.Size(344, 45);
+            this.trbSensibility.TabIndex = 16;
+            this.trbSensibility.Value = 200;
             // 
             // cboxReport
             // 
@@ -122,7 +142,7 @@
             // lblSensorH
             // 
             this.lblSensorH.AutoSize = true;
-            this.lblSensorH.Location = new System.Drawing.Point(270, 226);
+            this.lblSensorH.Location = new System.Drawing.Point(269, 239);
             this.lblSensorH.Name = "lblSensorH";
             this.lblSensorH.Size = new System.Drawing.Size(16, 13);
             this.lblSensorH.TabIndex = 14;
@@ -143,7 +163,7 @@
             this.trbUChannel.Location = new System.Drawing.Point(61, 161);
             this.trbUChannel.Maximum = 254;
             this.trbUChannel.Name = "trbUChannel";
-            this.trbUChannel.Size = new System.Drawing.Size(375, 45);
+            this.trbUChannel.Size = new System.Drawing.Size(311, 45);
             this.trbUChannel.TabIndex = 12;
             this.trbUChannel.Value = 220;
             // 
@@ -169,7 +189,7 @@
             // chkUseJoystick
             // 
             this.chkUseJoystick.AutoSize = true;
-            this.chkUseJoystick.Location = new System.Drawing.Point(309, 211);
+            this.chkUseJoystick.Location = new System.Drawing.Point(272, 212);
             this.chkUseJoystick.Name = "chkUseJoystick";
             this.chkUseJoystick.Size = new System.Drawing.Size(86, 17);
             this.chkUseJoystick.TabIndex = 9;
@@ -178,7 +198,7 @@
             // 
             // numElevation
             // 
-            this.numElevation.Location = new System.Drawing.Point(82, 219);
+            this.numElevation.Location = new System.Drawing.Point(101, 211);
             this.numElevation.Maximum = new decimal(new int[] {
             254,
             0,
@@ -193,33 +213,36 @@
             this.trbElevator.Location = new System.Drawing.Point(61, 121);
             this.trbElevator.Maximum = 1022;
             this.trbElevator.Name = "trbElevator";
-            this.trbElevator.Size = new System.Drawing.Size(375, 45);
+            this.trbElevator.Size = new System.Drawing.Size(311, 45);
             this.trbElevator.TabIndex = 8;
+            this.trbElevator.Value = 511;
             // 
             // trbAileron
             // 
             this.trbAileron.Location = new System.Drawing.Point(61, 87);
             this.trbAileron.Maximum = 1022;
             this.trbAileron.Name = "trbAileron";
-            this.trbAileron.Size = new System.Drawing.Size(375, 45);
+            this.trbAileron.Size = new System.Drawing.Size(311, 45);
             this.trbAileron.TabIndex = 7;
+            this.trbAileron.Value = 511;
             // 
             // trbRudder
             // 
             this.trbRudder.Location = new System.Drawing.Point(61, 55);
             this.trbRudder.Maximum = 1022;
             this.trbRudder.Name = "trbRudder";
-            this.trbRudder.Size = new System.Drawing.Size(375, 45);
+            this.trbRudder.Size = new System.Drawing.Size(311, 45);
             this.trbRudder.TabIndex = 6;
+            this.trbRudder.Value = 511;
             // 
             // lblElevation
             // 
             this.lblElevation.AutoSize = true;
-            this.lblElevation.Location = new System.Drawing.Point(25, 221);
+            this.lblElevation.Location = new System.Drawing.Point(10, 215);
             this.lblElevation.Name = "lblElevation";
-            this.lblElevation.Size = new System.Drawing.Size(51, 13);
+            this.lblElevation.Size = new System.Drawing.Size(85, 13);
             this.lblElevation.TabIndex = 5;
-            this.lblElevation.Text = "Elevation";
+            this.lblElevation.Text = "Elevation Target";
             // 
             // lblElevator
             // 
@@ -262,12 +285,12 @@
             this.trbThrotle.Location = new System.Drawing.Point(61, 19);
             this.trbThrotle.Maximum = 1022;
             this.trbThrotle.Name = "trbThrotle";
-            this.trbThrotle.Size = new System.Drawing.Size(375, 45);
+            this.trbThrotle.Size = new System.Drawing.Size(311, 45);
             this.trbThrotle.TabIndex = 0;
             // 
             // numPollTime
             // 
-            this.numPollTime.Location = new System.Drawing.Point(203, 23);
+            this.numPollTime.Location = new System.Drawing.Point(131, 31);
             this.numPollTime.Minimum = new decimal(new int[] {
             10,
             0,
@@ -285,9 +308,9 @@
             // 
             // btnOpenJoystick
             // 
-            this.btnOpenJoystick.Location = new System.Drawing.Point(296, 15);
+            this.btnOpenJoystick.Location = new System.Drawing.Point(183, 15);
             this.btnOpenJoystick.Name = "btnOpenJoystick";
-            this.btnOpenJoystick.Size = new System.Drawing.Size(95, 33);
+            this.btnOpenJoystick.Size = new System.Drawing.Size(95, 30);
             this.btnOpenJoystick.TabIndex = 3;
             this.btnOpenJoystick.Text = "Open Joystick";
             this.btnOpenJoystick.UseVisualStyleBackColor = true;
@@ -296,7 +319,7 @@
             // lblPollTime
             // 
             this.lblPollTime.AutoSize = true;
-            this.lblPollTime.Location = new System.Drawing.Point(133, 25);
+            this.lblPollTime.Location = new System.Drawing.Point(113, 15);
             this.lblPollTime.Name = "lblPollTime";
             this.lblPollTime.Size = new System.Drawing.Size(64, 13);
             this.lblPollTime.TabIndex = 4;
@@ -304,7 +327,7 @@
             // 
             // numJoy
             // 
-            this.numJoy.Location = new System.Drawing.Point(397, 23);
+            this.numJoy.Location = new System.Drawing.Point(284, 25);
             this.numJoy.Name = "numJoy";
             this.numJoy.Size = new System.Drawing.Size(68, 20);
             this.numJoy.TabIndex = 5;
@@ -318,25 +341,17 @@
             // 
             this.btnOpenConn.Location = new System.Drawing.Point(13, 13);
             this.btnOpenConn.Name = "btnOpenConn";
-            this.btnOpenConn.Size = new System.Drawing.Size(114, 35);
+            this.btnOpenConn.Size = new System.Drawing.Size(94, 35);
             this.btnOpenConn.TabIndex = 6;
             this.btnOpenConn.Text = "Wild Duck Open Connection";
             this.btnOpenConn.UseVisualStyleBackColor = true;
             this.btnOpenConn.Click += new System.EventHandler(this.btnOpenConn_Click);
             // 
-            // trbSensibility
-            // 
-            this.trbSensibility.Location = new System.Drawing.Point(28, 320);
-            this.trbSensibility.Maximum = 200;
-            this.trbSensibility.Name = "trbSensibility";
-            this.trbSensibility.Size = new System.Drawing.Size(380, 45);
-            this.trbSensibility.TabIndex = 16;
-            // 
             // frmHIDControllerTest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(490, 514);
+            this.ClientSize = new System.Drawing.Size(787, 436);
             this.Controls.Add(this.btnOpenConn);
             this.Controls.Add(this.numJoy);
             this.Controls.Add(this.lblPollTime);
@@ -347,6 +362,7 @@
             this.Text = "Control Test";
             this.grpMetrics.ResumeLayout(false);
             this.grpMetrics.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trbSensibility)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbUChannel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numElevation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbElevator)).EndInit();
@@ -355,7 +371,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.trbThrotle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPollTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numJoy)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trbSensibility)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -388,6 +403,7 @@
         private System.Windows.Forms.Label lblSensorH;
         private System.Windows.Forms.ComboBox cboxReport;
         private System.Windows.Forms.TrackBar trbSensibility;
+        private System.Windows.Forms.Label lblThrSens;
     }
 }
 

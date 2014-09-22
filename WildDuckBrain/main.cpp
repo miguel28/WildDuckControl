@@ -346,7 +346,7 @@ int main() {
 		UpdateSensors();
 		UpdateESC();
 
-		//ShowControllerReport();
+		ShowControllerReport();
 		//ShowSensorsReport();
 		
 		wait_ms(REFRESH_TIMEOUT_MS);

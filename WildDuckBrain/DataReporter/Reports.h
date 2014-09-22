@@ -53,6 +53,7 @@ typedef struct
     unsigned char HS_High_Limit;
     unsigned char HS_Medium_Limit;
     unsigned char HS_Low_Limit;
+	unsigned char DangerProtectionDivide;
 }Constants1;
 
 typedef struct

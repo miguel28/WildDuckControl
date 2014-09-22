@@ -360,7 +360,7 @@ void DataReporter::DecodeJoystick()
 	_controllerReport.UChannel = ReceivedReport[8];
 	_controllerReport.UseTargetMode = ReceivedReport[9];
 
-	_controllerReport.Command = (ReceivedReport[2] >> 4) & 0x0f;
+	_controllerReport.Command = (ReceivedReport[0] >> 4) & 0x0f;
 	_ScontrollerReport = _controllerReport;
 }
 void DataReporter::DecodeEmergency()
@@ -378,6 +378,7 @@ void DataReporter::DecodeConstants1()
     _constants1.HS_High_Limit = ReceivedReport[4];
     _constants1.HS_Medium_Limit = ReceivedReport[5];
     _constants1.HS_Low_Limit = ReceivedReport[6];
+	_constants1.DangerProtectionDivide = ReceivedReport[7];
 }
 void DataReporter::DecodeConstants2()
 {
@@ -411,7 +412,4 @@ void DataReporter::WatchDog()
 	if (HeartTolerance >= _emergencyLanding.ConnectionTimeOut)
 		isOnline = false;
 	else isOnline = true;
-	
-
-	
 }

@@ -16,7 +16,6 @@ namespace WildDuckControl
     {
         private WildDuckConnection wildDuck;
         private SDLJoystick joy;
-        private int FlyTimeOut = 0;
         float CalcThrottle = 0.0f;
 
 
@@ -50,7 +49,7 @@ namespace WildDuckControl
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (chkUseJoystick.Checked && joy != null && joy.IsOpen && FlyTimeOut== 0)
+            if (chkUseJoystick.Checked && joy != null && joy.IsOpen)
                 UpdateControlsWithJoystick();
             SendReport();
 
@@ -80,6 +79,9 @@ namespace WildDuckControl
             if (joy.ButtonNewpress(2))
                 CalcThrottle = 0.0f;
 
+            wildDuck.LandOff = joy.ButtonNewpress(10);
+            wildDuck.LandOn = joy.ButtonNewpress(9);   
+
             trbThrotle.Value = (int)(CalcThrottle);
             trbRudder.Value = (int)(joy.GetAxis(0, 0.25f) * 0.70f * 511.0f) + 511;
             trbAileron.Value = (int)(joy.GetAxis(3, 0.25f) * 0.70f * 511.0f) + 511;
@@ -87,11 +89,6 @@ namespace WildDuckControl
         }
         private void SendReport()
         {
-            if(FlyTimeOut == 1)
-                btnMoveCenter_Click(null, null);
-            if (FlyTimeOut != 0)
-                FlyTimeOut--;
-
             wildDuck.Send.joystickReport.Throttle = (ushort)(trbThrotle.Value);
             wildDuck.Send.joystickReport.Aileron = (ushort)(trbAileron.Value);
             wildDuck.Send.joystickReport.Rudder = (ushort)(trbRudder.Value);
@@ -106,21 +103,10 @@ namespace WildDuckControl
             trbRudder.Value = 511;
             trbThrotle.Value = 0;
         }
-        private void LandOff()
-        {
-            trbThrotle.Value = 0;
-            trbRudder.Value = 1022;
-            trbAileron.Value = 0;
-            trbElevator.Value = 0;
-            Application.DoEvents();
-            FlyTimeOut = 101;
-            
 
-
-        }
         private void btnFly_Click(object sender, EventArgs e)
         {
-            LandOff();
+            wildDuck.LandOff = true;
         }
 
         private void cboxReport_SelectedIndexChanged(object sender, EventArgs e)
