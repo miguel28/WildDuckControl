@@ -17,7 +17,7 @@ namespace WildDuckControl
         private WildDuckConnection wildDuck;
         private SDLJoystick joy;
         float CalcThrottle = 0.0f;
-
+        bool Arming = false;
 
         public frmHIDControllerTest()
         {
@@ -79,9 +79,36 @@ namespace WildDuckControl
             if (joy.ButtonNewpress(2))
                 CalcThrottle = 0.0f;
 
-            wildDuck.LandOff = joy.ButtonNewpress(10);
-            wildDuck.LandOn = joy.ButtonNewpress(9);   
-
+            if (radNaza.Checked)
+            {
+                wildDuck.LandOff = joy.ButtonNewpress(10);
+                wildDuck.LandOn = joy.ButtonNewpress(9); 
+            }
+            else
+            {
+                if (joy.ButtonHeld(10))
+                {
+                    trbThrotle.Value = 0;
+                    trbRudder.Value = 0;
+                    trbAileron.Value = 511;
+                    trbElevator.Value = 511;
+                    CalcThrottle = 0.0f;
+                    Arming = true;
+                }
+                else if (joy.ButtonHeld(9))
+                {
+                    trbThrotle.Value = 0;
+                    trbRudder.Value = 1022;
+                    trbAileron.Value = 511;
+                    trbElevator.Value = 511;
+                    CalcThrottle = 0.0f;
+                    Arming = true;
+                }
+                else Arming = false;
+            }
+            if (Arming)
+                return;
+ 
             trbThrotle.Value = (int)(CalcThrottle);
             trbRudder.Value = (int)(joy.GetAxis(0, 0.25f) * 0.70f * 511.0f) + 511;
             trbAileron.Value = (int)(joy.GetAxis(3, 0.25f) * 0.70f * 511.0f) + 511;
@@ -106,12 +133,47 @@ namespace WildDuckControl
 
         private void btnFly_Click(object sender, EventArgs e)
         {
-            wildDuck.LandOff = true;
+            if(radNaza.Checked)
+                wildDuck.LandOff = true;
+            else
+            {
+                Arming = true;
+                trbThrotle.Value = 0;
+                trbRudder.Value = 0;
+                trbAileron.Value = 511;
+                trbElevator.Value = 511;
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(2000);
+                btnMoveCenter_Click(null, null);
+                CalcThrottle = 0.0f;
+                Arming = false;
+            }
+        }
+
+        private void btnDisArm_Click(object sender, EventArgs e)
+        {
+            if (radNaza.Checked)
+                wildDuck.LandOn = true;
+            else
+            {
+                Arming = true;
+                trbThrotle.Value = 0;
+                trbRudder.Value = 1022;
+                trbAileron.Value = 511;
+                trbElevator.Value = 511;
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(2000);
+                btnMoveCenter_Click(null, null);
+                CalcThrottle = 0.0f;
+                Arming = false;
+            }
         }
 
         private void cboxReport_SelectedIndexChanged(object sender, EventArgs e)
         {
             wildDuck.ReceiveReportType = (ReportType)cboxReport.SelectedIndex;
         }
+
+        
     }
 }
