@@ -19,6 +19,20 @@ uint32_t __rbit(uint32_t value)
 	return newvalue;
 }
 
+uint8_t __rbit8(uint8_t value)
+{
+	uint8_t newvalue = 0;
+	uint16_t i;
+	uint8_t tempValue = 0;
+	for (i = 0; i < 8; i++)
+	{
+		tempValue = value & (1 << i);
+		bool bit = tempValue > 0;
+		newvalue |= (bit << (7 - i));
+	}
+	return newvalue;
+}
+
 PS_PAD::PS_PAD (PinName mosi, PinName miso, PinName sck, PinName cs) : _spi(mosi, miso, sck), _cs(cs) {
     _spi.format(8, 3);
     _spi.frequency(250000);
@@ -149,7 +163,11 @@ int PS_PAD::send (const char *cmd, int len, char *dat) {
     _cs = 0;
     wait_us(10);
     for (i = 0; i < len; i ++) {
+#ifdef USE_ORIGINAL
         dat[i] = __rbit(_spi.write(__rbit(cmd[i] << 24)) << 24);
+#else
+		dat[i] = __rbit8(_spi.write( __rbit8(cmd[i]) ) );
+#endif
         wait_us(10);
     }
     _cs = 1;

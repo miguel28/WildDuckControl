@@ -4,6 +4,7 @@
  */
 
 #include "mbed.h"
+//#define USE_ORIGINAL
 
 class PS_PAD {
 public:
