@@ -571,7 +571,6 @@ namespace SensorsSimulation {
 
 				 float Oposition = 0;
 				 float Output = 0;
-				 int FinalValue;
 
 				 //// Oposition is calculated number that reduce the control signal
 				 if (range1 >= target + Conts3Report.Prot_Medium_Limit)/// Positive Axis System protected
@@ -642,9 +641,9 @@ namespace SensorsSimulation {
 				 else
 				 {
 					 if (ControlSignal >= 511)
-						 FinalValue = trbControlSignal->Value - Output1;
+						 FinalValue = ControlSignal - Output1;
 					 else
-						 FinalValue = trbControlSignal->Value + Output2;
+						 FinalValue = ControlSignal + Output2;
 				 }
 
 				 lblRefuseLevel->Text = Output1.ToString() + ", " + Output2.ToString();

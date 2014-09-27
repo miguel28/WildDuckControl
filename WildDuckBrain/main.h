@@ -64,23 +64,27 @@ SRF05 *RightSensor2;
 
 ///////////////Reports
 ControllerReport creport;
+ControllerReport freport;
 Constants1 Conts1Report;
 Constants2 Conts2Report;
 Constants3 Conts3Report;
 EmergencyLanding eLanding;
 
 SensorsReport sreport;
+
 //////////// Variables
 bool UsingEmergency = false;
 float HighEmergency = 0.0f;
 int EAttemps = 0;
 int HighRangeRead = 0;
 
-
+///////////// Functions
 void ConstructAllModules();
 void DestructAllModules();
- 
+
 float Minor(float s1, float s2);
+int CalcOposition(int range1, float target, int ControlAxis, bool *isInDanger);
+int AxisProtection(float range1, float range2, int target, int ControlSignal);
 int ThrottleCorrection(int ErrorDif);
 void TargetControl(char Target);
 void EmergencyAttend();

@@ -43,7 +43,7 @@ public:
 	bool IsOnline();
 private:
 	/////Comunicacion Variables
-	char bufPointer;
+	unsigned char bufPointer;
 	char *buffer;
 	bool bufferBusy;
     char lastChar;  
@@ -54,7 +54,6 @@ private:
 	bool idle;
 	unsigned short HeartBeat, LastHeartBeat,HeartTolerance;
 	bool isOnline;
-
 
 	Serial* rf;
 	Ticker* tickWatchDog;

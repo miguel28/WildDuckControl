@@ -87,11 +87,11 @@ void DataReporter::InitReports()
 	_constants2.HS_Medium_Correction = 35;
 	_constants2.HS_Low_Correction = 12;
 
-	_constants3.Prot_Medium_Limit = 0;
-	_constants3.Prot_Low_Limit = 0;
-	_constants3.Prot_High_Correction = 0;
-	_constants3.Prot_Medium_Correction = 0;
-	_constants3.Prot_Low_Correction = 0;
+	_constants3.Prot_Medium_Limit = 20;
+	_constants3.Prot_Low_Limit = 12;
+	_constants3.Prot_High_Correction = 1000;
+	_constants3.Prot_Medium_Correction = 1000;
+	_constants3.Prot_Low_Correction = 200;
 }
 
 ControllerReport DataReporter::GetControllerReport()
@@ -361,7 +361,6 @@ void DataReporter::DecodeJoystick()
 	_controllerReport.UseTargetMode = ReceivedReport[9];
 
 	_controllerReport.Command = (ReceivedReport[0] >> 4) & 0x0f;
-	_ScontrollerReport = _controllerReport;
 }
 void DataReporter::DecodeEmergency()
 {

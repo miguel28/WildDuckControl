@@ -42,7 +42,6 @@ void ConstructAllModules()
 #endif
 
 }
-
 void DestructAllModules()
 {
 #ifdef PC_UART_DEBUG
@@ -84,7 +83,6 @@ void DestructAllModules()
 
 #endif
 }
-
 float Minor(float s1, float s2)
 {
 	if (s1 <= s2)
@@ -93,56 +91,97 @@ float Minor(float s1, float s2)
 		return s2;
 }
 
-void UpdateSensors()
+/**
+int final = AxisProtection(range1, range2, target, ControlSignal);
+trbControlOuput->Value = final;
+**/
+int CalcOposition(int range1, float target, int ControlAxis, bool *isInDanger)
 {
-#ifdef USE_HIGH_SENSOR
-	HighRangeRead++;
-	if (HighRangeRead>8)
+	if (ControlAxis < 0)
+		ControlAxis *= -1;
+
+	float Oposition = 0;
+	float Output = 0;
+
+	//// Oposition is calculated number that reduce the control signal
+	if (range1 >= target + Conts3Report.Prot_Medium_Limit)/// Positive Axis System protected
 	{
-		HighSensor->startRanging();
-		HighRangeRead = 0;
+		Oposition = 0;
+		Output = (Oposition * ControlAxis);
 	}
-#endif
+	else if (range1 >= target + Conts3Report.Prot_Low_Limit)/// The system is getting closer to a wall little oposition
+	{
+		float error = range1 - Conts3Report.Prot_Low_Limit - target;
+		float maxError = Conts3Report.Prot_Medium_Limit - Conts3Report.Prot_Low_Limit;
+		float gain = 1.0f - (error / maxError);
+		float correction = (Conts3Report.Prot_Low_Correction / 1000.0f);
+		Oposition = gain * correction;
 
-#ifdef TEST_SENSORS
-	sreport.Elevation = HighSensor->GetInches();
-	sreport.Front = FrontSensor1->GetInches();
-	sreport.Back = BackSensor1->GetInches();
-	sreport.Left = 0;
-	sreport.Right = 0;
-#else
+		Output = (Oposition * ControlAxis);
+	}
+	else if (range1 >= target)/// The System is very close to the target oposition Oposition total (oposition equal to control signal)
+	{
+		float error = range1 - target;
+		float maxError = Conts3Report.Prot_Low_Limit - 0;
+		float gain = 1.0f - (error / maxError);
+		float correction = (Conts3Report.Prot_Medium_Correction / 1000.0f);
+		Oposition = gain * correction;
 
-#ifdef USE_HIGH_SENSOR
-	sreport.Elevation = HighSensor->GetInches();
-#else
-	sreport.Elevation = 0;
-#endif
-#ifdef USE_FRONT_SENSOR
-	sreport.Front = Minor(FrontSensor1->GetInches(), FrontSensor2->GetInches());
-#else
-	sreport.Front = 0;
-#endif
-#ifdef USE_BACK_SENSOR
-	sreport.Back = Minor(BackSensor1->GetInches(), BackSensor2->GetInches());
-#else
-	sreport.Back = 0;
-#endif
-#ifdef USE_LEFT_SENSOR
-	sreport.Left = Minor(LeftSensor1->GetInches(), LeftSensor2->GetInches());
-#else
-	sreport.Left = 0;
-#endif
-#ifdef USE_RIGHT_SENSOR
-	sreport.Right = Minor(RightSensor1->GetInches(), RightSensor2->GetInches());
-	sreport.Debug1 = RightSensor1->GetInches();
-	sreport.Debug2 = RightSensor2->GetInches();
-#else
-	sreport.Right = 0;
-#endif
+		Output = (Oposition * ControlAxis);
+	}
+	else /// The sytem is in danger negative oposition.
+	{
+		float error = range1 - target;
+		float maxError = target;
+		float gain = -(error / maxError);
+		float correction = (Conts3Report.Prot_High_Correction / 1000.0f) + 1.0f;
+		Oposition = gain * correction;
+		Output = (Oposition * 511);// +ControlAxis;
+		*isInDanger = true;
+	}
 
-#endif
+	return Output;
+}
+int AxisProtection(float range1, float range2, int target, int ControlSignal)
+{
+	float Output1 = 0;
+	float Output2 = 0;
+	bool Danger1 = false;
+	bool Danger2 = false;
+	int FinalValue = 0;
 
-	reporter->SetSensorsReport(sreport);
+	Output1 = CalcOposition((int)range1, (int)target, ControlSignal - 511, &Danger1);
+	Output2 = CalcOposition((int)range2, (int)target, ControlSignal - 511, &Danger2);
+
+	FinalValue = ControlSignal;
+	if (Danger1 || Danger2)
+	{
+		FinalValue = 511;
+		if (Danger1 && Danger2)
+		{
+			Output1 /= 4;
+			Output2 /= 4;
+		}
+
+		if (Danger1)
+			FinalValue -= Output1;
+		if (Danger2)
+			FinalValue += Output2;
+	}
+	else
+	{
+		if (ControlSignal >= 511)
+			FinalValue = ControlSignal - Output1;
+		else
+			FinalValue = ControlSignal + Output2;
+	}
+
+	if (FinalValue <= 0)
+		FinalValue = 0;
+	if (FinalValue >= 1022)
+		FinalValue = 1022;
+
+	return FinalValue;
 }
 int ThrottleCorrection(int ErrorDif)
 {
@@ -201,7 +240,10 @@ void TargetControl(char Target)
 {
 	int ErrorDif = Target - sreport.Elevation;
 	int FinalThrottle = IDLE_CONSTANT; // Constante Throttle IDLE probablemente no sea cero
+	
 	FinalThrottle += ThrottleCorrection(ErrorDif);
+
+	freport.Throttle = FinalThrottle;
 	Throtle = (float)((float)(FinalThrottle) / 1022.0f);
 }
 void EmergencyAttend()
@@ -259,6 +301,57 @@ void PowerDown()
 	wait_ms(POWER_DELAY_MS);
 }
 
+void UpdateSensors()
+{
+#ifdef USE_HIGH_SENSOR
+	HighRangeRead++;
+	if (HighRangeRead>8)
+	{
+		HighSensor->startRanging();
+		HighRangeRead = 0;
+	}
+#endif
+
+#ifdef TEST_SENSORS
+	sreport.Elevation = HighSensor->GetInches();
+	sreport.Front = FrontSensor1->GetInches();
+	sreport.Back = BackSensor1->GetInches();
+	sreport.Left = 0;
+	sreport.Right = 0;
+#else
+
+#ifdef USE_HIGH_SENSOR
+	sreport.Elevation = HighSensor->GetInches();
+#else
+	sreport.Elevation = 0;
+#endif
+#ifdef USE_FRONT_SENSOR
+	sreport.Front = Minor(FrontSensor1->GetInches(), FrontSensor2->GetInches());
+#else
+	sreport.Front = 0;
+#endif
+#ifdef USE_BACK_SENSOR
+	sreport.Back = Minor(BackSensor1->GetInches(), BackSensor2->GetInches());
+#else
+	sreport.Back = 0;
+#endif
+#ifdef USE_LEFT_SENSOR
+	sreport.Left = Minor(LeftSensor1->GetInches(), LeftSensor2->GetInches());
+#else
+	sreport.Left = 0;
+#endif
+#ifdef USE_RIGHT_SENSOR
+	sreport.Right = Minor(RightSensor1->GetInches(), RightSensor2->GetInches());
+	sreport.Debug1 = RightSensor1->GetInches();
+	sreport.Debug2 = RightSensor2->GetInches();
+#else
+	sreport.Right = 0;
+#endif
+
+#endif
+
+	reporter->SetSensorsReport(sreport);
+}
 void UpdateThrottle()
 {
 	if (!reporter->IsOnline() && eLanding.UseEmergencyLanding)
@@ -270,25 +363,43 @@ void UpdateThrottle()
 
 	if (creport.UseTargetMode)
 		TargetControl(creport.ElevationTarget);
-	else 
+	else
+	{
+		freport.Throttle = creport.Throttle;
 		Throtle = (float)((float)(creport.Throttle) / 1022.0f);
+	}
+		
 }
 void UpdateMovements()
 {
 	if (Conts1Report.UseProtection)
 	{
-
+#ifdef USE_FRONT_SENSOR
+#ifdef USE_BACK_SENSOR
+		freport.Elevator = AxisProtection(sreport.Back, sreport.Front, Conts1Report.ProtectionDistance, creport.Elevator)
+		Elevator = (float)((float)(freport.Elevator) / 1022.0f);
+#endif
+#endif
+#ifdef USE_LEFT_SENSOR
+#ifdef USE_RIGHT_SENSOR
+		freport.Aileron = AxisProtection(sreport.Right, sreport.Left, Conts1Report.ProtectionDistance, creport.Aileron)
+		Aileron = (float)((float)(freport.Aileron) / 1022.0f);
+#endif
+#endif
 	}
 	else
 	{
+		freport.Aileron = creport.Aileron;
+		freport.Elevator = creport.Elevator;
 		Aileron = (float)(((float)creport.Aileron) / 1022.0f);
 		Elevator = (float)((float)(creport.Elevator) / 1022.0f);
-		Rudder = (float)((float)(creport.Rudder) / 1022.0f);
 	}
 
+	freport.Rudder = creport.Rudder;
+	freport.UChannel = creport.UChannel;
+	Rudder = (float)((float)(creport.Rudder) / 1022.0f);
 	UChannel = (float)((float)(creport.UChannel) / 254.0f);
 }
-
 void UpdateESC()
 {
     creport = reporter->GetControllerReport();
@@ -307,6 +418,8 @@ void UpdateESC()
 
 	UpdateThrottle();
 	UpdateMovements();
+
+	reporter->SetControllerReport(freport);
 
     Aileron();
     Throtle();    
