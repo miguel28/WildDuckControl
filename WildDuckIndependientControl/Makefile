@@ -3,7 +3,7 @@
 
 GCC_BIN =
 PROJECT = WildDuckIndependientControl
-OBJECTS = ./main.o ./PS_PAD/PS_PAD.o ./PS_PAD/Joystick.o ./BufferedSerial/BufferedSerial.o ./BufferedSerial/Buffer/Buffer.o 
+OBJECTS = ./main.o ./PS_PAD/PS_PAD.o ./BufferedSerial/BufferedSerial.o ./BufferedSerial/Buffer/Buffer.o
 SYS_OBJECTS = ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/cmsis_nvic.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/system_MKL25Z4.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/mbed_overrides.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/startup_MKL25Z4.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/board.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/retarget.o 
 INCLUDE_PATHS = -I. -I./PS_PAD -I./mbed -I./mbed/TARGET_KL25Z -I./mbed/TARGET_KL25Z/TARGET_Freescale -I./mbed/TARGET_KL25Z/TARGET_Freescale/TARGET_KLXX -I./mbed/TARGET_KL25Z/TARGET_Freescale/TARGET_KLXX/TARGET_KL25Z -I./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM -I./BufferedSerial -I./BufferedSerial/Buffer 
 LIBRARY_PATHS = -L./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM 
