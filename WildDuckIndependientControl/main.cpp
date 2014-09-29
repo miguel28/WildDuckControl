@@ -7,7 +7,13 @@ Joystick joy;
 //BufferedSerial pc(USBTX, USBRX);
 
 int main() {
+	joy.Update();
+	joy.Update();
+	joy.Update();
+
 	int res = joy.init();
+
+	joy.Update();
 	/*if (res ==0)
 		pc.printf("Joystick Connected!%d\r\n", res);
 	else

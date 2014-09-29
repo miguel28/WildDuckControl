@@ -4,7 +4,7 @@
  */
 
 #include "mbed.h"
-#define USE_ORIGINAL
+//#define USE_ORIGINAL
 
 enum TYPE {
 	PAD_LEFT,

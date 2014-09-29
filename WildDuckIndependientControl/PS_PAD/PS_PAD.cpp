@@ -4,8 +4,10 @@
  */
 
 #include "PS_PAD.h"
+#include "MKL25Z4.h" 
 #include "BufferedSerial.h"
-BufferedSerial pc(USBTX, USBRX);
+
+Serial pc(USBTX, USBRX);
 
 uint32_t __rbit(uint32_t value)
 {
@@ -38,6 +40,9 @@ uint8_t __rbit8(uint8_t value)
 PS_PAD::PS_PAD (PinName mosi, PinName miso, PinName sck, PinName cs) : _spi(mosi, miso, sck), _cs(cs) {
     _spi.format(8, 3);
     _spi.frequency(250000);
+	SPI0->C1 |= 0x01;
+	SPI0->C1 |= 0x08;
+	SPI0->C1 &= ~(0x04);
     _cs = 1;
     _vib1 = 0;
     _vib2 = 0;
@@ -63,10 +68,8 @@ int PS_PAD::init () {
 	pc.printf("EnterConfig: \r\n");
     send(enter_config_mode, 5, buf);
 
-    if (buf[2] == 0xff) {
-        //return -1;
-		return buf[2];
-    }
+    if (buf[2] == 0xff)
+        return -1;
 	
     wait_ms(16);
 	pc.printf("Analog: \r\n");
@@ -84,7 +87,8 @@ int PS_PAD::init () {
 int PS_PAD::poll () {
     const char poll_command[9] = {0x01, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     int i;
-    char cmd[10], buf[10];
+	char cmd[10] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+	char buf[10] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
     memcpy(cmd, poll_command, 9);
     cmd[3] = _vib1;
@@ -98,8 +102,6 @@ int PS_PAD::poll () {
         _pad[i] = buf[3 + i];
     }
     _connected = true;
-
-	pc.printf("Axis: %4.4f\r\n", _pad[4]);
 
     return 0;
 }
@@ -173,19 +175,24 @@ int PS_PAD::send (const char *cmd, int len, char *dat) {
     int i;
 
     _cs = 0;
-    wait_us(10);
+    wait_us(5000);
     for (i = 0; i < len; i ++) {
 #ifdef USE_ORIGINAL
-        dat[i] = __rbit(_spi.write(__rbit(cmd[i] << 24)) << 24);
+        //dat[i] = __rbit(_spi.write(__rbit(cmd[i] << 24)) << 24);
 #else
-		dat[i] = __rbit8(_spi.write( __rbit8(cmd[i]) ) );
+		//dat[i] = __rbit8(_spi.write( __rbit8(cmd[i]) ) );
+		dat[i] =_spi.write( cmd[i] );
 #endif
-        wait_us(10);
+        wait_us(5000);
     }
     _cs = 1;
 
-	//int i = 0;
-	for (i = 0; i < 10; i++)
+	pc.printf("Send: ");
+	for (i = 0; i < len; i++)
+		pc.printf("%p, ", cmd[i]);
+	pc.printf("\r\n");
+	pc.printf("Received: ");
+	for (i = 0; i < len; i++)
 		pc.printf("%p, ", dat[i]);
 	pc.printf("\r\n");
     return i;
