@@ -4,6 +4,7 @@
  */
 
 #include "mbed.h"
+//#define __DEBUG__
 //#define USE_ORIGINAL
 
 enum TYPE {
@@ -32,23 +33,26 @@ enum TYPE {
 
 class PS_PAD {
 public:
-    PS_PAD (PinName mosi, PinName miso, PinName sck, PinName cs);
-    PS_PAD (SPI &spi, PinName cs);
 
-    int init ();
-    int poll ();
-    int read (TYPE t);
-    int vibration (int v1, int v2);
-
+	PS_PAD(PinName mosi, PinName miso, PinName sck, PinName cs);
+	int init();
+	int poll();
+	int read(TYPE t);
+	int vibration(int v1, int v2);
+	uint8_t SendSPI(uint8_t data);
 private:
-    SPI _spi;
-    DigitalOut _cs;
-    uint8_t _pad[6];
-    int _vib1, _vib2;
-    bool _connected;
+	DigitalOut _clk;
+	DigitalOut _mosi;
+	DigitalIn _miso;
+	DigitalOut _cs;
 
-    int send (const char *cmd, int len, char *dat);
+	uint8_t _pad[6];
+	int _vib1, _vib2;
+	bool _connected;
+
+	int send(const char *cmd, int len, char *dat);
 };
+
 
 enum JButtons
 {

@@ -1,33 +1,46 @@
 #include "mbed.h"
-#include "BufferedSerial.h"
 #include "PS_PAD.h"
 
 DigitalOut myled(LED2);
-Joystick joy;
-//BufferedSerial pc(USBTX, USBRX);
+
+PS_PAD pad(D12, D11, D13, D10);
+#ifndef __DEBUG__
+Serial pc(USBTX, USBRX);
+#endif
 
 int main() {
-	joy.Update();
-	joy.Update();
-	joy.Update();
-
-	int res = joy.init();
-
-	joy.Update();
-	/*if (res ==0)
-		pc.printf("Joystick Connected!%d\r\n", res);
-	else
-		pc.printf("Joystick NO Connected!%d\r\n", res);
-		*/
+	int res = pad.init();
+	if (res == 0)
+	{
+#ifndef __DEBUG__
+		pc.printf("Joystick Opened\r\n");
+#endif
+	}
     while(1) {
-		joy.Update();
-		//pc.printf("POLL: %d\r\n", joy.poll());
-		//pc.printf("Axis 0: %4.4f\r\n", joy.GetAxis(0));
-		//pc.printf("Axis 0: %d\r\n", joy.read(ANALOG_LX));
+		pad.poll();
+		if (pad.read(PAD_X))
+		{
+#ifndef __DEBUG__
+			pc.printf("X Pressed\r\n");
+#endif
+		}
 
-        myled = 1;
+		if (pad.read(PAD_CIRCLE))
+		{
+#ifndef __DEBUG__
+			pc.printf("O Pressed\r\n");
+#endif
+		}
+
+		if (pad.read(PAD_L1))
+		{
+#ifndef __DEBUG__
+			pc.printf("AXIS: %d\r\n", pad.read(ANALOG_LX));
+#endif
+		}
+
+		myled = !myled;
         wait(0.05);
-        myled = 0;
-        wait(0.05);
+
     }
 }
