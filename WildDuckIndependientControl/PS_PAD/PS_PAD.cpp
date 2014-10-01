@@ -1,6 +1,6 @@
 /*
  * PlayStation Controller library
- * Copyright (c) 2013 Hiroshi Suga
+ * Copyright (c) 2013 Hiroshi Suga - 2014 Miguel Silva
  */
 
 #include "PS_PAD.h"
@@ -12,6 +12,7 @@ PS_PAD::PS_PAD(PinName mosi, PinName miso, PinName sck, PinName cs) : _clk(sck),
 	_clk = 1;
 	_mosi = 0;
 	_cs = 1;
+
 	_vib1 = 0;
 	_vib2 = 0;
 	_connected = false;
@@ -77,13 +78,12 @@ int PS_PAD::poll() {
 }
 
 int PS_PAD::read(TYPE t) {
-	if (!_connected) {
-		if (t <= BUTTONS) {
+	if (!_connected) 
+	{
+		if (t <= BUTTONS)
 			return 0;
-		}
-		else {
+		else 
 			return 0x80;
-		}
 	}
 
 	switch (t) {
@@ -149,9 +149,10 @@ int PS_PAD::send(const char *cmd, int len, char *dat) {
 	wait_us(10);
 	for (i = 0; i < len; i++) 
 	{
-		dat[i] = __rbit(_spi.write(__rbit(cmd[i] << 24)) << 24);
+		dat[i] = SendSPI(cmd[i]);
 		wait_us(20);
 	}
+
 #ifdef __DEBUG__
 	pc.printf("Sended:   ");
 	for (i = 0; i < len; i++)
@@ -162,25 +163,23 @@ int PS_PAD::send(const char *cmd, int len, char *dat) {
 		pc.printf("%p, ", dat[i]);
 	pc.printf("\r\n");
 #endif
+
 	_cs = 1;
 	return i;
 }
 
-
-
-
 ///////////////////////////////////////////
-Joystick::Joystick() : PS_PAD(D11, D12, D13, D10)
+Joystick::Joystick() : PS_PAD(D12, D11, D13, D10)
 {
 	Opened = false;
-	NumButtons = 12;
+	NumButtons = 14;
 }
 Joystick::~Joystick()
 {
 
 }
 
-int Joystick::Init()
+bool Joystick::Init()
 {
 	Opened = init() == 0;
 	return Opened;
@@ -205,6 +204,11 @@ void Joystick::Event()
 	mButtonHeld[Start] = read(PAD_START);
 	mButtonHeld[L3] = read(ANALOG_LEFT);
 	mButtonHeld[R3] = read(ANALOG_RIGHT);
+
+	mButtonHeld[UP] = read(PAD_TOP);
+	mButtonHeld[DOWN] = read(PAD_BOTTOM);
+	mButtonHeld[LEFT] = read(PAD_LEFT);
+	mButtonHeld[RIGHT] = read(PAD_RIGHT);
 
 	axis[XAxis] = read(ANALOG_LX);
 	axis[YAxis] = read(ANALOG_LY);
@@ -232,28 +236,6 @@ void Joystick::Event()
 			mButtonNewpress[i] = 0;
 		}
 	}
-	/*
-	char TempHat = GetHatHeld(0);
-	if (hatPrevState[0] != TempHat && TempHat != HAT_CENTERED)
-	{
-		hatNewpressState[0] = TempHat;
-	}
-	else
-	{
-		hatNewpressState[0] = HAT_CENTERED;
-	}
-	hatPrevState[0] = TempHat;
-
-	TempHat = GetHatHeld(1);
-	if (hatPrevState[1] != TempHat && TempHat != HAT_CENTERED)
-	{
-		hatNewpressState[1] = TempHat;
-	}
-	else
-	{
-		hatNewpressState[1] = HAT_CENTERED;
-	}
-	hatPrevState[1] = TempHat;*/
 }
 unsigned short Joystick::ButtonHeld(unsigned short button)
 {
@@ -286,12 +268,3 @@ float Joystick::GetAxis(unsigned char _axis, float DeathZone)
 
 	return FinalAxis;
 }
-/*
-char Joystick::GetHatHeld(int NumHat)
-{
-
-}
-char Joystick::GetHatNewPress(int NumHat)
-{
-
-}*/

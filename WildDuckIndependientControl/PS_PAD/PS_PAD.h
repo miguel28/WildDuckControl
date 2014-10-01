@@ -5,7 +5,6 @@
 
 #include "mbed.h"
 //#define __DEBUG__
-//#define USE_ORIGINAL
 
 enum TYPE {
 	PAD_LEFT,
@@ -33,13 +32,13 @@ enum TYPE {
 
 class PS_PAD {
 public:
-
 	PS_PAD(PinName mosi, PinName miso, PinName sck, PinName cs);
 	int init();
 	int poll();
 	int read(TYPE t);
 	int vibration(int v1, int v2);
 	uint8_t SendSPI(uint8_t data);
+
 private:
 	DigitalOut _clk;
 	DigitalOut _mosi;
@@ -67,7 +66,11 @@ enum JButtons
 	Select,
 	Start,
 	L3,
-	R3
+	R3,
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
 };
 
 enum JAxis
@@ -78,21 +81,14 @@ enum JAxis
 	WAxis
 };
 
-
-
-
 class Joystick : public PS_PAD
 {
 private:
 	unsigned short NumButtons;
-	unsigned short mButtonHeld[12];
-	unsigned short mButtonNewpress[12];
-	unsigned short bButtonNewpress[12];
-	char hatPrevState[5];
-	char hatNewpressState[5];
-	char hatHeldState[5];
+	unsigned short mButtonHeld[16];
+	unsigned short mButtonNewpress[16];
+	unsigned short bButtonNewpress[16];
 	int axis[4];
-
 	void Event();
 
 public:
@@ -100,13 +96,10 @@ public:
 	~Joystick();
 	bool Opened;
 
-	int Init();
+	bool Init();
 	void Update();
 	unsigned short ButtonHeld(unsigned short button);
 	unsigned short ButtonNewpress(unsigned short button);
 	float GetAxis(unsigned char axis, float DeathZone = 0.0f);
-	//char GetHatHeld(int NumHat);
-	//char GetHatNewPress(int NumHat);
 };
-
 
