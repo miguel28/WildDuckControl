@@ -3,9 +3,9 @@
 
 GCC_BIN =
 PROJECT = WildDuckIndependientControl
-OBJECTS = ./main.o ./PS_PAD/PS_PAD.o ./BufferedSerial/BufferedSerial.o ./BufferedSerial/Buffer/Buffer.o
-SYS_OBJECTS = ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/cmsis_nvic.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/system_MKL25Z4.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/mbed_overrides.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/startup_MKL25Z4.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/board.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/retarget.o 
-INCLUDE_PATHS = -I. -I./PS_PAD -I./mbed -I./mbed/TARGET_KL25Z -I./mbed/TARGET_KL25Z/TARGET_Freescale -I./mbed/TARGET_KL25Z/TARGET_Freescale/TARGET_KLXX -I./mbed/TARGET_KL25Z/TARGET_Freescale/TARGET_KLXX/TARGET_KL25Z -I./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM -I./BufferedSerial -I./BufferedSerial/Buffer 
+OBJECTS = ./main.o ./PS_PAD/PS_PAD.o ./LEDBar/LedBar.o ./Joystick/Joystick.o 
+SYS_OBJECTS = ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/retarget.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/board.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/cmsis_nvic.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/mbed_overrides.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/system_MKL25Z4.o ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/startup_MKL25Z4.o 
+INCLUDE_PATHS = -I. -I./PS_PAD -I./LEDBar -I./mbed -I./mbed/TARGET_KL25Z -I./mbed/TARGET_KL25Z/TARGET_Freescale -I./mbed/TARGET_KL25Z/TARGET_Freescale/TARGET_KLXX -I./mbed/TARGET_KL25Z/TARGET_Freescale/TARGET_KLXX/TARGET_KL25Z -I./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM -I./Joystick 
 LIBRARY_PATHS = -L./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM 
 LIBRARIES = -lmbed 
 LINKER_SCRIPT = ./mbed/TARGET_KL25Z/TOOLCHAIN_GCC_ARM/MKL25Z4.ld
@@ -18,8 +18,8 @@ LD      = $(GCC_BIN)arm-none-eabi-gcc
 OBJCOPY = $(GCC_BIN)arm-none-eabi-objcopy
 
 CPU = -mcpu=cortex-m0plus -mthumb
-CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -Wall -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer
-CC_SYMBOLS = -DTARGET_KL25Z -DTARGET_M0P -DTARGET_Freescale -DTARGET_KLXX -DTOOLCHAIN_GCC_ARM -DTOOLCHAIN_GCC -D__CORTEX_M0PLUS -DARM_MATH_CM0PLUS -DMBED_BUILD_TIMESTAMP=1411609387.33 -D__MBED__=1 -DTARGET_FF_ARDUINO 
+CC_FLAGS = $(CPU) -c -g -fno-common -fmessage-length=0 -Wall -fno-exceptions -ffunction-sections -fdata-sections
+CC_SYMBOLS = -DTARGET_KL25Z -DTARGET_M0P -DTARGET_Freescale -DTARGET_KLXX -DTOOLCHAIN_GCC_ARM -DTOOLCHAIN_GCC -D__CORTEX_M0PLUS -DARM_MATH_CM0PLUS -DMBED_BUILD_TIMESTAMP=1412453829.35 -D__MBED__=1 -DTARGET_FF_ARDUINO 
 
 LD_FLAGS = -mcpu=cortex-m0plus -mthumb -Wl,--gc-sections --specs=nano.specs -u _printf_float -u _scanf_float
 LD_SYS_LIBS = -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys

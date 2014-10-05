@@ -24,9 +24,6 @@ namespace WildDuckLibrary
         private const int TimesSendCommand = 5;
         private const int CommandResponseTimeOut = 10;
         private int ReportQueque = 0;
-
-        private byte _LandOff = 0;
-        private byte _LandOn = 0;
         #endregion
 
         #region Reports
@@ -87,20 +84,6 @@ namespace WildDuckLibrary
             set
             {
                 _RequestReport = value;
-            }
-        }
-        public bool LandOff
-        {
-            set
-            {
-                _LandOff = value ? (byte)(1<< 4): (byte)0;
-            }
-        }
-        public bool LandOn
-        {
-            set
-            {
-                _LandOn = value ? (byte)(1 << 5): (byte)0;
             }
         }
 
@@ -215,8 +198,7 @@ namespace WildDuckLibrary
                 Send.joystickReport.Throttle = 1022;
 
             byte[] buffer = new byte[12];
-            buffer[0] = (byte)((byte)(ReportType.Joystick) | ( _LandOn) | (_LandOff));
-            //buffer[0] = (byte)(ReportType.Joystick);
+            buffer[0] = (byte)(ReportType.Joystick);
             buffer[1] = (byte)_RequestReport;
 
             buffer[2] = (byte)(Send.joystickReport.Throttle & 0xff);
@@ -234,9 +216,6 @@ namespace WildDuckLibrary
             buffer[7] = (byte)Send.joystickReport.ElevationTarget;
             buffer[8] = (byte)Send.joystickReport.UChannel;
             buffer[9] = (byte)Send.joystickReport.UseTargetMode;
-
-            _LandOn = (byte)0;
-            _LandOff = (byte)0;
 
             WriteReport(buffer);
         }

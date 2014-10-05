@@ -376,13 +376,13 @@ void UpdateMovements()
 	{
 #ifdef USE_FRONT_SENSOR
 #ifdef USE_BACK_SENSOR
-		freport.Elevator = AxisProtection(sreport.Back, sreport.Front, Conts1Report.ProtectionDistance, creport.Elevator)
+		freport.Elevator = AxisProtection(sreport.Back, sreport.Front, Conts1Report.ProtectionDistance, creport.Elevator);
 		Elevator = (float)((float)(freport.Elevator) / 1022.0f);
 #endif
 #endif
 #ifdef USE_LEFT_SENSOR
 #ifdef USE_RIGHT_SENSOR
-		freport.Aileron = AxisProtection(sreport.Right, sreport.Left, Conts1Report.ProtectionDistance, creport.Aileron)
+		freport.Aileron = AxisProtection(sreport.Right, sreport.Left, Conts1Report.ProtectionDistance, creport.Aileron);
 		Aileron = (float)((float)(freport.Aileron) / 1022.0f);
 #endif
 #endif

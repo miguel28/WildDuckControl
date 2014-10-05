@@ -81,8 +81,25 @@ namespace WildDuckControl
 
             if (radNaza.Checked)
             {
-                wildDuck.LandOff = joy.ButtonNewpress(10);
-                wildDuck.LandOn = joy.ButtonNewpress(9); 
+                if (joy.ButtonHeld(10))
+                {
+                    trbThrotle.Value = 0;
+                    trbRudder.Value = 0;
+                    trbAileron.Value = 511;
+                    trbElevator.Value = 511;
+                    CalcThrottle = 0.0f;
+                    Arming = true;
+                }
+                else if (joy.ButtonHeld(9))
+                {
+                    trbThrotle.Value = 0;
+                    trbRudder.Value = 1022;
+                    trbAileron.Value = 511;
+                    trbElevator.Value = 511;
+                    CalcThrottle = 0.0f;
+                    Arming = true;
+                }
+                else Arming = false;
             }
             else
             {
@@ -134,7 +151,18 @@ namespace WildDuckControl
         private void btnFly_Click(object sender, EventArgs e)
         {
             if(radNaza.Checked)
-                wildDuck.LandOff = true;
+            {
+                Arming = true;
+                trbThrotle.Value = 0;
+                trbRudder.Value = 0;
+                trbAileron.Value = 511;
+                trbElevator.Value = 511;
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(2000);
+                btnMoveCenter_Click(null, null);
+                CalcThrottle = 0.0f;
+                Arming = false;
+            }
             else
             {
                 Arming = true;
@@ -153,7 +181,18 @@ namespace WildDuckControl
         private void btnDisArm_Click(object sender, EventArgs e)
         {
             if (radNaza.Checked)
-                wildDuck.LandOn = true;
+            {
+                Arming = true;
+                trbThrotle.Value = 0;
+                trbRudder.Value = 1022;
+                trbAileron.Value = 511;
+                trbElevator.Value = 511;
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(2000);
+                btnMoveCenter_Click(null, null);
+                CalcThrottle = 0.0f;
+                Arming = false;
+            }
             else
             {
                 Arming = true;
@@ -173,7 +212,6 @@ namespace WildDuckControl
         {
             wildDuck.ReceiveReportType = (ReportType)cboxReport.SelectedIndex;
         }
-
-        
+    
     }
 }
