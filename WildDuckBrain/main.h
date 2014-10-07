@@ -13,6 +13,10 @@
 //#define USE_LEFT_SENSOR
 //#define USE_RIGHT_SENSOR
 
+#define KK2 0
+#define NAZA_M 1
+#define FLY_CONTROL KK2
+
 #define IDLE_CONSTANT 511
 #define REFRESH_TIMEOUT_MS 30
 #define POWER_DELAY_MS 2000
@@ -88,8 +92,9 @@ int AxisProtection(float range1, float range2, int target, int ControlSignal);
 int ThrottleCorrection(int ErrorDif);
 void TargetControl(char Target);
 void EmergencyAttend();
-void PowerUp();
-void PowerDown();
+void SetUpdateESC();
+void PowerArm();
+void PowerDisArm();
 void UpdateThrottle();
 void UpdateMovements();
 void UpdateESC();

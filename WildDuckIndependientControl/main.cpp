@@ -2,47 +2,10 @@
 
 void ArmFunction()
 {
-#if FLY_CONTROL == KK2 
 	if (joy->ButtonHeld(10))
-	{
-		report.Throttle = 0;
-		report.Rudder = 0;
-		report.Aileron = 512;
-		report.Elevator = 512;
-		CalcThrottle = 0.0f;
-		Arming = true;
-	}
+		report.Command = 0x01;
 	else if (joy->ButtonHeld(9))
-	{
-		report.Throttle = 0;
-		report.Rudder = 1022;
-		report.Aileron = 512;
-		report.Elevator = 512;
-		CalcThrottle = 0.0f;
-		Arming = true;
-	}
-	else Arming = false;
-#else
-	if (joy->ButtonHeld(10))
-	{
-		report.Throttle = 0;
-		report.Rudder = 0;
-		report.Aileron = 512;
-		report.Elevator = 512;
-		CalcThrottle = 0.0f;
-		Arming = true;
-	}
-	else if (joy->ButtonHeld(9))
-	{
-		report.Throttle = 0;
-		report.Rudder = 1022;
-		report.Aileron = 512;
-		report.Elevator = 512;
-		CalcThrottle = 0.0f;
-		Arming = true;
-	}
-	else Arming = false;
-#endif
+		report.Command = 0x02;
 }
 void UpdateControls()
 {

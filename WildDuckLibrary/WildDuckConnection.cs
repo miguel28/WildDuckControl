@@ -24,6 +24,9 @@ namespace WildDuckLibrary
         private const int TimesSendCommand = 5;
         private const int CommandResponseTimeOut = 10;
         private int ReportQueque = 0;
+
+        private byte _LandOff = 0;
+        private byte _LandOn = 0;
         #endregion
 
         #region Reports
@@ -36,6 +39,20 @@ namespace WildDuckLibrary
             }
         }
         public Reports Send;
+        public bool Arm
+        {
+            set
+            {
+                _LandOff = value ? (byte)(1 << 4) : (byte)0;
+            }
+        }
+        public bool DisArm
+        {
+            set
+            {
+                _LandOn = value ? (byte)(1 << 5) : (byte)0;
+            }
+        }
         #endregion
 
         public WildDuckConnection(int pollData = 50)
@@ -198,7 +215,8 @@ namespace WildDuckLibrary
                 Send.joystickReport.Throttle = 1022;
 
             byte[] buffer = new byte[12];
-            buffer[0] = (byte)(ReportType.Joystick);
+            buffer[0] = (byte)((byte)(ReportType.Joystick) | (_LandOn) | (_LandOff));
+            //buffer[0] = (byte)(ReportType.Joystick);
             buffer[1] = (byte)_RequestReport;
 
             buffer[2] = (byte)(Send.joystickReport.Throttle & 0xff);
@@ -218,12 +236,15 @@ namespace WildDuckLibrary
             buffer[9] = (byte)Send.joystickReport.UseTargetMode;
 
             WriteReport(buffer);
+
+            _LandOn = (byte)0;
+            _LandOff = (byte)0;
         }
         private void SendEmegencyLandingReport()
         {
             byte[] buffer = new byte[12];
             buffer[0] = (byte)ReportType.EmergencyLanding;
-            buffer[1] = (byte)_RequestReport;
+            buffer[1] = (byte)ReportType.EmergencyLanding;
             buffer[2] = (byte)Send.emergencyLanding.UseEmergencyLanding;
             buffer[3] = (byte)Send.emergencyLanding.ConnectionTimeOut;
             buffer[4] = (byte)Send.emergencyLanding.BreakOutOffHeight;
@@ -238,7 +259,7 @@ namespace WildDuckLibrary
         {
             byte[] buffer = new byte[12];
             buffer[0] = (byte)ReportType.Constans1;
-            buffer[1] = (byte)_RequestReport;
+            buffer[1] = (byte)ReportType.Constans1;
             buffer[2] = (byte)Send.constant1.UseProtection;
             buffer[3] = (byte)Send.constant1.ProtectionDistance;
             buffer[4] = (byte)Send.constant1.HS_High_Limit;
@@ -264,8 +285,8 @@ namespace WildDuckLibrary
                 Send.constant2.HS_Low_Correction++;
 
             byte[] buffer = new byte[12];
-            buffer[0] = (byte)ReportType.Constans1;
-            buffer[1] = (byte)_RequestReport;
+            buffer[0] = (byte)ReportType.Constans2;
+            buffer[1] = (byte)ReportType.Constans2;
             buffer[2] = (byte)((Send.constant2.HS_UltraHigh_Correction >> 0) & 0x0ff);
             buffer[3] = (byte)((Send.constant2.HS_UltraHigh_Correction >> 8) & 0x0ff);
             buffer[4] = (byte)((Send.constant2.HS_High_Correction >> 0) & 0x0ff);
@@ -279,8 +300,8 @@ namespace WildDuckLibrary
         private void SendConstants3()
         {
             byte[] buffer = new byte[12];
-            buffer[0] = (byte)ReportType.Constans1;
-            buffer[1] = (byte)_RequestReport;
+            buffer[0] = (byte)ReportType.Constans3;
+            buffer[1] = (byte)ReportType.Constans3;
             buffer[2] = (byte)Send.constant3.Prot_Medium_Limit;
             buffer[3] = (byte)Send.constant3.Prot_Low_Limit;
             buffer[4] = (byte)((Send.constant3.Prot_High_Correction >> 0) & 0xff);

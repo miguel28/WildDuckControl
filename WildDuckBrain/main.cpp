@@ -257,7 +257,7 @@ void EmergencyAttend()
 	else
 	{
 		if (sreport.Elevation < eLanding.BreakOutOffHeight)
-			PowerDown();
+			PowerDisArm();
 		else
 		{
 			EAttemps++;
@@ -270,33 +270,46 @@ void EmergencyAttend()
 		}
 	}
 }
-void PowerUp()
-{
-	Throtle = 0.0f;
-	Rudder = 1.0f;
-	Elevator = 1.0f;
-	Aileron = 0.0f;
 
+void SetUpdateESC()
+{
 	Aileron();
 	Throtle();
 	Elevator();
 	Rudder();
 	UChannel();
+}
+void PowerArm()
+{
+#if FLY_CONTROL == KK2 
+	Throtle = 0.0f;
+	Rudder = 0.0f;
+	Elevator = 0.5f;
+	Aileron = 0.5f;
+#else
+	Throtle = 0.0f;
+	Rudder = 1.0f;
+	Elevator = 1.0f;
+	Aileron = 0.0f;
+#endif
+	SetUpdateESC();
 
 	wait_ms(POWER_DELAY_MS);
 }
-void PowerDown()
+void PowerDisArm()
 {
+#if FLY_CONTROL == KK2 
+	Throtle = 0.0f;
+	Rudder = 1.0f;
+	Elevator = 0.5f;
+	Aileron = 0.5f;
+#else
 	Throtle = 0.0f;
 	Rudder = 1.0f;
 	Elevator = 1.0f;
 	Aileron = 0.0f;
-
-	Aileron();
-	Throtle();
-	Elevator();
-	Rudder();
-	UChannel();
+#endif
+	SetUpdateESC();
 
 	wait_ms(POWER_DELAY_MS);
 }
@@ -372,6 +385,9 @@ void UpdateThrottle()
 }
 void UpdateMovements()
 {
+	float ail = 0.0f;
+	float ele = 0.0f;
+	float rud = 0.0f;
 	if (Conts1Report.UseProtection)
 	{
 #ifdef USE_FRONT_SENSOR
@@ -391,22 +407,41 @@ void UpdateMovements()
 	{
 		freport.Aileron = creport.Aileron;
 		freport.Elevator = creport.Elevator;
-		Aileron = (float)(((float)creport.Aileron) / 1022.0f);
-		Elevator = (float)((float)(creport.Elevator) / 1022.0f);
+
+		ail = (float)((float)(creport.Aileron) / 1022.0f);
+		ele = (float)((float)(creport.Elevator) / 1022.0f);
+
+		ail -= 0.5f;
+		ele -= 0.5f;
+
+		ail *= 0.4f;
+		ele *= 0.4f;
+
+		ail += 0.5f;
+		ele += 0.5f;
+
+		Aileron = ail;
+		Elevator = ele;
 	}
 
 	freport.Rudder = creport.Rudder;
 	freport.UChannel = creport.UChannel;
-	Rudder = (float)((float)(creport.Rudder) / 1022.0f);
+
+	rud = (float)((float)(creport.Rudder) / 1022.0f);;
+	rud -= 0.5f;
+	rud *= 0.7f;
+	rud += 0.5f;
+
+	Rudder = rud;
 	UChannel = (float)((float)(creport.UChannel) / 254.0f);
 }
 void UpdateESC()
 {
     creport = reporter->GetControllerReport();
 	if (creport.Command == 0x01)
-		PowerUp();
+		PowerArm();
 	if (creport.Command == 0x02)
-		PowerDown();
+		PowerDisArm();
 
 	if (reporter->ConstantsHaveChanged())
 	{
@@ -421,11 +456,7 @@ void UpdateESC()
 
 	reporter->SetControllerReport(freport);
 
-    Aileron();
-    Throtle();    
-    Elevator();
-    Rudder();
-    UChannel();
+	SetUpdateESC();
 }
 
 void ShowControllerReport()

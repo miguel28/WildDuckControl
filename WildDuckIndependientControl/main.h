@@ -18,9 +18,6 @@ typedef struct
 #define MAX_AXIS 0.7f
 #define SENSIBILITY 200
 #define __DEBUG_PC_
-#define KK2 0
-#define NAZA_M 1
-#define FLY_CONTROL KK2
 
 #ifdef __DEBUG_PC_
 Serial pc(USBTX, USBRX);

@@ -67,6 +67,11 @@ namespace WildDuckControl
         private void UpdateControlsWithJoystick()
         {
             joy.Update();
+            JoystickHatPositions pos = joy.GetHatNewPress(0);
+            if (pos == JoystickHatPositions.HAT_UP)
+                CalcThrottle += 100.0f;
+            if (pos == JoystickHatPositions.HAT_RIGHTDOWN)
+                CalcThrottle -= 100.0f;
 
             float tmpThortle = joy.GetAxis(1,0.25f);
 
@@ -79,57 +84,16 @@ namespace WildDuckControl
             if (joy.ButtonNewpress(2))
                 CalcThrottle = 0.0f;
 
-            if (radNaza.Checked)
-            {
-                if (joy.ButtonHeld(10))
-                {
-                    trbThrotle.Value = 0;
-                    trbRudder.Value = 0;
-                    trbAileron.Value = 511;
-                    trbElevator.Value = 511;
-                    CalcThrottle = 0.0f;
-                    Arming = true;
-                }
-                else if (joy.ButtonHeld(9))
-                {
-                    trbThrotle.Value = 0;
-                    trbRudder.Value = 1022;
-                    trbAileron.Value = 511;
-                    trbElevator.Value = 511;
-                    CalcThrottle = 0.0f;
-                    Arming = true;
-                }
-                else Arming = false;
-            }
-            else
-            {
-                if (joy.ButtonHeld(10))
-                {
-                    trbThrotle.Value = 0;
-                    trbRudder.Value = 0;
-                    trbAileron.Value = 511;
-                    trbElevator.Value = 511;
-                    CalcThrottle = 0.0f;
-                    Arming = true;
-                }
-                else if (joy.ButtonHeld(9))
-                {
-                    trbThrotle.Value = 0;
-                    trbRudder.Value = 1022;
-                    trbAileron.Value = 511;
-                    trbElevator.Value = 511;
-                    CalcThrottle = 0.0f;
-                    Arming = true;
-                }
-                else Arming = false;
-            }
+            wildDuck.Arm = joy.ButtonNewpress(10);
+            wildDuck.DisArm = joy.ButtonNewpress(9);
+            Arming = (joy.ButtonNewpress(10) || joy.ButtonNewpress(9));
             if (Arming)
                 return;
  
             trbThrotle.Value = (int)(CalcThrottle);
-            trbRudder.Value = (int)(joy.GetAxis(0, 0.25f) * 0.70f * 511.0f) + 511;
-            trbAileron.Value = (int)(joy.GetAxis(3, 0.25f) * 0.70f * 511.0f) + 511;
-            trbElevator.Value = (int)(joy.GetAxis(2, 0.25f) * 0.70f *511.0f) + 511;
+            trbRudder.Value = (int)((-joy.GetAxis(0, 0.10f)) * 0.7f * 511.0f) + 511;
+            trbAileron.Value = (int)(joy.GetAxis(3, 0.10f) * 0.7f * 511.0f) + 511;
+            trbElevator.Value = (int)(joy.GetAxis(2, 0.10f) * 0.7f * 511.0f) + 511;
         }
         private void SendReport()
         {
@@ -150,62 +114,12 @@ namespace WildDuckControl
 
         private void btnFly_Click(object sender, EventArgs e)
         {
-            if(radNaza.Checked)
-            {
-                Arming = true;
-                trbThrotle.Value = 0;
-                trbRudder.Value = 0;
-                trbAileron.Value = 511;
-                trbElevator.Value = 511;
-                Application.DoEvents();
-                System.Threading.Thread.Sleep(2000);
-                btnMoveCenter_Click(null, null);
-                CalcThrottle = 0.0f;
-                Arming = false;
-            }
-            else
-            {
-                Arming = true;
-                trbThrotle.Value = 0;
-                trbRudder.Value = 0;
-                trbAileron.Value = 511;
-                trbElevator.Value = 511;
-                Application.DoEvents();
-                System.Threading.Thread.Sleep(2000);
-                btnMoveCenter_Click(null, null);
-                CalcThrottle = 0.0f;
-                Arming = false;
-            }
+            wildDuck.Arm = true;
         }
 
         private void btnDisArm_Click(object sender, EventArgs e)
         {
-            if (radNaza.Checked)
-            {
-                Arming = true;
-                trbThrotle.Value = 0;
-                trbRudder.Value = 1022;
-                trbAileron.Value = 511;
-                trbElevator.Value = 511;
-                Application.DoEvents();
-                System.Threading.Thread.Sleep(2000);
-                btnMoveCenter_Click(null, null);
-                CalcThrottle = 0.0f;
-                Arming = false;
-            }
-            else
-            {
-                Arming = true;
-                trbThrotle.Value = 0;
-                trbRudder.Value = 1022;
-                trbAileron.Value = 511;
-                trbElevator.Value = 511;
-                Application.DoEvents();
-                System.Threading.Thread.Sleep(2000);
-                btnMoveCenter_Click(null, null);
-                CalcThrottle = 0.0f;
-                Arming = false;
-            }
+            wildDuck.DisArm = true;
         }
 
         private void cboxReport_SelectedIndexChanged(object sender, EventArgs e)

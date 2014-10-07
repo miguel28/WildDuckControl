@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.grpMetrics = new System.Windows.Forms.GroupBox();
+            this.btnDisArm = new System.Windows.Forms.Button();
             this.lblThrSens = new System.Windows.Forms.Label();
             this.trbSensibility = new System.Windows.Forms.TrackBar();
             this.cboxReport = new System.Windows.Forms.ComboBox();
@@ -55,9 +56,6 @@
             this.numJoy = new System.Windows.Forms.NumericUpDown();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.btnOpenConn = new System.Windows.Forms.Button();
-            this.radKK2 = new System.Windows.Forms.RadioButton();
-            this.radNaza = new System.Windows.Forms.RadioButton();
-            this.btnDisArm = new System.Windows.Forms.Button();
             this.grpMetrics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trbSensibility)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trbUChannel)).BeginInit();
@@ -98,6 +96,16 @@
             this.grpMetrics.TabIndex = 1;
             this.grpMetrics.TabStop = false;
             this.grpMetrics.Text = "Wild Duck Controls";
+            // 
+            // btnDisArm
+            // 
+            this.btnDisArm.Location = new System.Drawing.Point(180, 289);
+            this.btnDisArm.Name = "btnDisArm";
+            this.btnDisArm.Size = new System.Drawing.Size(75, 23);
+            this.btnDisArm.TabIndex = 18;
+            this.btnDisArm.Text = "DisArm";
+            this.btnDisArm.UseVisualStyleBackColor = true;
+            this.btnDisArm.Click += new System.EventHandler(this.btnDisArm_Click);
             // 
             // lblThrSens
             // 
@@ -351,45 +359,11 @@
             this.btnOpenConn.UseVisualStyleBackColor = true;
             this.btnOpenConn.Click += new System.EventHandler(this.btnOpenConn_Click);
             // 
-            // radKK2
-            // 
-            this.radKK2.AutoSize = true;
-            this.radKK2.Checked = true;
-            this.radKK2.Location = new System.Drawing.Point(302, 10);
-            this.radKK2.Name = "radKK2";
-            this.radKK2.Size = new System.Drawing.Size(45, 17);
-            this.radKK2.TabIndex = 7;
-            this.radKK2.TabStop = true;
-            this.radKK2.Text = "KK2";
-            this.radKK2.UseVisualStyleBackColor = true;
-            // 
-            // radNaza
-            // 
-            this.radNaza.AutoSize = true;
-            this.radNaza.Location = new System.Drawing.Point(302, 31);
-            this.radNaza.Name = "radNaza";
-            this.radNaza.Size = new System.Drawing.Size(54, 17);
-            this.radNaza.TabIndex = 8;
-            this.radNaza.Text = "NAZA";
-            this.radNaza.UseVisualStyleBackColor = true;
-            // 
-            // btnDisArm
-            // 
-            this.btnDisArm.Location = new System.Drawing.Point(180, 289);
-            this.btnDisArm.Name = "btnDisArm";
-            this.btnDisArm.Size = new System.Drawing.Size(75, 23);
-            this.btnDisArm.TabIndex = 18;
-            this.btnDisArm.Text = "DisArm";
-            this.btnDisArm.UseVisualStyleBackColor = true;
-            this.btnDisArm.Click += new System.EventHandler(this.btnDisArm_Click);
-            // 
             // frmHIDControllerTest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(787, 436);
-            this.Controls.Add(this.radNaza);
-            this.Controls.Add(this.radKK2);
             this.Controls.Add(this.btnOpenConn);
             this.Controls.Add(this.numJoy);
             this.Controls.Add(this.lblPollTime);
@@ -442,8 +416,6 @@
         private System.Windows.Forms.ComboBox cboxReport;
         private System.Windows.Forms.TrackBar trbSensibility;
         private System.Windows.Forms.Label lblThrSens;
-        private System.Windows.Forms.RadioButton radKK2;
-        private System.Windows.Forms.RadioButton radNaza;
         private System.Windows.Forms.Button btnDisArm;
     }
 }
