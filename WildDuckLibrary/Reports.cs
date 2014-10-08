@@ -57,6 +57,7 @@ namespace WildDuckLibrary
         public byte HS_Medium_Limit;
         public byte HS_Low_Limit;
         public byte DangerProtectionDivide;
+        public byte Sensibility;
     }
 
     public struct Constants2

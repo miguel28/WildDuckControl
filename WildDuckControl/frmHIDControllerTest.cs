@@ -49,7 +49,7 @@ namespace WildDuckControl
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (chkUseJoystick.Checked && joy != null && joy.IsOpen)
+            if (chkUseJoystick.Checked && joy != null && joy.IsOpen && !Arming)
                 UpdateControlsWithJoystick();
             SendReport();
 
@@ -73,7 +73,7 @@ namespace WildDuckControl
             if (pos == JoystickHatPositions.HAT_RIGHTDOWN)
                 CalcThrottle -= 100.0f;
 
-            float tmpThortle = joy.GetAxis(1,0.25f);
+            float tmpThortle = joy.GetAxis(1,0.10f);
 
             CalcThrottle += -tmpThortle * (trbSensibility.Value / 50.0f);
             if (CalcThrottle <= 0.0f)
@@ -86,14 +86,19 @@ namespace WildDuckControl
 
             wildDuck.Arm = joy.ButtonNewpress(10);
             wildDuck.DisArm = joy.ButtonNewpress(9);
+
             Arming = (joy.ButtonNewpress(10) || joy.ButtonNewpress(9));
             if (Arming)
-                return;
+            {
+                CalcThrottle = 0.0f;
+                System.Threading.Thread.Sleep(2000);
+                Arming = false;
+            }
  
             trbThrotle.Value = (int)(CalcThrottle);
-            trbRudder.Value = (int)((-joy.GetAxis(0, 0.10f)) * 0.7f * 511.0f) + 511;
-            trbAileron.Value = (int)(joy.GetAxis(3, 0.10f) * 0.7f * 511.0f) + 511;
-            trbElevator.Value = (int)(joy.GetAxis(2, 0.10f) * 0.7f * 511.0f) + 511;
+            trbRudder.Value = (int)((-joy.GetAxis(0, 0.10f)) * 511.0f) + 511;
+            trbAileron.Value = (int)(joy.GetAxis(3, 0.10f) * 511.0f) + 511;
+            trbElevator.Value = (int)(joy.GetAxis(2, 0.10f) * 511.0f) + 511;
         }
         private void SendReport()
         {
@@ -115,11 +120,17 @@ namespace WildDuckControl
         private void btnFly_Click(object sender, EventArgs e)
         {
             wildDuck.Arm = true;
+            Arming = true;
+            System.Threading.Thread.Sleep(2000);
+            Arming = false;
         }
 
         private void btnDisArm_Click(object sender, EventArgs e)
         {
             wildDuck.DisArm = true;
+            Arming = true;
+            System.Threading.Thread.Sleep(2000);
+            Arming = false;
         }
 
         private void cboxReport_SelectedIndexChanged(object sender, EventArgs e)

@@ -2,14 +2,26 @@
 
 void ArmFunction()
 {
-	if (joy->ButtonHeld(10))
+	if (joy->ButtonNewpress(10))
+	{
 		report.Command = 0x01;
-	else if (joy->ButtonHeld(9))
+		Arming = true;
+	}
+	else if (joy->ButtonNewpress(9))
+	{
 		report.Command = 0x02;
+		Arming = true;
+	}
+		
 }
 void UpdateControls()
 {
 	joy->Update();
+
+	if (joy->ButtonNewpress(UP))
+		CalcThrottle += 100.0f;
+	if (joy->ButtonNewpress(DOWN))
+		CalcThrottle -= 100.0f;
 
 	float tmpThortle = joy->GetAxis(1, JOY_DEATH_ZONE);
 	CalcThrottle += -tmpThortle * (SENSIBILITY / 50.0f);
@@ -23,15 +35,15 @@ void UpdateControls()
 
 	ArmFunction();
 
-	if (Arming)
-		return;
-
-	report.Throttle = (unsigned short)(CalcThrottle);
-	report.Rudder = (unsigned short)(joy->GetAxis(0, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511;
-	report.Aileron = (unsigned short)(joy->GetAxis(3, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511;
-	report.Elevator = (unsigned short)(joy->GetAxis(2, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511;
-	report.UChannel = 220u;
-
+	if (!Arming)
+	{
+		report.Throttle = (unsigned short)(CalcThrottle);
+		report.Rudder = (unsigned short)(joy->GetAxis(0, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511;
+		report.Aileron = (unsigned short)(joy->GetAxis(3, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511;
+		report.Elevator = (unsigned short)(joy->GetAxis(2, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511;
+		report.UChannel = 220u;
+	}
+	
 	*bar = report.Throttle;
 	SendCommand();
 
@@ -79,7 +91,7 @@ void SendCommand()
 		report.Throttle = 1022;
 
 	buffer[0] = 0x00u;
-	buffer[1] = 0x00u;
+	buffer[1] = 0x0fu;
 
 	buffer[2] = (unsigned char)(report.Throttle & 0xff);
 	buffer[3] = (unsigned char)(report.Rudder & 0xff);
@@ -97,7 +109,31 @@ void SendCommand()
 	buffer[8] = (unsigned char)report.UChannel;
 	buffer[9] = (unsigned char)report.UseTargetMode;
 
-	//WriteReport(buffer);
+	WriteReport(buffer);
+
+	if (Arming)
+	{
+		armingCounter += UPDATE_RATE;
+		if (armingCounter >= 2.0f)
+		{
+			Arming = false;
+			armingCounter = 0.0f;
+		}
+	}
+}
+void WriteReport(unsigned char* data)
+{
+	/*
+	int i;
+	for (i = 0; i<10; i++)
+	{
+		while (!rf->writeable());
+		rf->putc(data[i]);
+	}
+	while (!rf->writeable());
+	rf->putc((char)0xff);
+	while (!rf->writeable());
+	rf->putc((char)0xff);*/
 }
 void SetupBar()
 {
@@ -133,10 +169,9 @@ int main() {
 
     while(1) 
 	{
-		wait(0.05);
+		wait(UPDATE_RATE);
 		UpdateControls();
 		SendCommand();
-
 		myled = !myled;
     }
 }

@@ -98,5 +98,8 @@ void PowerDisArm();
 void UpdateThrottle();
 void UpdateMovements();
 void UpdateESC();
+float AjustAxis(float value, float percent);
+
+
 void ShowControllerReport();
 void ShowSensorsReport();

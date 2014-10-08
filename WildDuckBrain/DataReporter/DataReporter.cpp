@@ -81,6 +81,7 @@ void DataReporter::InitReports()
 	_constants1.HS_High_Limit = 60;
 	_constants1.HS_Medium_Limit = 30;
 	_constants1.HS_Low_Limit = 10;
+	_constants1.Sensibility = 0.35f;
 
 	_constants2.HS_UltraHigh_Correction = 320;
 	_constants2.HS_High_Correction = 120;
@@ -378,6 +379,8 @@ void DataReporter::DecodeConstants1()
     _constants1.HS_Medium_Limit = ReceivedReport[5];
     _constants1.HS_Low_Limit = ReceivedReport[6];
 	_constants1.DangerProtectionDivide = ReceivedReport[7];
+	_constants1.Sensibility = (float)ReceivedReport[8]/100.0f;
+	
 }
 void DataReporter::DecodeConstants2()
 {

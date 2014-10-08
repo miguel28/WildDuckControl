@@ -14,9 +14,11 @@ typedef struct
 	unsigned char Command;
 }ControllerReport;
 
-#define JOY_DEATH_ZONE 0.25f
+#define JOY_DEATH_ZONE 0.10f
 #define MAX_AXIS 0.7f
 #define SENSIBILITY 200
+#define UPDATE_RATE 0.05f
+
 #define __DEBUG_PC_
 
 #ifdef __DEBUG_PC_
@@ -31,7 +33,8 @@ ControllerReport report;
 float CalcThrottle = 0.0f;
 bool Arming = false;
 unsigned char buffer[12];
-
+float armingCounter = 0.0f;
+void WriteReport(unsigned char* data);
 void UpdateControls();
 void ArmFunction();
 void SendCommand();

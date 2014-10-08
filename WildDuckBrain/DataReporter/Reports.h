@@ -54,6 +54,7 @@ typedef struct
     unsigned char HS_Medium_Limit;
     unsigned char HS_Low_Limit;
 	unsigned char DangerProtectionDivide;
+	float Sensibility;
 }Constants1;
 
 typedef struct
@@ -72,11 +73,5 @@ typedef struct
     unsigned short Prot_Medium_Correction;
     unsigned short Prot_Low_Correction;
 }Constants3;
-
-typedef struct
-{
-    char X,Y,Z;
-}IMUReport;
-
 
 #endif

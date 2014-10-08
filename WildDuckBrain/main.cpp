@@ -385,9 +385,6 @@ void UpdateThrottle()
 }
 void UpdateMovements()
 {
-	float ail = 0.0f;
-	float ele = 0.0f;
-	float rud = 0.0f;
 	if (Conts1Report.UseProtection)
 	{
 #ifdef USE_FRONT_SENSOR
@@ -407,32 +404,14 @@ void UpdateMovements()
 	{
 		freport.Aileron = creport.Aileron;
 		freport.Elevator = creport.Elevator;
-
-		ail = (float)((float)(creport.Aileron) / 1022.0f);
-		ele = (float)((float)(creport.Elevator) / 1022.0f);
-
-		ail -= 0.5f;
-		ele -= 0.5f;
-
-		ail *= 0.4f;
-		ele *= 0.4f;
-
-		ail += 0.5f;
-		ele += 0.5f;
-
-		Aileron = ail;
-		Elevator = ele;
+		Aileron = AjustAxis((float)((float)(creport.Aileron) / 1022.0f), Conts1Report.Sensibility);
+		Elevator = AjustAxis((float)((float)(creport.Elevator) / 1022.0f), Conts1Report.Sensibility);
 	}
 
 	freport.Rudder = creport.Rudder;
 	freport.UChannel = creport.UChannel;
 
-	rud = (float)((float)(creport.Rudder) / 1022.0f);;
-	rud -= 0.5f;
-	rud *= 0.7f;
-	rud += 0.5f;
-
-	Rudder = rud;
+	Rudder = AjustAxis((float)((float)(creport.Rudder) / 1022.0f), Conts1Report.Sensibility);
 	UChannel = (float)((float)(creport.UChannel) / 254.0f);
 }
 void UpdateESC()
@@ -457,6 +436,13 @@ void UpdateESC()
 	reporter->SetControllerReport(freport);
 
 	SetUpdateESC();
+}
+float AjustAxis(float value, float percent)
+{
+	value -= 0.5f;
+	value *= percent;
+	value += 0.5f;
+	return value;
 }
 
 void ShowControllerReport()
