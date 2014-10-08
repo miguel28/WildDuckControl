@@ -84,6 +84,7 @@ namespace WildDuckControl
             if (joy.ButtonNewpress(2))
                 CalcThrottle = 0.0f;
 
+            wildDuck.Motor = joy.ButtonHeld(4);
             wildDuck.Arm = joy.ButtonNewpress(10);
             wildDuck.DisArm = joy.ButtonNewpress(9);
 

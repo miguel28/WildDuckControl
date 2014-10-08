@@ -417,11 +417,16 @@ void UpdateMovements()
 void UpdateESC()
 {
     creport = reporter->GetControllerReport();
-	if (creport.Command == 0x01)
+	if (creport.Command & 0x01)
 		PowerArm();
-	if (creport.Command == 0x02)
+	if (creport.Command & 0x02)
 		PowerDisArm();
-
+#ifdef USE_MOTOR
+	if (creport.Command & 0x04)
+		pinMotor = 1;
+	else
+		pinMotor = 0;
+#endif
 	if (reporter->ConstantsHaveChanged())
 	{
 		Conts1Report = reporter->GetConstants1();

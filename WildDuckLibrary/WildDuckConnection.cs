@@ -27,6 +27,7 @@ namespace WildDuckLibrary
 
         private byte _LandOff = 0;
         private byte _LandOn = 0;
+        private byte _Motor = 0;
         #endregion
 
         #region Reports
@@ -51,6 +52,13 @@ namespace WildDuckLibrary
             set
             {
                 _LandOn = value ? (byte)(1 << 5) : (byte)0;
+            }
+        }
+        public bool Motor
+        {
+            set
+            {
+                _Motor = value ? (byte)(1 << 6) : (byte)0;
             }
         }
         #endregion
@@ -215,7 +223,7 @@ namespace WildDuckLibrary
                 Send.joystickReport.Throttle = 1022;
 
             byte[] buffer = new byte[12];
-            buffer[0] = (byte)((byte)(ReportType.Joystick) | (_LandOn) | (_LandOff));
+            buffer[0] = (byte)((byte)(ReportType.Joystick) | (_LandOn) | (_LandOff) | (_Motor));
             //buffer[0] = (byte)(ReportType.Joystick);
             buffer[1] = (byte)_RequestReport;
 
@@ -266,7 +274,7 @@ namespace WildDuckLibrary
             buffer[5] = (byte)Send.constant1.HS_Medium_Limit;
             buffer[6] = (byte)Send.constant1.HS_Low_Limit;
             buffer[7] = (byte)Send.constant1.DangerProtectionDivide;
-            buffer[8] = (byte)0x00;
+            buffer[8] = (byte)Send.constant1.Sensibility;
             buffer[9] = (byte)0x00;
             WriteReport(buffer);
         }
@@ -409,6 +417,7 @@ namespace WildDuckLibrary
             _Received.constant1.HS_Medium_Limit = buffer[5];
             _Received.constant1.HS_Low_Limit = buffer[6];
             _Received.constant1.DangerProtectionDivide = buffer[7];
+            _Received.constant1.Sensibility = buffer[8];
         }
         private void DecodeConstants2(byte[] buffer)
         {

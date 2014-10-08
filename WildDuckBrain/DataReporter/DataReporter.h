@@ -31,11 +31,6 @@ public:
 	/*Set*/
     void SetControllerReport(ControllerReport report);
     void SetSensorsReport(SensorsReport report);
-    void SetEmergencyLandingReport(EmergencyLanding report);
-    void SetConstants1(Constants1 report);
-    void SetConstants2(Constants2 report);
-    void SetConstants3(Constants3 report);
-
     
     char ReportRequest;
 	bool ConstantsHaveChanged();
@@ -83,10 +78,6 @@ private:
     
     ControllerReport _ScontrollerReport;
     SensorsReport _SsensorsReport;
-    EmergencyLanding _SemergencyLanding;
-    Constants1 _Sconstants1;
-    Constants2 _Sconstants2;
-    Constants3 _Sconstants3; 
 };
 
 #endif

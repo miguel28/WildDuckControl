@@ -124,22 +124,6 @@ void DataReporter::SetSensorsReport(SensorsReport report)
 {
     _SsensorsReport = report;
 }
-void DataReporter::SetEmergencyLandingReport(EmergencyLanding report)
-{
-    _SemergencyLanding = report;
-}
-void DataReporter::SetConstants1(Constants1 report)
-{
-    _Sconstants1 = report;
-}
-void DataReporter::SetConstants2(Constants2 report)
-{
-    _Sconstants2 = report;
-}
-void DataReporter::SetConstants3(Constants3 report)
-{
-    _Sconstants3 = report;
-}
 
 void DataReporter::ClearBuffer()
 {
@@ -233,12 +217,12 @@ void DataReporter::SendReport()
 		
 		revBuffer[0] = (char)ReportRequest;
 		revBuffer[1] = (char)Nothing;
-		revBuffer[2] = _SemergencyLanding.UseEmergencyLanding;
-		revBuffer[3] = _SemergencyLanding.ConnectionTimeOut;
-		revBuffer[4] = _SemergencyLanding.BreakOutOffHeight;
-		revBuffer[5] = (char)(_SemergencyLanding.DownDecrementCoeficient & 0xff);
-		revBuffer[6] = (char)((_SemergencyLanding.DownDecrementCoeficient >> 8) & 0xff);
-		revBuffer[7] = _SemergencyLanding.DecrementTime;
+		revBuffer[2] = _emergencyLanding.UseEmergencyLanding;
+		revBuffer[3] = _emergencyLanding.ConnectionTimeOut;
+		revBuffer[4] = _emergencyLanding.BreakOutOffHeight;
+		revBuffer[5] = (char)(_emergencyLanding.DownDecrementCoeficient & 0xff);
+		revBuffer[6] = (char)((_emergencyLanding.DownDecrementCoeficient >> 8) & 0xff);
+		revBuffer[7] = _emergencyLanding.DecrementTime;
 		revBuffer[8] = (char)0x00;
 		revBuffer[9] = (char)0x00;
 		Send(revBuffer);
@@ -247,11 +231,11 @@ void DataReporter::SendReport()
 	case cConstants1:
 		revBuffer[0] = (char)ReportRequest;
 		revBuffer[1] = (char)Nothing;
-		revBuffer[2] = _Sconstants1.UseProtection;
-		revBuffer[3] = _Sconstants1.ProtectionDistance;
-		revBuffer[4] = _Sconstants1.HS_High_Limit;
-		revBuffer[5] = _Sconstants1.HS_Medium_Limit;
-		revBuffer[6] = _Sconstants1.HS_Low_Limit;
+		revBuffer[2] = _constants1.UseProtection;
+		revBuffer[3] = _constants1.ProtectionDistance;
+		revBuffer[4] = _constants1.HS_High_Limit;
+		revBuffer[5] = _constants1.HS_Medium_Limit;
+		revBuffer[6] = _constants1.HS_Low_Limit;
 		revBuffer[7] = (char)0x00;
 		revBuffer[8] = (char)0x00;
 		revBuffer[9] = (char)0x00;
@@ -261,28 +245,28 @@ void DataReporter::SendReport()
 	case cConstants2:
 		revBuffer[0] = (char)ReportRequest;
 		revBuffer[1] = (char)Nothing;
-		revBuffer[2] = (char)((_Sconstants2.HS_UltraHigh_Correction >> 0) & 0x0ff);
-		revBuffer[3] = (char)((_Sconstants2.HS_UltraHigh_Correction >> 8) & 0x0ff);
-		revBuffer[4] = (char)((_Sconstants2.HS_High_Correction >> 0) & 0x0ff);
-		revBuffer[5] = (char)((_Sconstants2.HS_High_Correction >> 8) & 0x0ff);
-		revBuffer[6] = (char)((_Sconstants2.HS_Medium_Correction >> 0) & 0x0ff);
-		revBuffer[7] = (char)((_Sconstants2.HS_Medium_Correction >> 8) & 0x0ff);
-		revBuffer[8] = (char)((_Sconstants2.HS_Low_Correction >> 0) & 0x0ff);
-		revBuffer[9] = (char)((_Sconstants2.HS_Low_Correction >> 8) & 0x0ff);
+		revBuffer[2] = (char)((_constants2.HS_UltraHigh_Correction >> 0) & 0x0ff);
+		revBuffer[3] = (char)((_constants2.HS_UltraHigh_Correction >> 8) & 0x0ff);
+		revBuffer[4] = (char)((_constants2.HS_High_Correction >> 0) & 0x0ff);
+		revBuffer[5] = (char)((_constants2.HS_High_Correction >> 8) & 0x0ff);
+		revBuffer[6] = (char)((_constants2.HS_Medium_Correction >> 0) & 0x0ff);
+		revBuffer[7] = (char)((_constants2.HS_Medium_Correction >> 8) & 0x0ff);
+		revBuffer[8] = (char)((_constants2.HS_Low_Correction >> 0) & 0x0ff);
+		revBuffer[9] = (char)((_constants2.HS_Low_Correction >> 8) & 0x0ff);
 		Send(revBuffer);
 		break;
 
 	case cConstants3:
 		revBuffer[0] = (char)ReportRequest;
 		revBuffer[1] = (char)Nothing;
-		revBuffer[2] = _Sconstants3.Prot_Medium_Limit;
-		revBuffer[3] = _Sconstants3.Prot_Low_Limit;
-		revBuffer[4] = (char)((_Sconstants3.Prot_High_Correction >> 0) & 0xff);
-		revBuffer[5] = (char)((_Sconstants3.Prot_High_Correction >> 8) & 0xff);
-		revBuffer[6] = (char)((_Sconstants3.Prot_Medium_Correction >> 0) & 0xff);
-		revBuffer[7] = (char)((_Sconstants3.Prot_Medium_Correction >> 8) & 0xff);
-		revBuffer[8] = (char)((_Sconstants3.Prot_Low_Correction >> 0) & 0xff);
-		revBuffer[9] = (char)((_Sconstants3.Prot_Low_Correction >> 8) & 0xff);
+		revBuffer[2] = _constants3.Prot_Medium_Limit;
+		revBuffer[3] = _constants3.Prot_Low_Limit;
+		revBuffer[4] = (char)((_constants3.Prot_High_Correction >> 0) & 0xff);
+		revBuffer[5] = (char)((_constants3.Prot_High_Correction >> 8) & 0xff);
+		revBuffer[6] = (char)((_constants3.Prot_Medium_Correction >> 0) & 0xff);
+		revBuffer[7] = (char)((_constants3.Prot_Medium_Correction >> 8) & 0xff);
+		revBuffer[8] = (char)((_constants3.Prot_Low_Correction >> 0) & 0xff);
+		revBuffer[9] = (char)((_constants3.Prot_Low_Correction >> 8) & 0xff);
 		Send(revBuffer);
 		break;
 	}

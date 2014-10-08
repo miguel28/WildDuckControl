@@ -5,11 +5,13 @@ void ArmFunction()
 	if (joy->ButtonNewpress(10))
 	{
 		report.Command = 0x01;
+		CalcThrottle = 0.0f;
 		Arming = true;
 	}
 	else if (joy->ButtonNewpress(9))
 	{
 		report.Command = 0x02;
+		CalcThrottle = 0.0f;
 		Arming = true;
 	}
 		
@@ -37,6 +39,10 @@ void UpdateControls()
 
 	if (!Arming)
 	{
+		report.Command = 0x00;
+		if (joy->ButtonHeld(4))
+			report.Command |= 0x04;
+
 		report.Throttle = (unsigned short)(CalcThrottle);
 		report.Rudder = (unsigned short)(joy->GetAxis(0, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511;
 		report.Aileron = (unsigned short)(joy->GetAxis(3, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511;
@@ -90,7 +96,7 @@ void SendCommand()
 	if (report.Throttle >= 1022)
 		report.Throttle = 1022;
 
-	buffer[0] = 0x00u;
+	buffer[0] = 0x00u | (report.Command << 4);
 	buffer[1] = 0x0fu;
 
 	buffer[2] = (unsigned char)(report.Throttle & 0xff);
@@ -123,17 +129,18 @@ void SendCommand()
 }
 void WriteReport(unsigned char* data)
 {
-	/*
+#ifdef USE_RF
 	int i;
 	for (i = 0; i<10; i++)
 	{
-		while (!rf->writeable());
-		rf->putc(data[i]);
+		while (!rf.writeable());
+		rf.putc(data[i]);
 	}
-	while (!rf->writeable());
-	rf->putc((char)0xff);
-	while (!rf->writeable());
-	rf->putc((char)0xff);*/
+	while (!rf.writeable());
+	rf.putc((char)0xff);
+	while (!rf.writeable());
+	rf.putc((char)0xff);
+#endif
 }
 void SetupBar()
 {
@@ -171,7 +178,7 @@ int main() {
 	{
 		wait(UPDATE_RATE);
 		UpdateControls();
-		SendCommand();
+
 		myled = !myled;
     }
 }
