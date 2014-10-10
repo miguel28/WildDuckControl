@@ -70,18 +70,20 @@ void DataReporter::InitReports()
 	_SsensorsReport.Left = 0;
 	_SsensorsReport.Right = 0;
 
-	_emergencyLanding.UseEmergencyLanding = 0;
+	_emergencyLanding.UseEmergencyLanding = 1;
 	_emergencyLanding.ConnectionTimeOut = 50;// 5 Seconds
 	_emergencyLanding.BreakOutOffHeight = 20;
 	_emergencyLanding.DownDecrementCoeficient = 0;
 	_emergencyLanding.DecrementTime = 0;
+
+	HeartTolerance = 50;
 
 	_constants1.UseProtection = 0;
 	_constants1.ProtectionDistance = 0;
 	_constants1.HS_High_Limit = 60;
 	_constants1.HS_Medium_Limit = 30;
 	_constants1.HS_Low_Limit = 10;
-	_constants1.Sensibility = 0.35f;
+	_constants1.Sensibility = 0.3f;
 
 	_constants2.HS_UltraHigh_Correction = 320;
 	_constants2.HS_High_Correction = 120;
@@ -346,6 +348,10 @@ void DataReporter::DecodeJoystick()
 	_controllerReport.UseTargetMode = ReceivedReport[9];
 
 	_controllerReport.Command = (ReceivedReport[0] >> 4) & 0x0f;
+	if (_controllerReport.Command != 0)
+		_controllerReport.Throttle = 0;
+	if (!isOnline)
+		_controllerReport.Command = 0;
 }
 void DataReporter::DecodeEmergency()
 {

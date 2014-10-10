@@ -19,7 +19,7 @@
 
 #define IDLE_CONSTANT 511
 #define REFRESH_TIMEOUT_MS 30
-#define POWER_DELAY_MS 2000
+#define POWER_DELAY_MS 200
 //#define USE_MOTOR
 
 #ifdef PC_UART_DEBUG

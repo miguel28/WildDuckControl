@@ -250,7 +250,7 @@ void EmergencyAttend()
 {
 	if (!UsingEmergency)
 	{
-		HighEmergency = sreport.Elevation;
+		HighEmergency = creport.Throttle;
 		UsingEmergency = true;
 		EAttemps = 0;
 	}
@@ -261,12 +261,30 @@ void EmergencyAttend()
 		else
 		{
 			EAttemps++;
-			if (EAttemps > (eLanding.DecrementTime))
+			if (EAttemps >(eLanding.DecrementTime))
 			{
 				HighEmergency -= ((float)eLanding.DownDecrementCoeficient / (float)10000);
 				EAttemps = 0;
 			}
-			TargetControl(HighEmergency);
+			//TargetControl(HighEmergency);
+			
+			creport.Throttle = HighEmergency;
+			creport.Rudder = 512;
+			creport.Aileron = 512;
+			creport.Elevator = 512;
+			creport.ElevationTarget = 0;
+			creport.UChannel = 220;
+			creport.UseTargetMode = 0;
+			creport.Command = 0;
+
+			Throtle = (float)((float)(creport.Throttle) / 1022.0f);
+			Aileron = 0.5f;
+			Elevator = 0.5f;
+			Rudder = 0.5f;
+
+			SetUpdateESC();
+			return;
+
 		}
 	}
 }
@@ -288,7 +306,7 @@ void PowerArm()
 	Aileron = 0.5f;
 #else
 	Throtle = 0.0f;
-	Rudder = 1.0f;
+	Rudder = 0.0f;
 	Elevator = 1.0f;
 	Aileron = 0.0f;
 #endif
@@ -307,7 +325,7 @@ void PowerDisArm()
 	Throtle = 0.0f;
 	Rudder = 1.0f;
 	Elevator = 1.0f;
-	Aileron = 0.0f;
+	Aileron = 1.0f;
 #endif
 	SetUpdateESC();
 
@@ -412,15 +430,24 @@ void UpdateMovements()
 	freport.UChannel = creport.UChannel;
 
 	Rudder = AjustAxis((float)((float)(creport.Rudder) / 1022.0f), Conts1Report.Sensibility);
+	//Rudder = AjustAxis((float)((float)(511) / 1022.0f), Conts1Report.Sensibility);
 	UChannel = (float)((float)(creport.UChannel) / 254.0f);
 }
 void UpdateESC()
 {
     creport = reporter->GetControllerReport();
+	
 	if (creport.Command & 0x01)
+	{
 		PowerArm();
+		return;
+	}	
 	if (creport.Command & 0x02)
+	{
 		PowerDisArm();
+		return;
+	}
+		
 #ifdef USE_MOTOR
 	if (creport.Command & 0x04)
 		pinMotor = 1;

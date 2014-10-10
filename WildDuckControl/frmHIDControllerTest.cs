@@ -49,7 +49,7 @@ namespace WildDuckControl
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (chkUseJoystick.Checked && joy != null && joy.IsOpen && !Arming)
+            if (chkUseJoystick.Checked && joy != null && joy.IsOpen)
                 UpdateControlsWithJoystick();
             SendReport();
 
@@ -85,17 +85,23 @@ namespace WildDuckControl
                 CalcThrottle = 0.0f;
 
             wildDuck.Motor = joy.ButtonHeld(4);
-            wildDuck.Arm = joy.ButtonNewpress(10);
-            wildDuck.DisArm = joy.ButtonNewpress(9);
+            wildDuck.Arm = joy.ButtonHeld(10);
+            wildDuck.DisArm = joy.ButtonHeld(9);
 
-            Arming = (joy.ButtonNewpress(10) || joy.ButtonNewpress(9));
-            if (Arming)
+            Arming = (joy.ButtonHeld(10) || joy.ButtonHeld(9));
+            /*if (Arming)
             {
                 CalcThrottle = 0.0f;
                 System.Threading.Thread.Sleep(2000);
                 Arming = false;
+            }*/
+            if (Arming)
+            {
+                CalcThrottle = 0.0f;
+                return;
             }
- 
+                
+
             trbThrotle.Value = (int)(CalcThrottle);
             trbRudder.Value = (int)((-joy.GetAxis(0, 0.10f)) * 511.0f) + 511;
             trbAileron.Value = (int)(joy.GetAxis(3, 0.10f) * 511.0f) + 511;

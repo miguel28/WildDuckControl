@@ -245,8 +245,8 @@ namespace WildDuckLibrary
 
             WriteReport(buffer);
 
-            _LandOn = (byte)0;
-            _LandOff = (byte)0;
+            //_LandOn = (byte)0;
+            //_LandOff = (byte)0;
         }
         private void SendEmegencyLandingReport()
         {
