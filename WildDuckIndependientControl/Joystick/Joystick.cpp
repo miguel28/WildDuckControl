@@ -43,8 +43,8 @@ void Joystick::Event()
 
 	axis[XAxis] = read(ANALOG_LX);
 	axis[YAxis] = read(ANALOG_LY);
-	axis[ZAxis] = read(ANALOG_RX);
-	axis[WAxis] = read(ANALOG_RY);
+	axis[WAxis] = read(ANALOG_RX);
+	axis[ZAxis] = read(ANALOG_RY);
 
 	int i;
 	for (i = 0; i<NumButtons; i++)

@@ -44,7 +44,7 @@ void UpdateControls()
 			report.Command |= 0x04;
 
 		report.Throttle = (unsigned short)(CalcThrottle);
-		report.Rudder = (unsigned short)(joy->GetAxis(0, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511;
+		report.Rudder = (unsigned short)((-joy->GetAxis(0, JOY_DEATH_ZONE)) * MAX_AXIS * 511.0f) + 511;
 		report.Aileron = (unsigned short)(joy->GetAxis(3, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511;
 		report.Elevator = (unsigned short)(joy->GetAxis(2, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511;
 		report.UChannel = 220u;
@@ -120,7 +120,7 @@ void SendCommand()
 	if (Arming)
 	{
 		armingCounter += UPDATE_RATE;
-		if (armingCounter >= 2.0f)
+		if (armingCounter >= 0.4f)
 		{
 			Arming = false;
 			armingCounter = 0.0f;
@@ -145,15 +145,25 @@ void WriteReport(unsigned char* data)
 void SetupBar()
 {
 	bar = new LedBar();
+	wait_us(10);
 	bar->SetPin(0, A0);
+	wait_us(10);
 	bar->SetPin(1, A1);
+	wait_us(10);
 	bar->SetPin(2, A2);
+	wait_us(10);
 	bar->SetPin(3, A3);
+	wait_us(10);
 	bar->SetPin(4, A4);
+	wait_us(10);
 	bar->SetPin(5, A5);
+	wait_us(10);
 	bar->SetPin(6, D2);
+	wait_us(10);
 	bar->SetPin(7, D5);
+	wait_us(10);
 	bar->SetPin(8, D7);
+	wait_us(10);
 }
 void SetupJoystick()
 {
@@ -171,6 +181,7 @@ void SetupJoystick()
 		while (1);
 }
 int main() {
+	rf.baud(19200);
 	SetupBar();
 	SetupJoystick();
 
@@ -179,6 +190,7 @@ int main() {
 		wait(UPDATE_RATE);
 		UpdateControls();
 
-		myled = !myled;
+		onlineLed = !onlineLed;
+		//myled = !myled;
     }
 }

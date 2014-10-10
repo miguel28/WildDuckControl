@@ -17,20 +17,21 @@ typedef struct
 #define JOY_DEATH_ZONE 0.10f
 #define MAX_AXIS 1.0f
 #define SENSIBILITY 200
-#define UPDATE_RATE 0.05f
+#define UPDATE_RATE 0.049f
 
-#define __DEBUG_PC_
-//#define USE_RF
+//#define __DEBUG_PC_
+#define USE_RF
 
 #ifdef __DEBUG_PC_
 Serial pc(USBTX, USBRX);
 #endif
 
 #ifdef USE_RF
-Serial rf(USBTX, USBRX);
+Serial rf(D14, D15);
 #endif
 
-DigitalOut myled(LED2);
+DigitalOut onlineLed(PTC0);
+//DigitalOut myled(LED2);
 Joystick* joy;
 LedBar* bar;
 

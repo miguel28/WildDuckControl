@@ -32,11 +32,11 @@ DigitalOut mpinMotor(PTE21);
 
 
 DataReporter *reporter;
-ESC Aileron(D5);
-ESC Elevator(D4);
-ESC Throtle(D3);
-ESC Rudder(D2);
-ESC UChannel(D6);
+ESC Aileron(D6);
+ESC Elevator(D5);
+ESC Throtle(D4);
+ESC Rudder(D3);
+ESC UChannel(D2);
 
 #ifdef TEST_SENSORS
 SRF08 *HighSensor;

@@ -430,7 +430,6 @@ void UpdateMovements()
 	freport.UChannel = creport.UChannel;
 
 	Rudder = AjustAxis((float)((float)(creport.Rudder) / 1022.0f), Conts1Report.Sensibility);
-	//Rudder = AjustAxis((float)((float)(511) / 1022.0f), Conts1Report.Sensibility);
 	UChannel = (float)((float)(creport.UChannel) / 254.0f);
 }
 void UpdateESC()
