@@ -2,13 +2,13 @@
 
 void ArmFunction()
 {
-	if (joy->ButtonNewpress(10))
+	if (joy->ButtonNewpress(Start))
 	{
 		report.Command = 0x01;
 		CalcThrottle = 0.0f;
 		Arming = true;
 	}
-	else if (joy->ButtonNewpress(9))
+	else if (joy->ButtonNewpress(Select))
 	{
 		report.Command = 0x02;
 		CalcThrottle = 0.0f;
@@ -32,7 +32,7 @@ void UpdateControls()
 	if (CalcThrottle >= 1022.0f)
 		CalcThrottle = 1022.0f;
 
-	if (joy->ButtonNewpress(2))
+	if (joy->ButtonNewpress(Circle))
 		CalcThrottle = 0.0f;
 
 	ArmFunction();
@@ -40,7 +40,7 @@ void UpdateControls()
 	if (!Arming)
 	{
 		report.Command = 0x00;
-		if (joy->ButtonHeld(4))
+		if (joy->ButtonHeld(Square))
 			report.Command |= 0x04;
 
 		report.Throttle = (unsigned short)(CalcThrottle);
@@ -54,8 +54,34 @@ void UpdateControls()
 	SendCommand();
 
 #ifdef __DEBUG_PC_
-	//pc.printf("Throttle %d \r\n", report.Throttle);
-	pc.printf("Throttle %d, %d \r\n", bar->Throttle, bar->value);
+	
+	//pc.printf("Throttle %d, %d \r\n", bar->Throttle, bar->value);
+	if (joy->ButtonNewpress(UP))
+		pc.printf("UP \r\n");
+	if (joy->ButtonNewpress(DOWN))
+		pc.printf("DOWN \r\n");
+	if (joy->ButtonNewpress(LEFT))
+		pc.printf("LEFT \r\n");
+	if (joy->ButtonNewpress(RIGHT))
+		pc.printf("RIGHT \r\n");
+
+	if (joy->ButtonNewpress(L1))
+		pc.printf("L1 \r\n");
+	if (joy->ButtonNewpress(R1))
+		pc.printf("R1 \r\n");
+	if (joy->ButtonNewpress(L2))
+		pc.printf("L2 \r\n");
+	if (joy->ButtonNewpress(R2))
+		pc.printf("R2 \r\n");
+
+	if (joy->ButtonNewpress(Circle))
+		pc.printf("CIRCLE \r\n");
+	if (joy->ButtonNewpress(Square))
+		pc.printf("SQUARE \r\n");
+	if (joy->ButtonNewpress(Triangle))
+		pc.printf("Triangle \r\n");
+	if (joy->ButtonNewpress(Cross))
+		pc.printf("Cross \r\n");
 #endif
 }
 void SendCommand()
@@ -182,6 +208,8 @@ void SetupJoystick()
 }
 int main() {
 	rf.baud(19200);
+	wait_ms(1000);
+
 	SetupBar();
 	SetupJoystick();
 
@@ -191,6 +219,5 @@ int main() {
 		UpdateControls();
 
 		onlineLed = !onlineLed;
-		//myled = !myled;
     }
 }

@@ -3,7 +3,7 @@
 Joystick::Joystick() : PS_PAD(D12, D11, D13, D10)
 {
 	Opened = false;
-	NumButtons = 14;
+	NumButtons = 16;
 }
 Joystick::~Joystick()
 {
@@ -70,13 +70,13 @@ void Joystick::Event()
 }
 unsigned short Joystick::ButtonHeld(unsigned short button)
 {
-	if (button > NumButtons || button == 0)return 0;
-	else return mButtonHeld[button - 1];
+	if (button > NumButtons || button < 0)return 0;
+	else return mButtonHeld[button];
 }
 unsigned short Joystick::ButtonNewpress(unsigned short button)
 {
-	if (button > NumButtons || button == 0)return 0;
-	else return mButtonNewpress[button - 1];
+	if (button > NumButtons || button < 0)return 0;
+	else return mButtonNewpress[button];
 }
 float Joystick::GetAxis(unsigned char _axis, float DeathZone)
 {

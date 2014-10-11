@@ -28,11 +28,11 @@ uint8_t PS_PAD::SendSPI(uint8_t data)
 		uint8_t sbit = (data >> i) & 0x01;
 		_mosi = sbit;
 		_clk = 0;
-		wait_us(6);
+		wait_us(10);
 
 		retData |= (_miso << i);
 		_clk = 1;
-		wait_us(6);
+		wait_us(10);
 	}
 	return retData;
 }
@@ -147,7 +147,7 @@ int PS_PAD::send(const char *cmd, int len, char *dat) {
 	int i;
 
 	_cs = 0;
-	wait_us(10);
+	wait_us(20);
 	for (i = 0; i < len; i++) 
 	{
 		dat[i] = SendSPI(cmd[i]);

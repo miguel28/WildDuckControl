@@ -31,7 +31,6 @@ Serial rf(D14, D15);
 #endif
 
 DigitalOut onlineLed(PTC0);
-//DigitalOut myled(LED2);
 Joystick* joy;
 LedBar* bar;
 
