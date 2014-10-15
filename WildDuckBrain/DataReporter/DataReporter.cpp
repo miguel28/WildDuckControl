@@ -8,7 +8,7 @@ DigitalOut Led(LED2);
 
 DataReporter::DataReporter()
 {
-	HeartBeat = 0;
+	HeartBeat = 100;
 	LastHeartBeat = 0;
 	HeartTolerance = 0;
 	isOnline = false;
@@ -75,8 +75,6 @@ void DataReporter::InitReports()
 	_emergencyLanding.BreakOutOffHeight = 20;
 	_emergencyLanding.DownDecrementCoeficient = 0;
 	_emergencyLanding.DecrementTime = 0;
-
-	HeartTolerance = 50;
 
 	_constants1.UseProtection = 0;
 	_constants1.ProtectionDistance = 0;
