@@ -120,6 +120,9 @@ class ESC
     void pulse ();
     ///Alias of pulse()
     void operator() ();
+
+	//// Power Off 0us Throttle
+	void powerOff();
  };
 
 #endif

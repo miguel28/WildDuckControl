@@ -2,7 +2,7 @@
 #include "esc.h"
 
 ESC::ESC(const PinName pwmPinOut, const int period)
-        : esc(pwmPinOut), period(period), throttle(1000)
+        : esc(pwmPinOut), period(period), throttle(0)
 {
     esc.period_ms(period);
     esc.pulsewidth_us(throttle);
@@ -34,4 +34,9 @@ void ESC::pulse ()
 void ESC::operator() ()
 {
     this->pulse();
+}
+
+void ESC::powerOff()
+{
+	throttle = 0;
 }

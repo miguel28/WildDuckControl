@@ -12,6 +12,7 @@
 //#define USE_BACK_SENSOR
 //#define USE_LEFT_SENSOR
 //#define USE_RIGHT_SENSOR
+//#define USE_MOTOR
 
 #define KK2 0
 #define NAZA_M 1
@@ -19,8 +20,7 @@
 
 #define IDLE_CONSTANT 511
 #define REFRESH_TIMEOUT_MS 30
-#define POWER_DELAY_MS 200
-//#define USE_MOTOR
+#define POWER_DELAY_MS 50
 
 #ifdef PC_UART_DEBUG
 BufferedSerial *pc;
@@ -32,11 +32,11 @@ DigitalOut mpinMotor(PTE21);
 
 
 DataReporter *reporter;
-ESC Aileron(D6);
-ESC Elevator(D5);
-ESC Throtle(D4);
-ESC Rudder(D3);
-ESC UChannel(D2);
+ESC *Aileron;
+ESC *Elevator;
+ESC *Throtle;
+ESC *Rudder;
+ESC *UChannel;
 
 #ifdef TEST_SENSORS
 SRF08 *HighSensor;
@@ -83,6 +83,7 @@ EmergencyLanding eLanding;
 SensorsReport sreport;
 
 //////////// Variables
+bool ESCPowerdOn = false;
 bool UsingEmergency = false;
 float HighEmergency = 0.0f;
 int EAttemps = 0;

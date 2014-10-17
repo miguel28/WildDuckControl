@@ -71,10 +71,10 @@ void DataReporter::InitReports()
 	_SsensorsReport.Right = 0;
 
 	_emergencyLanding.UseEmergencyLanding = 1;
-	_emergencyLanding.ConnectionTimeOut = 50;// 5 Seconds
-	_emergencyLanding.BreakOutOffHeight = 20;
-	_emergencyLanding.DownDecrementCoeficient = 0;
-	_emergencyLanding.DecrementTime = 0;
+	_emergencyLanding.ConnectionTimeOut = 20;//50 - 5 Seconds
+	_emergencyLanding.BreakOutOffHeight = 200;
+	_emergencyLanding.DownDecrementCoeficient = 50;
+	_emergencyLanding.DecrementTime = 2;
 
 	_constants1.UseProtection = 0;
 	_constants1.ProtectionDistance = 0;
