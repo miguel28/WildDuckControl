@@ -20,7 +20,7 @@ int main()
     
         esc1 = throttle_var; //memorize the throttle value (it doesn't send it to the ESC).
         
-        //... do whatever you want - e.g. call esc1.setThrottle(throttle_var) again ...
+        //... do whatever you want - e.g. call esc1.setDuty(throttle_var) again ...
         
         esc1(); //actually sets the throttle to the ESC.
         
@@ -55,7 +55,7 @@ int main() {
             if (var < 100) {
                 var++;
             }
-            if (esc1.setThrottle(var) && esc2.setThrottle(var) && esc3.setThrottle(var) && esc4.setThrottle(var)) {
+            if (esc1.setDuty(var) && esc2.setDuty(var) && esc3.setDuty(var) && esc4.setDuty(var)) {
                 printf("%i\r\n", var);
             }
         }
@@ -63,13 +63,13 @@ int main() {
             if (var > 0) {
                 var--;
             }
-            if (esc1.setThrottle(var) && esc2.setThrottle(var) && esc3.setThrottle(var) && esc4.setThrottle(var)) {
+            if (esc1.setDuty(var) && esc2.setDuty(var) && esc3.setDuty(var) && esc4.setDuty(var)) {
                 printf("%i\r\n", var);
             }
         }
         else if (c == 'r') {
             var = 0;
-            if (esc1.setThrottle(var) && esc2.setThrottle(var) && esc3.setThrottle(var) && esc4.setThrottle(var)) {
+            if (esc1.setDuty(var) && esc2.setDuty(var) && esc3.setDuty(var) && esc4.setDuty(var)) {
                 printf("%i\r\n", var);                
             }
         }
@@ -104,8 +104,8 @@ class ESC
      *  @param t in in the range [0.0;1.0]
      *  @return true if throttle value is in range; false otherwise.
      */
-    bool setThrottle (const float t);
-    ///Alias of setThrottle(float)
+    bool setDuty (const float t);
+    ///Alias of setDuty(float)
     bool operator= (const float t);
     
     /** Get the last setted throttle value

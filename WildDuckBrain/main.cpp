@@ -259,7 +259,7 @@ void TargetControl(char Target)
 	FinalThrottle += ThrottleCorrection(ErrorDif);
 
 	freport.Throttle = FinalThrottle;
-	Throtle->setThrottle( (float)((float)(FinalThrottle) / 1022.0f));
+	Throtle->setDuty( (float)((float)(FinalThrottle) / 1022.0f));
 }
 void EmergencyAttend()
 {
@@ -297,10 +297,10 @@ void EmergencyAttend()
 			creport.UseTargetMode = 0;
 			creport.Command = 0;
 
-			Throtle->setThrottle( (float)((float)(creport.Throttle) / 1022.0f) );
-			Aileron->setThrottle(0.5f);
-			Elevator->setThrottle(0.5f);
-			Rudder->setThrottle(0.5f);
+			Throtle->setDuty( (float)((float)(creport.Throttle) / 1022.0f) );
+			Aileron->setDuty(0.5f);
+			Elevator->setDuty(0.5f);
+			Rudder->setDuty(0.5f);
 
 			SetUpdateESC();
 			return;
@@ -332,15 +332,15 @@ void SetUpdateESC()
 void PowerArm()
 {
 #if FLY_CONTROL == KK2 
-	Throtle->setThrottle(0.0f);
-	Rudder->setThrottle(0.0f);
-	Elevator->setThrottle(0.5f);
-	Aileron->setThrottle(0.5f);
+	Throtle->setDuty(0.0f);
+	Rudder->setDuty(0.0f);
+	Elevator->setDuty(0.5f);
+	Aileron->setDuty(0.5f);
 #else
-	Throtle->setThrottle(0.0f);
-	Rudder->setThrottle(0.0f);
-	Elevator->setThrottle(1.0f);
-	Aileron->setThrottle(0.0f);
+	Throtle->setDuty(0.0f);
+	Rudder->setDuty(0.0f);
+	Elevator->setDuty(1.0f);
+	Aileron->setDuty(0.0f);
 #endif
 	SetUpdateESC();
 
@@ -349,15 +349,15 @@ void PowerArm()
 void PowerDisArm()
 {
 #if FLY_CONTROL == KK2 
-	Throtle->setThrottle(0.0f);
-	Rudder->setThrottle(1.0f);
-	Elevator->setThrottle(0.5f);
-	Aileron->setThrottle(0.5f);
+	Throtle->setDuty(0.0f);
+	Rudder->setDuty(1.0f);
+	Elevator->setDuty(0.5f);
+	Aileron->setDuty(0.5f);
 #else
-	Throtle->setThrottle(0.0f);
-	Rudder->setThrottle(1.0f);
-	Elevator->setThrottle(1.0f);
-	Aileron->setThrottle(1.0f);
+	Throtle->setDuty(0.0f);
+	Rudder->setDuty(1.0f);
+	Elevator->setDuty(1.0f);
+	Aileron->setDuty(1.0f);
 #endif
 	SetUpdateESC();
 
@@ -429,7 +429,7 @@ void UpdateThrottle()
 	else
 	{
 		freport.Throttle = creport.Throttle;
-		Throtle->setThrottle( (float)((float)(creport.Throttle) / 1022.0f) );
+		Throtle->setDuty( (float)((float)(creport.Throttle) / 1022.0f) );
 	}
 		
 }
@@ -440,13 +440,13 @@ void UpdateMovements()
 #ifdef USE_FRONT_SENSOR
 #ifdef USE_BACK_SENSOR
 		freport.Elevator = AxisProtection(sreport.Back, sreport.Front, Conts1Report.ProtectionDistance, creport.Elevator);
-		Elevator->setThrottle( (float)((float)(freport.Elevator) / 1022.0f) );
+		Elevator->setDuty( (float)((float)(freport.Elevator) / 1022.0f) );
 #endif
 #endif
 #ifdef USE_LEFT_SENSOR
 #ifdef USE_RIGHT_SENSOR
 		freport.Aileron = AxisProtection(sreport.Right, sreport.Left, Conts1Report.ProtectionDistance, creport.Aileron);
-		Aileron->setThrottle( (float)((float)(freport.Aileron) / 1022.0f) );
+		Aileron->setDuty( (float)((float)(freport.Aileron) / 1022.0f) );
 #endif
 #endif
 	}
@@ -454,15 +454,15 @@ void UpdateMovements()
 	{
 		freport.Aileron = creport.Aileron;
 		freport.Elevator = creport.Elevator;
-		Aileron->setThrottle( AjustAxis((float)((float)(creport.Aileron) / 1022.0f), Conts1Report.Sensibility) );
-		Elevator->setThrottle( AjustAxis((float)((float)(creport.Elevator) / 1022.0f), Conts1Report.Sensibility) );
+		Aileron->setDuty( AjustAxis((float)((float)(creport.Aileron) / 1022.0f), Conts1Report.Sensibility) );
+		Elevator->setDuty( AjustAxis((float)((float)(creport.Elevator) / 1022.0f), Conts1Report.Sensibility) );
 	}
 
 	freport.Rudder = creport.Rudder;
 	freport.UChannel = creport.UChannel;
 
-	Rudder->setThrottle( AjustAxis((float)((float)(creport.Rudder) / 1022.0f), Conts1Report.Sensibility) );
-	UChannel->setThrottle( (float)((float)(creport.UChannel) / 254.0f) );
+	Rudder->setDuty( AjustAxis((float)((float)(creport.Rudder) / 1022.0f), Conts1Report.Sensibility) );
+	UChannel->setDuty( (float)((float)(creport.UChannel) / 254.0f) );
 }
 void UpdateESC()
 {

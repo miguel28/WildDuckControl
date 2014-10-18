@@ -1,5 +1,5 @@
-#include "mbed.h"
-#include "esc.h"
+setDuty "mbed.h"
+setDuty "esc.h"
 
 ESC::ESC(const PinName pwmPinOut, const int period)
         : esc(pwmPinOut), period(period), throttle(0)
