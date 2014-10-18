@@ -3,9 +3,9 @@
 
 GCC_BIN =
 PROJECT = WildDuckX
-OBJECTS = ./main.o ./UltrasonicSensors/SRF10.o ./UltrasonicSensors/SRF08.o ./UltrasonicSensors/UltrasonicBase.o ./UltrasonicSensors/SRF05.o ./DataReporter/DataReporter.o ./BufferedSerial/BufferedSerial.o ./BufferedSerial/Buffer/Buffer.o ./ESC/esc.o
+OBJECTS = ./main.o ./UltrasonicSensors/SRF10.o ./UltrasonicSensors/SRF08.o ./UltrasonicSensors/UltrasonicBase.o ./UltrasonicSensors/SRF05.o ./DataReporter/DataReporter.o ./BufferedSerial/BufferedSerial.o ./BufferedSerial/Buffer/Buffer.o ./SLCD/SLCD.o ./ESC/esc.o
 SYS_OBJECTS = ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/startup_MKL46Z4.o ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/system_MKL46Z4.o ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/cmsis_nvic.o ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/mbed_overrides.o ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/board.o ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/retarget.o 
-INCLUDE_PATHS = -I. -I./UltrasonicSensors -I./mbed -I./mbed/TARGET_KL46Z -I./mbed/TARGET_KL46Z/TARGET_Freescale -I./mbed/TARGET_KL46Z/TARGET_Freescale/TARGET_KLXX -I./mbed/TARGET_KL46Z/TARGET_Freescale/TARGET_KLXX/TARGET_KL46Z -I./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM -I./DataReporter -I./BufferedSerial -I./BufferedSerial/Buffer -I./ESC
+INCLUDE_PATHS = -I. -I./UltrasonicSensors -I./mbed -I./mbed/TARGET_KL46Z -I./mbed/TARGET_KL46Z/TARGET_Freescale -I./mbed/TARGET_KL46Z/TARGET_Freescale/TARGET_KLXX -I./mbed/TARGET_KL46Z/TARGET_Freescale/TARGET_KLXX/TARGET_KL46Z -I./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM -I./DataReporter -I./BufferedSerial -I./BufferedSerial/Buffer -I./ESC -I./SLCD
 LIBRARY_PATHS = -L./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM 
 LIBRARIES = -lmbed 
 LINKER_SCRIPT = ./mbed/TARGET_KL46Z/TOOLCHAIN_GCC_ARM/MKL46Z4.ld
