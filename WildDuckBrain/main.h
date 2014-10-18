@@ -13,6 +13,7 @@
 //#define USE_LEFT_SENSOR
 //#define USE_RIGHT_SENSOR
 //#define USE_MOTOR
+#define USE_LCD
 
 #define KK2 0
 #define NAZA_M 1
@@ -21,6 +22,11 @@
 #define IDLE_CONSTANT 511
 #define REFRESH_TIMEOUT_MS 30
 #define POWER_DELAY_MS 50
+
+#ifdef USE_LCD
+#include "SLCD.h"
+SLCD *slcd;
+#endif
 
 #ifdef PC_UART_DEBUG
 BufferedSerial *pc;
@@ -99,7 +105,10 @@ int AxisProtection(float range1, float range2, int target, int ControlSignal);
 int ThrottleCorrection(int ErrorDif);
 void TargetControl(char Target);
 void EmergencyAttend();
+
 void SetUpdateESC();
+void PowerOffESC();
+
 void PowerArm();
 void PowerDisArm();
 void UpdateThrottle();
@@ -107,6 +116,6 @@ void UpdateMovements();
 void UpdateESC();
 float AjustAxis(float value, float percent);
 
-
+void ShowLCD();
 void ShowControllerReport();
 void ShowSensorsReport();

@@ -38,5 +38,5 @@ void ESC::operator() ()
 
 void ESC::powerOff()
 {
-	throttle = 0;
+	throttle = 1500;
 }

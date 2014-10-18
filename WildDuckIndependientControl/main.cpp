@@ -2,13 +2,13 @@
 
 void ArmFunction()
 {
-	if (joy->ButtonNewpress(Start))
+	if (joy->ButtonHeld(Start))
 	{
 		report.Command = 0x01;
 		CalcThrottle = 0.0f;
 		Arming = true;
 	}
-	else if (joy->ButtonNewpress(Select))
+	else if (joy->ButtonHeld(Select))
 	{
 		report.Command = 0x02;
 		CalcThrottle = 0.0f;

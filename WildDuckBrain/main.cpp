@@ -7,6 +7,11 @@ void ConstructAllModules()
 #endif
 	reporter = new DataReporter();
 
+#ifdef USE_LCD
+	slcd = new SLCD();
+	slcd->All_Segments(1);
+#endif
+
 	UsingEmergency = false;
 	ESCPowerdOn = false;
 	Aileron = new ESC(D6);
@@ -56,6 +61,7 @@ void DestructAllModules()
 	delete pc;
 #endif
 	delete reporter;
+	delete slcd;
 
 	delete Aileron;
 	delete Elevator;
@@ -273,7 +279,11 @@ void EmergencyAttend()
 	{
 		//if (sreport.Elevation < eLanding.BreakOutOffHeight)
 		if (HighEmergency < (float)eLanding.BreakOutOffHeight)
+		{
 			PowerDisArm();
+			//wait(2000);
+			ESCPowerdOn = false;
+		}
 		else
 		{
 			EAttemps++;
@@ -315,13 +325,7 @@ void SetUpdateESC()
 		ESCPowerdOn = true;
 
 	if (!ESCPowerdOn)
-	{
-		Aileron->powerOff();
-		Throtle->powerOff();
-		Elevator->powerOff();
-		Rudder->powerOff();
-		UChannel->powerOff();
-	}
+		PowerOffESC();
 	
 	Aileron->pulse();
 	Throtle->pulse();
@@ -329,6 +333,15 @@ void SetUpdateESC()
 	Rudder->pulse();
 	UChannel->pulse();
 }
+void PowerOffESC()
+{
+	Aileron->powerOff();
+	//Throtle->powerOff();
+	Elevator->powerOff();
+	Rudder->powerOff();
+	UChannel->powerOff();
+}
+
 void PowerArm()
 {
 #if FLY_CONTROL == KK2 
@@ -508,6 +521,16 @@ float AjustAxis(float value, float percent)
 	return value;
 }
 
+void ShowLCD()
+{
+#ifdef USE_LCD
+	if (reporter->IsOnline())
+		slcd->printf("ONLI");
+	else
+		slcd->printf("OFFL");
+#endif
+
+}
 void ShowControllerReport()
 {
 #ifdef PC_UART_DEBUG
@@ -536,11 +559,17 @@ int main() {
 	SetUpdateESC();
 	wait_ms(200);
 
+#ifdef USE_LCD
+	slcd->All_Segments(0);
+	slcd->printf("OK  ");
+#endif
+
     while(1) 
     {
 		UpdateSensors();
 		UpdateESC();
 
+		ShowLCD();
 		ShowControllerReport();
 		//ShowSensorsReport();
 		
