@@ -111,7 +111,7 @@ class ESC
     /** Get the last setted throttle value
      *  @return throttle in range [0.0-1.0].
      */
-    float getThrottle () const;
+    float getDuty () const;
     ///Alias of getThrottle()
     operator float () const;
     

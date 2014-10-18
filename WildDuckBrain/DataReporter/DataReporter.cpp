@@ -8,10 +8,11 @@ DigitalOut Led(LED2);
 
 DataReporter::DataReporter()
 {
-	HeartBeat = 100;
+	HeartBeat = 0;
 	LastHeartBeat = 0;
-	HeartTolerance = 0;
+	HeartTolerance = 100;
 	isOnline = false;
+	//Led = 1;
 
 	bufferBusy = false;
 	lastChar = 0x00;
@@ -402,4 +403,6 @@ void DataReporter::WatchDog()
 	if (HeartTolerance >= _emergencyLanding.ConnectionTimeOut)
 		isOnline = false;
 	else isOnline = true;
+
+	//Led = !isOnline;
 }

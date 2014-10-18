@@ -534,6 +534,7 @@ void ShowSensorsReport()
 int main() {
 	ConstructAllModules();
 	SetUpdateESC();
+	wait_ms(200);
 
     while(1) 
     {
