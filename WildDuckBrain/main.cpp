@@ -344,34 +344,45 @@ void PowerOffESC()
 
 void PowerArm()
 {
-#if FLY_CONTROL == KK2 
-	Throtle->setDuty(0.0f);
-	Rudder->setDuty(0.0f);
-	Elevator->setDuty(0.5f);
-	Aileron->setDuty(0.5f);
-#else
-	Throtle->setDuty(0.0f);
-	Rudder->setDuty(0.0f);
-	Elevator->setDuty(1.0f);
-	Aileron->setDuty(0.0f);
-#endif
+	if (creport.Command & 0x08u) //// This is for Arm KK2
+	{
+		Throtle->setDuty(0.0f);
+		Rudder->setDuty(0.0f);
+		Elevator->setDuty(0.5f);
+		Aileron->setDuty(0.5f);
+	}
+	else   //// This is for arm NAZA
+	{
+		Throtle->setDuty(0.0f);
+		Rudder->setDuty(0.0f);
+		Elevator->setDuty(1.0f);
+		Aileron->setDuty(0.0f);
+	}
 	SetUpdateESC();
 
 	wait_ms(POWER_DELAY_MS);
 }
 void PowerDisArm()
 {
-#if FLY_CONTROL == KK2 
-	Throtle->setDuty(0.0f);
-	Rudder->setDuty(1.0f);
-	Elevator->setDuty(0.5f);
-	Aileron->setDuty(0.5f);
-#else
-	Throtle->setDuty(0.0f);
-	Rudder->setDuty(1.0f);
-	Elevator->setDuty(1.0f);
-	Aileron->setDuty(1.0f);
-#endif
+	if (creport.Command & 0x08)  //// This is for Disarm KK2
+	{
+		Throtle->setDuty(0.0f);
+		Rudder->setDuty(1.0f);
+		Elevator->setDuty(0.5f);
+		Aileron->setDuty(0.5f);
+	}
+	else   //// This is for Disarm NAZA
+	{
+		//Throtle->setDuty(0.0f);
+		//Rudder->setDuty(1.0f);
+		//Elevator->setDuty(1.0f);
+		//Aileron->setDuty(1.0f);
+		Throtle->setDuty(0.0f);
+		Rudder->setDuty(0.5f);
+		Elevator->setDuty(0.5f);
+		Aileron->setDuty(0.5f);
+	}
+
 	SetUpdateESC();
 
 	wait_ms(POWER_DELAY_MS);
@@ -481,23 +492,32 @@ void UpdateESC()
 {
 	creport = reporter->GetControllerReport();
 	
-	if (creport.Command & 0x01)
+	if (creport.Command & 0x01u)
 	{
 		PowerArm();
 		return;
 	}	
-	if (creport.Command & 0x02)
+	if (creport.Command & 0x02u)
 	{
 		PowerDisArm();
 		return;
 	}
 		
 #ifdef USE_MOTOR
-	if (creport.Command & 0x04)
-		pinMotor = 1;
+	if (creport.Command & 0x04u)
+	{
+		pinMotor.setDuty(1.0f);
+		pinMotor.pulse();
+	}
+		
 	else
-		pinMotor = 0;
+	{
+		pinMotor.setDuty(0.0f);
+		pinMotor.pulse();
+	}
+		
 #endif
+
 	if (reporter->ConstantsHaveChanged())
 	{
 		Conts1Report = reporter->GetConstants1();

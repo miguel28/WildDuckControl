@@ -15,10 +15,6 @@
 //#define USE_MOTOR
 #define USE_LCD
 
-#define KK2 0
-#define NAZA_M 1
-#define FLY_CONTROL KK2
-
 #define IDLE_CONSTANT 511
 #define REFRESH_TIMEOUT_MS 30
 #define POWER_DELAY_MS 50
@@ -33,9 +29,8 @@ BufferedSerial *pc;
 #endif
 
 #ifdef USE_MOTOR
-DigitalOut mpinMotor(PTE21);
+ESC mpinMotor(D7);
 #endif
-
 
 DataReporter *reporter;
 ESC *Aileron;
