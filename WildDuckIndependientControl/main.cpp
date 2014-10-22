@@ -80,10 +80,20 @@ void UpdateControls()
 		report.Elevator = (unsigned short)(joy->GetAxis(2, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511; //// Convert value of axis 2 to be a elevator value of control
 		report.UChannel = 220u; //// Constand Pwmout signal of NAZA, to tells them that the controller it is in manual mode
 	}
-	
+	else /// if the flag is true create a synchronous timer to clear the flag
+	{
+		armingCounter += UPDATE_RATE; //// the armCounter addes the update rate in every vertical sync line
+									  //// UPDATE_RATE is a macro defined in main.h
+		if (armingCounter >= 0.4f)    //// if the timer counter is grater or equal than 0.4f
+		{							  //// then
+			Arming = false;			  //// clear the arming flag
+			armingCounter = 0.0f;     //// reset Counter
+		}
+	}
+
+
 	*bar = report.Throttle; //// Se to the var led the number of throttle we have calculated to turns on respectedly leds in power hand.
 	SendCommand(); //// Cals Send Command Function once we have formated the joystick data in ControllerReport structure.
-
 
 	/*
 	This little _DEBUG_PC_ debug block is only to check the value in 
@@ -137,6 +147,18 @@ void SendCommand()
 {
 	/*
 	This part of this subroutine fixed some data
+
+	the data pakage of 12 bytes can be contain in the body two 0xffu consecutives thats why 
+	the end of tha pakage must be 0xffu, 0xffu and the receiver can missunderstood the pakage
+	as a invalid or incomplete pakage.
+
+	Example :
+				   {PakageID,  PkgRequested, 8 bytes data pakage body------------------------------,  2 end bytes 0xffu };
+	char* pakage = {   0x01u,         0x0fu, 0x50u, 0x30u, 0xefu, 0x17u, 0x56u, 0x67u, 0x34u, 0x21u,  0xffu,    0xffu   };
+
+	the receiver take bytes from RF UART module and check until it gets  the two 0xff bytes.
+
+	thats why the following lines correct 255, 511, 1023 report values in order to avoid that
 	*/
 	
 	if (report.Aileron == 255)
@@ -195,88 +217,133 @@ void SendCommand()
 	unsigned char temp4 = (unsigned char)((unsigned char)((report.Elevator >> 8) << 0) & 0xff); //// Take the last 2 bits of Elevator usigned short
 	unsigned char temp5 = (unsigned char)((temp1 | temp2 | temp3 | temp4) & 0xff); //// Take this all last bits of every axis and concats in other byte (byte 6)
 
-	buffer[6] = temp5;//// ^
+	buffer[6] = temp5;//// Asigned the contacted byte ^^^^^
 	buffer[7] = (unsigned char)report.ElevationTarget; //// Send elevation target 
 	buffer[8] = (unsigned char)report.UChannel;        //// Send UChannel for
 	buffer[9] = (unsigned char)report.UseTargetMode;   //// Send commnad of use target Mode, always 0x00 in this case
 
-	WriteReport(buffer);
+	WriteReport(buffer); //// Calls write report subroutine, that takes 1 parameter a char* buffer with 12 char pointer size
 
-	if (Arming)
-	{
-		armingCounter += UPDATE_RATE;
-		if (armingCounter >= 0.4f)
-		{
-			Arming = false;
-			armingCounter = 0.0f;
-		}
-	}
 }
-void WriteReport(unsigned char* data)
+
+/*
+Take 1 argument, unsigned char pointer with minum data length 10.
+return void argument
+
+This function manage the use of byte per byte data sending in a uart 
+module specified in rf objec.
+
+This method polls in a while loop a waits untils the UART Module 
+is available to write a new character, in fact in means that the las 
+character that we have requested to send has been sent. For doing
+this is only by calling bool writable() methad define in Serial 
+class of mebed runtime library.
+
+After that if a write new character by calling void putc(char c)
+method of Serial Class define in mbed runtime library
+(Check www.mbed.org Serial Handbook).
+*/
+void WriteReport(unsigned char* data) //// Take unsigned char* data pointer
 {
-#ifdef USE_RF
-	int i;
-	for (i = 0; i<10; i++)
-	{
-		while (!rf.writeable());
-		rf.putc(data[i]);
+#ifdef USE_RF //// If it is defined thar USE_RF macro in main.h compile the pollowing code
+			  //// This macro could be undefined for debugging porpuses only.
+	int i;    //// Declara our integer iterator variable (standar for a for loop)
+	for (i = 0; i<10; i++)	//// make a loop from i = 0 to i = 9
+	{						//// this loop writes the 10 first byte of the pakage
+		while (!rf.writeable()); //// wait until the UART module it is available to write
+		rf.putc(data[i]);		 //// then put a new character to write
 	}
-	while (!rf.writeable());
-	rf.putc((char)0xff);
-	while (!rf.writeable());
-	rf.putc((char)0xff);
+	while (!rf.writeable()); //// wait until the UART module it is available to write
+	rf.putc((char)0xff);     //// then writes 0xff in the uart module
+	while (!rf.writeable()); //// wait until the UART module it is available to write
+	rf.putc((char)0xff);     //// then writes 0xff in the uart module
 #endif
 }
+
+/*
+Take 0 arguments
+returns void parameter
+
+this function asigned the hardware pins that can be used as pwmout defined
+for the Freedom microcontroller FDRM-KL25Z, see www.mbed.org FDRM-KL25Z
+Handbook. 
+
+This function contructs the bar object with a defaul LedBar Contructor.
+
+The funcion it take 9 pwmout pins, asigned with the imediate value of the
+pin definitin by using the method void LedBar::SetPin(int numpin, PinName pin)
+and waiting 10 us to se the next pin in order to avoid a current overload,
+and also to avoid a program freezes.
+*/
 void SetupBar()
 {
-	bar = new LedBar();
-	wait_us(10);
-	bar->SetPin(0, A0);
-	wait_us(10);
-	bar->SetPin(1, A1);
-	wait_us(10);
-	bar->SetPin(2, A2);
-	wait_us(10);
-	bar->SetPin(3, A3);
-	wait_us(10);
-	bar->SetPin(4, A4);
-	wait_us(10);
-	bar->SetPin(5, A5);
-	wait_us(10);
-	bar->SetPin(6, D2);
-	wait_us(10);
-	bar->SetPin(7, D5);
-	wait_us(10);
-	bar->SetPin(8, D7);
-	wait_us(10);
+	bar = new LedBar(); //// Contruct the bar object
+	wait_us(10);        //// Wait 10 us to avoid current overload
+	bar->SetPin(0, A0); //// Se segment 0 of the bar as a A0 pin
+	wait_us(10);        //// Wait 10 us to avoid current overload
+	bar->SetPin(1, A1); //// Se segment 1 of the bar as a A1 pin
+	wait_us(10);        //// Wait 10 us to avoid current overload
+	bar->SetPin(2, A2); //// Se segment 2 of the bar as a A2 pin
+	wait_us(10);        //// Wait 10 us to avoid current overload
+	bar->SetPin(3, A3); //// Se segment 3 of the bar as a A3 pin
+	wait_us(10);        //// Wait 10 us to avoid current overload
+	bar->SetPin(4, A4); //// Se segment 4 of the bar as a A4 pin
+	wait_us(10);        //// Wait 10 us to avoid current overload
+	bar->SetPin(5, A5); //// Se segment 5 of the bar as a A5 pin
+	wait_us(10);        //// Wait 10 us to avoid current overload
+	bar->SetPin(6, D2); //// Se segment 6 of the bar as a D2 pin
+	wait_us(10);        //// Wait 10 us to avoid current overload
+	bar->SetPin(7, D5); //// Se segment 7 of the bar as a D5 pin
+	wait_us(10);        //// Wait 10 us to avoid current overload
+	bar->SetPin(8, D7); //// Se segment 8 of the bar as a D7 pin
+	wait_us(10);        //// Wait 10 us to avoid current overload
 }
+
+/*
+Takes 0 Arguments
+returns void argument.
+
+This function constructs a new Joystick instance in joy object,
+and algo initalizes the PS2 controller (see Joystick.h and Joystick.cpp)
+
+if any error in the moment of the initialization go to a infinite loop
+*/
 void SetupJoystick()
 {
-	joy = new Joystick();
-	int res = joy->init();
+	joy = new Joystick(); //// creates a new instance of Joystick in joy object
+	int res = joy->init();//// Initializes the joystick and stores the initialization result.
+	////  if the result it is equal 0 the joystick was successfully opened
+	/// if the result is diferent to 0 the joystick wasn't successfully opened
 
-#ifdef __DEBUG_PC_
-	if (res == 0)
+#ifdef __DEBUG_PC_ //// This define block if for pc debug only if the _DEBUG_PC_ is defined
+				   //// writes in a serial terminal the result of the initialization.
+	if (res == 0)  
 		pc.printf("Joystick Opened\r\n");
 	else
 		pc.printf("Joystick NOT Opened\r\n");
 #endif
 
-	if (res != 0)
-		while (1);
+	if (res != 0) //// if the result it's not equal to 0 the go to infinite loop.
+		while (1); //// Infinite loop
 }
+
+/*
+main c function of the program
+*/
 int main() {
-	rf.baud(19200);
-	wait_ms(1000);
+	rf.baud(19200); //// first of all changes the baud rate to 19200 that's why the uart module 
+					//// that previuosly have been programed from RF-Magic
+	wait_ms(1000);  //// wait 1 second  to avoid current overload.z
 
-	SetupBar();
-	SetupJoystick();
+	SetupBar();     //// Calls SetupBar() to asign the led bar pins
+	SetupJoystick();//// Calls SetupJoystick() to initialize the joystick
 
-    while(1) 
+    while(1) //// Main program infinite loop
 	{
-		wait(UPDATE_RATE);
-		UpdateControls();
+		wait(UPDATE_RATE); //// wait the Update rate define in main.h
+		UpdateControls();  //// calls UpdatesControls() to poll new values of joystick and
+						   //// and sent to the rf uart module.
 
-		onlineLed = !onlineLed;
+		onlineLed = !onlineLed; /// Toggle led of a led on the 10th bar led
     }
 }
