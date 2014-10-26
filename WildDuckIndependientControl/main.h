@@ -48,7 +48,7 @@ typedef struct
 #define SENSIBILITY 200		   //// This is a Sensibility Factor
 #define UPDATE_RATE 0.049f
 
-//#define __DEBUG_PC_  //// This is a flag macro for enables pc serial port debugging
+#define __DEBUG_PC_  //// This is a flag macro for enables pc serial port debugging
 #define USE_RF         //// This macro flag is for compiles the pertinents instructions
 
 #ifdef __DEBUG_PC_			//// If the flag of debug is defined 
