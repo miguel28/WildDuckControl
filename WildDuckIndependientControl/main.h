@@ -51,25 +51,25 @@ typedef struct
 //#define __DEBUG_PC_  //// This is a flag macro for enables pc serial port debugging
 #define USE_RF         //// This macro flag is for compiles the pertinents instructions
 
-#ifdef __DEBUG_PC_
-Serial pc(USBTX, USBRX);
+#ifdef __DEBUG_PC_			//// If the flag of debug is defined 
+Serial pc(USBTX, USBRX);    //// then create a pc uart interface on USB destination ports
 #endif
 
-#ifdef USE_RF
-Serial rf(D14, D15);
+#ifdef USE_RF         //// if the flag os use Rf si defined
+Serial rf(D14, D15);  //// Create new uart Interface to use RF Module
 #endif
 
-DigitalOut onlineLed(PTC0);
-Joystick* joy;
-LedBar* bar;
+DigitalOut onlineLed(PTC0);  //// Glove online LED on PTC0
+Joystick* joy;               //// Instance of joystick 
+LedBar* bar;				 //// Insdtance of Led Bar controller
 
-ControllerReport report;
-float CalcThrottle = 0.0f;
-bool Arming = false;
-unsigned char buffer[12];
-float armingCounter = 0.0f;
+ControllerReport report;	 //// Controller report structure
+float CalcThrottle = 0.0f;   //// Calculated Throttle
+bool Arming = false;		 //// Arming flag, default false
+unsigned char buffer[12];    //// byte per byte send buffer
+float armingCounter = 0.0f;  //// temporizer for arming flag
 
-void WriteReport(unsigned char* data);
+void WriteReport(unsigned char* data);        
 void UpdateControls();
 void ArmFunction();
 void SendCommand();
