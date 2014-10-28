@@ -1,4 +1,28 @@
-#include "main.h"
+/******************************************************************
+Wild Duck Independient Control
+Project Created 8/3/2014
+File main.cpp
+
+This program has been created by using mbed runtime libraries
+for the platform FRDM-KL25Z in a offline project managed by
+arm-gcc compiler.
+
+For more details see (http://www.mbed.org) for a gerneal
+overview. And for the development se (http://developer.mbed.org/)
+
+*This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of
+the License, or(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+<http://www.gnu.org/licenses/>
+******************************************************************/
+
+#include "main.h" //// Include main.h definitions
 
 /*
 Takes 0 Arguments
@@ -347,3 +371,5 @@ int main() {
 		onlineLed = !onlineLed; /// Toggle led of a led on the 10th bar led
     }
 }
+
+/* End of file main.cpp */

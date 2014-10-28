@@ -41,7 +41,7 @@ typedef struct
 	unsigned char UChannel;        //// 8 bits var for uchannel naza
 	unsigned char UseTargetMode;   //// 8 bits var for target mode command
 	unsigned char Command;         //// 4 bits var nibble for command
-}ControllerReport;
+}ControllerReport; //// 68 efective bits
 
 #define JOY_DEATH_ZONE 0.10f   //// Defined a constant of deathzone for joystick
 #define MAX_AXIS 1.0f          //// Porportional constant of axis
@@ -69,9 +69,12 @@ bool Arming = false;		 //// Arming flag, default false
 unsigned char buffer[12];    //// byte per byte send buffer
 float armingCounter = 0.0f;  //// temporizer for arming flag
 
+/* Definition of prototype functions */
 void WriteReport(unsigned char* data);        
 void UpdateControls();
 void ArmFunction();
 void SendCommand();
 void SetupBar();
 void SetupJoystick();
+
+/*End of file main.h*/

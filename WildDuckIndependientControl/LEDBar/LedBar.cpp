@@ -1,13 +1,38 @@
-#include "LedBar.h"
+/******************************************************************
+Wild Duck Independient Control
+Project Created 8/3/2014
+File LedBar.cpp
 
+This program has been created by using mbed runtime libraries
+for the platform FRDM-KL25Z in a offline project managed by
+arm-gcc compiler.
+
+For more details see (http://www.mbed.org) for a gerneal
+overview. And for the development se (http://developer.mbed.org/)
+
+*This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of
+the License, or(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+<http://www.gnu.org/licenses/>
+******************************************************************/
+
+#include "LedBar.h"
 
 LedBar::LedBar()
 {
-	Throttle = 0;
+	//// Reset private var to default value.
+	Throttle = 0; 
 	defined = 0;
 }
 LedBar::~LedBar()
 {
+	
 	for (int i = 0; i < NUM_SEGMENTS; i++)
 		delete Segment[i];
 }
@@ -43,3 +68,4 @@ void LedBar::CalcPWM()
 	}
 }
 
+//// end of LedBar.cpp
