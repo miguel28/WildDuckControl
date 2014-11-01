@@ -24,31 +24,34 @@ GNU General Public License for more details.
 
 #include "LedBar.h"
 
+/* Default constructor */
 LedBar::LedBar()
 {
 	//// Reset private var to default value.
 	Throttle = 0; 
 	defined = 0;
 }
+/* Default desconstructor 
+   deletes all pwmout constructed before*/
 LedBar::~LedBar()
 {
-	
-	for (int i = 0; i < NUM_SEGMENTS; i++)
-		delete Segment[i];
+	for (int i = 0; i < NUM_SEGMENTS; i++) //// for each segment array meber
+		delete Segment[i];				   //// delete the pwmout instance
 }
 void LedBar::SetPin(int numpin, PinName pin)
 {
-	if (numpin >= NUM_SEGMENTS)
-		return;
+	if (numpin >= NUM_SEGMENTS) //// if the 9 pwmout are defined
+		return;					//// then exit of this function
 
-	Segment[numpin] = new PwmOut(pin);
-	*Segment[numpin] = 0.0f;
-	defined++;
+	Segment[numpin] = new PwmOut(pin);  //// Construct a new instace of pwmout defined in mbed.h
+	*Segment[numpin] = 0.0f;			//// use overloaded operator to initialize on 0% duty
+	defined++;							//// if new pin is defined adds 1 the defined variable.
 }
+//// = operator overload 
 void LedBar::operator = (const int t)
 {
-	if (defined < NUM_SEGMENTS)
-		return;
+	if (defined < NUM_SEGMENTS) //// if the 9 pwmout aren't defined
+		return;					//// then exit of this function
 
 	Throttle = t;
 	CalcPWM();
