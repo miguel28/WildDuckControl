@@ -2,6 +2,8 @@
 
 DigitalOut led2(LED1);
 DigitalOut Led(LED2);
+DigitalOut BlueLed(D13);
+
 ////////////////////////////////////////////////////////////////////////
 ////       Public  Members
 ////////////////////////////////////////////////////////////////////////
@@ -289,7 +291,8 @@ void DataReporter::GetReport()
                 DecodeReport();
 				//wait_us(10);
 				SendReport();
-                led2 = !led2;
+                //led2 = !led2;
+				BlueLed = !BlueLed;
 				HeartBeat++;
             }
             bufPointer = 0;

@@ -12,7 +12,7 @@
 //#define USE_BACK_SENSOR
 //#define USE_LEFT_SENSOR
 //#define USE_RIGHT_SENSOR
-//#define USE_MOTOR
+#define USE_MOTOR
 #define USE_LCD
 
 #define IDLE_CONSTANT 511
