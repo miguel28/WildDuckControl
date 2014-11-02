@@ -66,23 +66,23 @@ void UpdateControls()
 	joy->Update(); /// Polls new axis and buttons state from joystick
 
 	if (joy->ButtonNewpress(UP)) //// When press digital pad Adds to the throttle 10% every new press
-		CalcThrottle += 100.0f;
+		CalcThrottle += 30.0f;
 	if (joy->ButtonNewpress(DOWN)) //// When press digital pad Substracts to the throttle 10% every new press
-		CalcThrottle -= 100.0f;
+		CalcThrottle -= 30.0f;
 
 	float tmpThortle = joy->GetAxis(1, JOY_DEATH_ZONE); //// Get Axis 1 (Throttle) os joystick
 
 	if (tmpThortle <= 0.0f) //// Throttle UP when axis result is less that 0.0f
-		CalcThrottle += -tmpThortle * (SENSIBILITY / 50.0f); //// Calc sensibility of up throttle axis
+		CalcThrottle += -tmpThortle * ((SENSIBILITY * 0.5f)/ 50.0f); //// Calc sensibility of up throttle axis
 	else /// Throttle DOWN when  axis result is grater than 0.0f;
-		CalcThrottle += -tmpThortle * ((SENSIBILITY * 1.25f) / 50.0f); //// Calc sensibility of down throttle axis, downs 25% more.
+		CalcThrottle += -tmpThortle * ((SENSIBILITY) / 50.0f); //// Calc sensibility of down throttle axis, downs 25% more.
 
 	if (CalcThrottle <= 0.0f) //// If throttle is lesser or equal that 0.0f
 		CalcThrottle = 0.0f;  //// then set throttle to 0.0f. This is for preventing get negative throttles even if user try down more
 	if (CalcThrottle >= 1022.0f) //// If throttle is greater or equal that 0.0f
 		CalcThrottle = 1022.0f; //// then set throttle to 0.0f. This is for preventing get overload throttles even if user try up more
 
-	if (joy->ButtonNewpress(Circle)) //// Emergency Set Throttle to Zero if press Circle Button of Joystick
+	if (joy->ButtonHeld(Circle) || joy->ButtonHeld(Triangle)) //// Emergency Set Throttle to Zero if press Circle Button of Joystick
 		CalcThrottle = 0.0f;		//// Set throttle to IDLE
 
 	report.Command = 0x00u; /// Reset command Nibble (view Controller Report Structure in main.h)
@@ -102,7 +102,7 @@ void UpdateControls()
 		report.Rudder = (unsigned short)((-joy->GetAxis(0, JOY_DEATH_ZONE)) * MAX_AXIS * 511.0f) + 511; //// Convert Value of axis 0 to be a rudder value of control (get notice that this axis is inverted)
 		report.Aileron = (unsigned short)(joy->GetAxis(3, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511; //// Convert value of axis 3 to be a aileron value of control
 		report.Elevator = (unsigned short)(joy->GetAxis(2, JOY_DEATH_ZONE) * MAX_AXIS * 511.0f) + 511; //// Convert value of axis 2 to be a elevator value of control
-		report.UChannel = 220u; //// Constand Pwmout signal of NAZA, to tells them that the controller it is in manual mode
+		report.UChannel = 45u; //// Constand Pwmout signal of NAZA, to tells them that the controller it is in manual mode
 	}
 	else /// if the flag is true create a synchronous timer to clear the flag
 	{
@@ -128,8 +128,9 @@ void UpdateControls()
 
 #ifdef __DEBUG_PC_
 
-	//pc.printf("Throttle %d, %d \r\n", bar->Throttle, bar->value);
-	if (joy->ButtonNewpress(UP))
+	pc.printf("Throttle %d \r\n", report.Throttle);
+	//pc.printf("Elevator %d \r\n", report.Elevator);
+	/*if (joy->ButtonNewpress(UP))
 		pc.printf("UP \r\n");
 	if (joy->ButtonNewpress(DOWN))
 		pc.printf("DOWN \r\n");
@@ -154,7 +155,7 @@ void UpdateControls()
 	if (joy->ButtonNewpress(Triangle))
 		pc.printf("Triangle \r\n");
 	if (joy->ButtonNewpress(Cross))
-		pc.printf("Cross \r\n");
+		pc.printf("Cross \r\n");*/
 #endif
 }
 

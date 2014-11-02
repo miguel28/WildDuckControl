@@ -43,8 +43,8 @@ typedef struct
 	unsigned char Command;         //// 4 bits var nibble for command
 }ControllerReport; //// 68 efective bits
 
-#define JOY_DEATH_ZONE 0.10f   //// Defined a constant of deathzone for joystick
-#define MAX_AXIS 1.0f          //// Porportional constant of axis
+#define JOY_DEATH_ZONE 0.0f   //// Defined a constant of deathzone for joystick
+#define MAX_AXIS 0.33f          //// Porportional constant of axis
 #define SENSIBILITY 200		   //// This is a Sensibility Factor
 #define UPDATE_RATE 0.049f
 
