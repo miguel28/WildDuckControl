@@ -506,13 +506,13 @@ void UpdateESC()
 #ifdef USE_MOTOR
 	if (creport.Command & 0x04u)
 	{
-		mpinMotor.setDuty(1.0f);
+		mpinMotor.setDuty(0.0f);
 		mpinMotor.pulse();
 	}
 		
 	else
 	{
-		mpinMotor.setDuty(0.0f);
+		mpinMotor.setDuty(1.0f);
 		mpinMotor.pulse();
 	}
 		
