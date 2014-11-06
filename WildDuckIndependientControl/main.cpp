@@ -82,7 +82,7 @@ void UpdateControls()
 	if (CalcThrottle >= 1022.0f) //// If throttle is greater or equal that 0.0f
 		CalcThrottle = 1022.0f; //// then set throttle to 0.0f. This is for preventing get overload throttles even if user try up more
 
-	if (joy->ButtonHeld(Circle) || joy->ButtonHeld(Triangle)) //// Emergency Set Throttle to Zero if press Circle Button of Joystick
+	if (joy->ButtonHeld(Circle) || joy->ButtonHeld(Triangle)) //// Emergency Set Throttle to Zero if press Circle or Triangle Button of Joystick
 		CalcThrottle = 0.0f;		//// Set throttle to IDLE
 
 	report.Command = 0x00u; /// Reset command Nibble (view Controller Report Structure in main.h)
