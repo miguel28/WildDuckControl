@@ -44,9 +44,9 @@ typedef struct
 }ControllerReport; //// 68 efective bits
 
 #define JOY_DEATH_ZONE 0.0f   //// Defined a constant of deathzone for joystick
-#define MAX_AXIS 0.667f          //// Porportional constant of axis for NAZA is 0.33f
+#define MAX_AXIS 1.0f          //// Porportional constant of axis for NAZA is 0.33f
 #define SENSIBILITY 200		   //// This is a Sensibility Factor
-#define HELD_BUTTON_THROTTLE 0.0000833f //// 60s is 1200 cycles
+#define HELD_BUTTON_THROTTLE 0.0833f //// 60s is 1200 cycles
 #define UPDATE_RATE 0.049f //// Code cycle vbBlankSync every aprox. 50 ms
 
 #define __DEBUG_PC_  //// This is a flag macro for enables pc serial port debugging

@@ -68,9 +68,9 @@ void UpdateControls()
 	//////////////////////////////////////////////////////////////////
 	/*This block controls Throttle control*/
 	if (joy->ButtonNewpress(UP)) //// When press digital pad Adds to the throttle 10% every new press
-		CalcThrottle += 30.0f;
+		CalcThrottle += 50.0f;
 	if (joy->ButtonNewpress(DOWN)) //// When press digital pad Substracts to the throttle 10% every new press
-		CalcThrottle -= 30.0f;
+		CalcThrottle -= 50.0f;
 
 	float tmpThortle = joy->GetAxis(1, JOY_DEATH_ZONE); //// Get Axis 1 (Throttle) os joystick
 
