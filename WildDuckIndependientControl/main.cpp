@@ -65,6 +65,8 @@ void UpdateControls()
 {
 	joy->Update(); /// Polls new axis and buttons state from joystick
 
+	//////////////////////////////////////////////////////////////////
+	/*This block controls Throttle control*/
 	if (joy->ButtonNewpress(UP)) //// When press digital pad Adds to the throttle 10% every new press
 		CalcThrottle += 30.0f;
 	if (joy->ButtonNewpress(DOWN)) //// When press digital pad Substracts to the throttle 10% every new press
@@ -73,9 +75,12 @@ void UpdateControls()
 	float tmpThortle = joy->GetAxis(1, JOY_DEATH_ZONE); //// Get Axis 1 (Throttle) os joystick
 
 	if (tmpThortle <= 0.0f) //// Throttle UP when axis result is less that 0.0f
-		CalcThrottle += -tmpThortle * ((SENSIBILITY * 0.5f)/ 50.0f); //// Calc sensibility of up throttle axis
+		CalcThrottle += -tmpThortle * (SENSIBILITY / 50.0f); //// Calc sensibility of up throttle axis
 	else /// Throttle DOWN when  axis result is grater than 0.0f;
-		CalcThrottle += -tmpThortle * ((SENSIBILITY) / 50.0f); //// Calc sensibility of down throttle axis, downs 25% more.
+		CalcThrottle += -tmpThortle * (SENSIBILITY / 50.0f); //// Calc sensibility of down throttle axis, downs 25% more.
+
+	if (joy->ButtonHeld(R2))
+		CalcThrottle += HELD_BUTTON_THROTTLE;
 
 	if (CalcThrottle <= 0.0f) //// If throttle is lesser or equal that 0.0f
 		CalcThrottle = 0.0f;  //// then set throttle to 0.0f. This is for preventing get negative throttles even if user try down more
@@ -83,7 +88,10 @@ void UpdateControls()
 		CalcThrottle = 1022.0f; //// then set throttle to 0.0f. This is for preventing get overload throttles even if user try up more
 
 	if (joy->ButtonHeld(Circle) || joy->ButtonHeld(Triangle)) //// Emergency Set Throttle to Zero if press Circle or Triangle Button of Joystick
-		CalcThrottle = 0.0f;		//// Set throttle to IDLE
+		CalcThrottle = 0.0f; //// Set throttle to IDLE
+
+	/*This block controls Throttle control*/
+	//////////////////////////////////////////////////////////////////
 
 	report.Command = 0x00u; /// Reset command Nibble (view Controller Report Structure in main.h)
 	ArmFunction(); //// Call Arm subroutine
@@ -127,7 +135,6 @@ void UpdateControls()
 	*/
 
 #ifdef __DEBUG_PC_
-
 	pc.printf("Throttle %d \r\n", report.Throttle);
 	//pc.printf("Elevator %d \r\n", report.Elevator);
 	/*if (joy->ButtonNewpress(UP))
