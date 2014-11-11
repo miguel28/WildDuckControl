@@ -1,4 +1,28 @@
-#include "Joystick.h"
+/******************************************************************
+Wild Duck Independient Control
+Project Created 8/3/2014
+File Joystick.h
+
+This program has been created by using mbed runtime libraries
+for the platform FRDM-KL25Z in a offline project managed by
+arm-gcc compiler.
+
+For more details see (http://www.mbed.org) for a gerneal
+overview. And for the development se (http://developer.mbed.org/)
+
+*This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of
+the License, or(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+<http://www.gnu.org/licenses/>
+******************************************************************/
+
+#include "Joystick.h" //// Include the Joystick.h definitions
 
 Joystick::Joystick() : PS_PAD(D12, D11, D13, D10)
 {
@@ -99,3 +123,4 @@ float Joystick::GetAxis(unsigned char _axis, float DeathZone)
 
 	return FinalAxis;
 }
+//// End of file Joystick.cpp

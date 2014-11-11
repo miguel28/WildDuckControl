@@ -22,56 +22,85 @@ GNU General Public License for more details.
 <http://www.gnu.org/licenses/>
 ******************************************************************/
 
-#include "PS_PAD.h"
+#include "PS_PAD.h" //// Includes PS_PAD.h headers.
 
+/*
+	In this file include the definition of Joystick class
+	that inherits the members of a PS_PAD class and manage also
+	a newpress state of the buttons and create a final user
+	API like Joystick on a CSharp write that a been writed before, 
+	and also the MK_Input.cpp  used in the watchdog interface. 
+*/
+
+
+/* Enum definition of the name of the buttons*/
 enum JButtons
 {
-	Triangle,
-	Circle,
-	Cross,
-	Square,
-	L1,
-	R1,
-	L2,
-	R2,
-	Select,
-	Start,
-	L3,
-	R3,
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT
+	Triangle, //// 0x00
+	Circle,   //// 0x01
+	Cross,    //// 0x02
+	Square,   //// 0x03
+	L1,       //// 0x04
+	R1,       //// 0x05
+	L2,       //// 0x06
+	R2,       //// 0x07
+	Select,   //// 0x08
+	Start,    //// 0x08
+	L3,       //// 0x09
+	R3,       //// 0x0A
+	UP,       //// 0x0B
+	DOWN,     //// 0x0C
+	LEFT,     //// 0x0D
+	RIGHT     //// 0x0E
 };
 
+/* Enum definition of the Axis*/
 enum JAxis
 {
-	XAxis,
-	YAxis,
-	ZAxis,
-	WAxis
+	XAxis, //// 0x00
+	YAxis, //// 0x01
+	ZAxis, //// 0x02
+	WAxis  //// 0x03
 };
 
-class Joystick : public PS_PAD
+/* Definition of a class Joystick */
+class Joystick : public PS_PAD //// Inherits from PS_PAD as public
 {
+	/* Private members */
 private:
-	unsigned short NumButtons;
+	/* Stores on a buffer the polled button states from
+	PS_PAD */
+	unsigned short NumButtons; //// = 16 num buttons
 	unsigned short mButtonHeld[16];
 	unsigned short mButtonNewpress[16];
 	unsigned short bButtonNewpress[16];
-	int axis[4];
-	void Event();
+	int axis[4]; //// 4 axis defined
 
+	/* Function that takes the buttons states from PS_PAD class
+	   and convets it to a new buffer format ( this is for reuse a code
+	   that a I've generated before) */
+	void Event(); 
+
+	/* Public members*/
 public:
-	Joystick();
-	~Joystick();
-	bool Opened;
+	Joystick(); //// Default contructor
+	~Joystick(); //// Default Destructor
+	bool Opened; //// Indicates if the Joystick is connected.
 
-	bool Init();
-	void Update();
+	bool Init(); //// Function that initialized the joystick
+	void Update(); ////  Method that Update the state of the buttons
+	
+	/*Public method that returns the state of a button if is pressed or not*/
 	unsigned short ButtonHeld(unsigned short button);
-	unsigned short ButtonNewpress(unsigned short button);
-	float GetAxis(unsigned char axis, float DeathZone = 0.0f);
-};
 
-//// End od Joystick.h
+	/* Public methods that return the state of the button if 
+	   the button has been when the before state was not,
+	   in order to catch the new press event
+	*/
+	unsigned short ButtonNewpress(unsigned short button);
+
+	/* Get the value of the selected axis in a float range of -1.0f and 1.0f */
+	float GetAxis(unsigned char axis, float DeathZone = 0.0f);
+};/* Definition of a class Joystick */
+
+//// End of Joystick.h

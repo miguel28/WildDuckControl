@@ -4,7 +4,7 @@ Project Created 8/3/2014
 File PS_PAD.h
 
 PlayStation Controller library
-* Copyright (c) 2013 Hiroshi Suga
+* Copyright (c) 2013 Hiroshi Suga - 2014 Miguel Silva
 
 This program has been created by using mbed runtime libraries
 for the platform FRDM-KL25Z in a offline project managed by

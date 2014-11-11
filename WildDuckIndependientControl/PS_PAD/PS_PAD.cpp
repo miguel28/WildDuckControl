@@ -1,7 +1,29 @@
-/*
- * PlayStation Controller library
- * Copyright (c) 2013 Hiroshi Suga - 2014 Miguel Silva
- */
+/******************************************************************
+Wild Duck Independient Control
+Project Created 8/3/2014
+File PS_PAD.h
+
+PlayStation Controller library
+* Copyright (c) 2013 Hiroshi Suga - 2014 Miguel Silva
+
+This program has been created by using mbed runtime libraries
+for the platform FRDM-KL25Z in a offline project managed by
+arm-gcc compiler.
+
+For more details see (http://www.mbed.org) for a gerneal
+overview. And for the development se (http://developer.mbed.org/)
+
+*This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of
+the License, or(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+<http://www.gnu.org/licenses/>
+******************************************************************/
 
 #include "PS_PAD.h" //// Include the headers of PS_PAD.h also the definition of the class
 
@@ -104,15 +126,21 @@ int PS_PAD::poll() {
 	return 0; //// function exits success!
 }
 
+/* int read method 
+   takes TYPE parameters (enum)
+   */
 int PS_PAD::read(TYPE t) {
+	//// if the controller isn't connected return 0 or 128 if t is an axis
 	if (!_connected) 
 	{
 		if (t <= BUTTONS)
 			return 0;
 		else 
-			return 0x80;
+			return 0x80; //// Center value of axis
 	}
 
+	//// Depends of the t request state returns the value of the
+	//// last poll data retreived from the controller.
 	switch (t) {
 	case PAD_LEFT:
 		return _pad[0] & 0x80 ? 0 : 1;
@@ -160,6 +188,13 @@ int PS_PAD::read(TYPE t) {
 	return 0;
 }
 
+/* int PS_PAD::vibration(int v1, int v2)
+   Takes int argument v1
+   Takes int argument v2
+  
+   Sets the controller vibration to a internal variables
+   to send again in the next poll command.
+*/
 int PS_PAD::vibration(int v1, int v2) {
 	_vib1 = v1 ? 1 : 0;
 	if (v2 < 0) v2 = 0;
@@ -169,17 +204,31 @@ int PS_PAD::vibration(int v1, int v2) {
 	return 0;
 }
 
-int PS_PAD::send(const char *cmd, int len, char *dat) {
-	int i;
+/*
+   int PS_PAD::send(const char *cmd, int len, char *dat) 
 
-	_cs = 0;
-	wait_us(20);
-	for (i = 0; i < len; i++) 
+   Takes 1 char command array
+   Takes 1 int len to define the lenght of the command arrat
+   Takes 1 pointes char * to store the reteived data.
+
+   This functions handles the data flow of the comunication 
+   between the master and the PS2 controller.
+*/
+int PS_PAD::send(const char *cmd, int len, char *dat) {
+	int i; //// for loop interator
+
+	_cs = 0; //// Set the chip select to 0 on a dominant state
+			 //// to enable the comunication
+			 //// between the PS2 and the master.
+	wait_us(20); //// Wait 20 us
+	for (i = 0; i < len; i++) //// for each *cmd byte send the current interator index pointer and receive from the controller
 	{
 		dat[i] = SendSPI(cmd[i]);
-		wait_us(20);
+		wait_us(20); //// wait 20 us between every byte
 	}
 
+	/* If the debug flag is defined show in a serial pc terminal
+	   tha comunication results */
 #ifdef __DEBUG__
 	pc.printf("Sended:   ");
 	for (i = 0; i < len; i++)
@@ -191,6 +240,6 @@ int PS_PAD::send(const char *cmd, int len, char *dat) {
 	pc.printf("\r\n");
 #endif
 
-	_cs = 1;
+	_cs = 1; //// Finally, set the Chip Select to recesive state
 	return i;
 }
