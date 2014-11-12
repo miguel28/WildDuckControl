@@ -279,7 +279,7 @@ void WriteReport(unsigned char* data) //// Take unsigned char* data pointer
 {
 #ifdef USE_RF //// If it is defined thar USE_RF macro in main.h compile the pollowing code
 			  //// This macro could be undefined for debugging porpuses only.
-	int i;    //// Declara our integer iterator variable (standar for a for loop)
+	int i;    //// Declara our integer iterator variable (standard for a for loop)
 	for (i = 0; i<10; i++)	//// make a loop from i = 0 to i = 9
 	{						//// this loop writes the 10 first byte of the pakage
 		while (!rf.writeable()); //// wait until the UART module it is available to write

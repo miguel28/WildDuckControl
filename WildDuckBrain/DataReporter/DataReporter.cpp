@@ -1,40 +1,77 @@
-#include "DataReporter.h"
+/******************************************************************
+Wild Duck Independient Control
+Project Created 8/3/2014
+File Reports.cpp
 
-DigitalOut led2(LED1);
-DigitalOut Led(LED2);
-DigitalOut BlueLed(D13);
+This program has been created by using mbed runtime libraries
+for the platform FRDM-KL46Z in a offline project managed by
+arm-gcc compiler.
+
+For more details see (http://www.mbed.org) for a gerneal
+overview. And for the development se (http://developer.mbed.org/)
+
+*This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of
+the License, or(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+<http://www.gnu.org/licenses/>
+******************************************************************/
+
+#include "DataReporter.h" //// Includes the header of definition of DataReporter.h
+
+/* in this block I declered a 3 led that indicates the conection status*/
+DigitalOut led2(LED1);   //// this led toggles every data reportersended
+DigitalOut Led(LED2);    //// GREEN LED if the green led toggle in a certain frecuecnty the controller is online
+						 //// this led toggles every data reporter decoded
+DigitalOut BlueLed(D13); //// same tha laste
 
 ////////////////////////////////////////////////////////////////////////
 ////       Public  Members
 ////////////////////////////////////////////////////////////////////////
 
+/* the contructor creates a new instaces of certain objects and also
+   set the initial value of the internal variables. 
+*/
 DataReporter::DataReporter()
 {
-	HeartBeat = 0;
+	/* this block initializes the controller offline*/
+	HeartBeat = 0;  
 	LastHeartBeat = 0;
 	HeartTolerance = 100;
 	isOnline = false;
 	//Led = 1;
 
+	/* This block initializes tehe reports array buffers*/
 	bufferBusy = false;
 	lastChar = 0x00;
 	ReportRequest = Sensors;
 	revBuffer = new char[REPORTLENGTH];
 	changed = true;
 	idle = true;
-	InitReports();
+	InitReports(); //// Calls the report initialization
 
+	/* Create a new instance of the Serial Module in rf pointer, and
+	   also attaches the interrupt handlers
+	*/
 	rf = new Serial(PTE16, PTE17); // tx, rx
 	rf->baud(BAUDRATE);
 	tickWatchDog = new Ticker();
 	rf->attach(this, &DataReporter::GetReport);
 	tickWatchDog->attach(this, &DataReporter::WatchDog, 0.1f);
 
+
 	buffer = new char[MAXBUFFER];
 	ReceivedReport = new char[REPORTLENGTH];
 	bufPointer = 0;
 
 }
+
+/* The dectuctor deletes all array buffers*/
 DataReporter::~DataReporter()
 {
     delete ReceivedReport;
@@ -42,21 +79,34 @@ DataReporter::~DataReporter()
 	delete rf;
 	delete revBuffer;
 }
+
+/* returns the value fo the private member "changed"
+   this is for check if a constant value have changed
+*/
 bool DataReporter::ConstantsHaveChanged()
 {
 	bool ret = changed;
 	changed = false;
 	return ret;
 }
+
+/* returns the value fo the private member "idle"
+   this is for check if the controller has receiver a new constant
+*/
 bool DataReporter::IsIdle()
 {
 	return idle;
 }
+
+/* returns the value fo the private member "isOnline"
+this is for check if the controller is online or not.
+*/
 bool DataReporter::IsOnline()
 {
 	return isOnline;
 }
 
+/* this methods initializes the default values of the structures*/
 void DataReporter::InitReports()
 {
 	_controllerReport.Throttle = 0;
@@ -98,6 +148,7 @@ void DataReporter::InitReports()
 	_constants3.Prot_Low_Correction = 200;
 }
 
+/*Get reports methods, only returns the last decoded structres */
 ControllerReport DataReporter::GetControllerReport()
 {
 	return _controllerReport;
@@ -119,6 +170,9 @@ Constants3 DataReporter::GetConstants3()
     return _constants3;
 }
 
+/*Set sen a new stucuture to send, when the controller asks for
+certain report, the class sends the last defined in this methods
+*/
 void DataReporter::SetControllerReport(ControllerReport report)
 {
     _ScontrollerReport = report;
@@ -128,6 +182,7 @@ void DataReporter::SetSensorsReport(SensorsReport report)
     _SsensorsReport = report;
 }
 
+/* this method clears the received buffer */
 void DataReporter::ClearBuffer()
 {
 	int i;
@@ -135,6 +190,9 @@ void DataReporter::ClearBuffer()
 		buffer[i] = 0x00;
 	bufPointer = 0;
 }
+
+//// if USBHOST is defined declare the apropiate send method.
+//// this method send to the controller byte per byte in the Serial rf Module
 #ifdef USBHOST
 void DataReporter::Send(HID_REPORT report)
 {
@@ -153,17 +211,18 @@ void DataReporter::Send(HID_REPORT report)
 #else
 void DataReporter::Send(char* data)
 {
-	Led = !Led;
-	int i;
-	for (i = 0; i<10; i++)
-	{
-		while (!rf->writeable());
-		rf->putc(data[i]);
+	Led = !Led; //// Toggles the RED LED of the KL46Z board
+	//// This macro could be undefined for debugging porpuses only.
+	int i;    //// Declara our integer iterator variable (standard for a for loop)
+	for (i = 0; i<10; i++)	//// make a loop from i = 0 to i = 9
+	{						//// this loop writes the 10 first byte of the pakage
+		while (!rf.writeable()); //// wait until the UART module it is available to write
+		rf.putc(data[i]);		 //// then put a new character to write
 	}
-	while (!rf->writeable());
-	rf->putc((char)0xff);
-	while (!rf->writeable());
-	rf->putc((char)0xff);
+	while (!rf.writeable()); //// wait until the UART module it is available to write
+	rf.putc((char)0xff);     //// then writes 0xff in the uart module
+	while (!rf.writeable()); //// wait until the UART module it is available to write
+	rf.putc((char)0xff);     //// then writes 0xff in the uart module
 }
 #endif
 
@@ -172,6 +231,11 @@ void DataReporter::Send(char* data)
 ////////////////////////////////////////////////////////////////////////
 void DataReporter::SendReport()
 {
+	/*
+	This subroutine formats the data structure defined in main.h
+	to a 12 bytes data pakage.
+	*/
+
 	char temp1, temp2, temp3, temp4, temp5;
 
 	switch(ReportRequest)
@@ -274,33 +338,60 @@ void DataReporter::SendReport()
 		break;
 	}
 }
+/* This routine is called by a serial received 
+   character interrupt.
+
+   Then the serial receiver a new character this 
+   methods stores the incomming character in the buffer array
+   by using the bufPointer.
+
+   The methods keeps storing the incoming 
+   characters until the last two byte were 0xffu,
+
+   two 0xffu means the end of a report
+
+   the data pakage of 12 bytes can be contain in the body two 0xffu consecutives thats why
+   the end of tha pakage must be 0xffu, 0xffu and the receiver can missunderstood the pakage
+   as a invalid or incomplete pakage.
+
+   Example :
+                  {PakageID,  PkgRequested, 8 bytes data pakage body------------------------------,  2 end bytes 0xffu };
+   char* pakage = {   0x01u,         0x0fu, 0x50u, 0x30u, 0xefu, 0x17u, 0x56u, 0x67u, 0x34u, 0x21u,  0xffu,    0xffu   };
+
+   the receiver take bytes from RF UART module and check until it gets  the two 0xff bytes.
+
+   thats why the following lines correct 255, 511, 1023 report values in order to avoid that
+*/
 void DataReporter::GetReport()
 {
-    int i;
+    int i; //// for loop interator control
 
-    if(rf->readable()) {
-        char c = rf->getc();
-        buffer[bufPointer] = c;
-        bufPointer++;
+    if(rf->readable()) { //// check if the rf serial is readable
+        char c = rf->getc();  //// retrive the received character.
+        buffer[bufPointer] = c;  //// stores the character in the buffers
+        bufPointer++;   //// next buffer position
 
-        if(lastChar == 0xFF && c == 0xFF) {
-            if(bufPointer>11) {
-                for(i=0; i< REPORTLENGTH; i++)
-                    ReceivedReport[i] = buffer[i];
+        if(lastChar == 0xFF && c == 0xFF) {        //// if we received two 0xff use this data as a valid report
+            if(bufPointer>11) {                    //// the data needs to be grater to 11 bytes ( this is a protection of trunked data)
+                for(i=0; i< REPORTLENGTH; i++)     //// so, next, put the received buffer data in a last received report.
+                    ReceivedReport[i] = buffer[i]; 
 
-                DecodeReport();
+                DecodeReport();   //// calls the methods that decodes the last received report in a abstrat structure.
 				//wait_us(10);
-				SendReport();
+				SendReport();     //// the funcion also reposes with a new data report that the controller have asked
                 //led2 = !led2;
-				BlueLed = !BlueLed;
-				HeartBeat++;
+				BlueLed = !BlueLed;  //// Toggles the blue led
+				HeartBeat++;         //// heart beat value incrase by 1 to refresh the connection
             }
-            bufPointer = 0;
+            bufPointer = 0; //// resets the pointer to 0
         }
-        lastChar = c;
+        lastChar = c; //// stores the last character received.
     }
 }
 
+/* this methods check what kind of report has been recived and
+   also deserializes the data in a abstract structure
+*/
 void DataReporter::DecodeReport()
 {
     ReportRequest = ReceivedReport[1];
@@ -390,6 +481,18 @@ void DataReporter::DecodeConstants3()
     _constants3.Prot_Low_Correction = ReceivedReport[8] | (ReceivedReport[9] << 8);
 }
 
+/* This fucntion has been called every 20 ms in order to check the 
+   status of the connection by using a heartbeat indicator
+   if the Heart beat value isn't changed since the last scan 
+
+   then begins to count in the HeartTolerance,
+
+   if the HeartTolerance is greter that certain parameter 
+   the connections status is offline, otherwise
+   the HeartBeat has changed since the last scan, then 
+   the controller is online.
+
+   */
 void DataReporter::WatchDog()
 {
 	if (HeartBeat == LastHeartBeat)
