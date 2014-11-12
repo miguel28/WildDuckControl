@@ -99,7 +99,10 @@ public:
 	*/
 	unsigned short ButtonNewpress(unsigned short button);
 
-	/* Get the value of the selected axis in a float range of -1.0f and 1.0f */
+	/* Get the value of the selected axis in a float range of -1.0f and 1.0f 
+	   Also calculates the result of the axis by using a death zone, by default
+	   this DeathZone is 0.0f (no death zone).
+	*/
 	float GetAxis(unsigned char axis, float DeathZone = 0.0f);
 };/* Definition of a class Joystick */
 
